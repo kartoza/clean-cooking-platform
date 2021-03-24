@@ -1,0 +1,74 @@
+section.banner {
+  position: relative;
+
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  max-width: unset;
+  width: 100%;
+  height: 600px;
+
+  padding: 0;
+  padding-bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--the-white);
+  text-shadow: 0 2px 1px rgba(0,0,0,0.2);
+}
+
+section.banner * {
+  position: relative;
+}
+
+section.banner h1, section.banner h3 {
+  text-align: center;
+
+  color: var(--the-white);
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+  font-weight: 300;
+}
+
+section.banner h1 {
+  font-size: 4em;
+}
+
+section.banner h3 {
+  font-size: 2em;
+
+  padding-left: 4em;
+  padding-right: 4em;
+  width: auto;
+}
+
+section.banner:before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 1080px) {
+  section.banner {
+    height: unset;
+  }
+
+  section.banner h1 {
+    font-size: 2em;
+  }
+
+  section.banner h3 {
+    font-size: 1.2em;
+
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+}

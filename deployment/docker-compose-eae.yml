@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  eae:
+    build: ../energyaccessexplorer
+    ports:
+      - "6789:6789"
+      - "9876:9876"
+    volumes:
+      - ../energyaccessexplorer/uganda:/uganda

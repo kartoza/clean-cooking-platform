@@ -1,0 +1,162 @@
+nav {
+  display: flex;
+  font-size: 1.3em;
+  background-color: var(--the-green);
+  font-family: without-serif, sans-serif;
+  clear: both;
+  line-height: 3.6em;
+  padding: 0 2em;
+  box-shadow: 0px 1px 5px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  content : "";
+  display: block;
+
+  width: 100%;
+  height: 3.8em;
+
+  opacity: 0.15;
+
+  background-image: url(/images/nav-watermark.png);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+nav a {
+  display: block;
+
+  position: relative;
+
+  text-align: center;
+  text-decoration: none;
+
+  margin: 0;
+  flex: 1;
+
+  color: var(--the-white);
+  fill: var(--the-white);
+}
+
+nav a.active {
+  color: var(--the-yellow);
+}
+
+nav a:hover {
+  opacity: 0.9;
+}
+
+nav a#energy-access-link {
+  flex: 0;
+  width: auto;
+  font-size: 1.2em;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-transform: uppercase;
+  margin-left: 4em;
+}
+
+nav a#energy-access-link:after {
+  content: 'BETA';
+  font-size: 0.5em;
+  position: relative;
+  top: -1.8em;
+  left: -3em;
+}
+
+nav a#submit-a-story {
+  border: solid 1px var(--the-yellow);
+  text-transform: unset;
+}
+
+nav #navigation-links {
+  display: flex;
+  flex-flow: row;
+  flex: 1;
+
+  justify-content: center;
+}
+
+nav #navigation-links a {
+  font-size: 0.8em;
+  max-width: 10em;
+}
+
+/* mobile specifics */
+@media (max-width: 1080px) {
+  nav {
+    padding: 0 1em;
+    display: block;
+  }
+
+  nav:before {
+    height: 3.6em;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+  }
+
+  nav div {
+    text-align: center;
+    margin: 0;
+    flex: 1;
+  }
+
+  nav #toggle {
+    display: none;
+    width: 0;
+  }
+
+  nav label[for="toggle"] {
+    position: absolute;
+    right: 0;
+
+    font-weight: bold;
+    font-size: 1.9em;
+
+    color: black;
+    cursor: pointer;
+
+    fill: var(--the-white);
+    line-height: 1.5em;
+
+    height: 100%;
+    width: 1.5em;
+    text-align: center;
+
+    display: block;
+
+    z-index: 11;
+  }
+
+  nav a#energy-access-link {
+    font-size: 5.5vw;
+    display: block;
+    margin: auto;
+    z-index: 10;
+  }
+
+  nav #navigation-links {
+    display: block;
+  }
+
+  nav #navigation-links a {
+    width: 100%;
+    max-width: unset;
+  }
+
+  nav #toggle:not(:checked) ~ #navigation-links .toggleable,
+  nav #toggle:not(:checked) ~ .toggleable {
+    position: absolute;
+    top: -1000px !important;
+    display: none;
+    clear: both;
+  }
+}

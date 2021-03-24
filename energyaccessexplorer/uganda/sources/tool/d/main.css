@@ -1,0 +1,383 @@
+h1, h2, h3 {
+  color: var(--the-green);
+}
+
+a {
+  cursor: pointer;
+}
+
+.big-green-button {
+  text-align: center;
+  margin: 1em;
+  background-color: var(--the-green);
+  color: white !important;
+  text-decoration: none;
+  padding: 0.9em 1.3em;
+}
+
+.up-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.2em;
+  color: var(--the-green) !important;
+  fill: var(--the-green) !important;
+  background-color: white !important;
+}
+
+.up-title.active {
+  background-color: var(--the-green) !important;
+  color: var(--the-white) !important;
+  fill: var(--the-white) !important;
+}
+
+dialog main {
+  background-color: white;
+  margin: auto;
+  max-width: 1200px;
+  width: fit-content;
+  width: -moz-fit-content;
+  margin-top: 80px !important;
+}
+
+dialog header {
+  padding: 1em;
+  padding-left: 1.3em;
+  font-size: 1.2em;
+  background-color: var(--the-green);
+  color: var(--the-white);
+  position: relative;
+}
+
+dialog .close {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  text-decoration: none;
+  font-size: 1.4em;
+  line-height: 1em;
+  width: 1em;
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+  color: var(--the-white);
+}
+
+dialog content {
+  padding: 1.7em !important;
+}
+
+dialog pre {
+  max-width: 850px;
+  white-space: pre-line;
+}
+
+.more-dropdown-ul {
+  width: fit-content;
+  width: -moz-fit-content;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+  position: absolute;
+  right: -25px;
+  top: 30px;
+  padding: 8px 0;
+  border-radius: 5px;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,0.2);
+  z-index: 9999;
+}
+
+.more-dropdown-li {
+  padding: 7px 15px;
+  font-size: 0.9em;
+  color: var(--the-color);
+}
+
+.more-dropdown-li:hover {
+  background-color: #e7e9ec;
+}
+
+.more-dropdown-li:hover:active {
+  background-color: #cecece
+}
+
+aside.nanny-marker {
+  background-color: rgba(0,0,0,1);
+  border-radius: 3px;
+  box-shadow: 0 20px 30px 0 rgba(0,0,0,0.2);
+
+  max-width: 400px;
+
+  animation: pulse 3s ease-out;
+  animation-iteration-count: infinite;
+  opacity: 0.5;
+  z-index: 9999;
+}
+
+aside.nanny-marker * {
+  color: white;
+}
+
+aside.nanny-marker main {
+  padding: 1em;
+}
+
+aside.nanny-marker header {
+  font-weight: bold;
+  font-size: 1.05em;
+  margin-bottom: 0.7em;
+}
+
+aside.nanny-marker .nanny-close-button::before {
+  font-size: 1.5em;
+  padding: 2px 7px;
+}
+
+aside.nanny-marker .nanny-close-button::before {
+  content: '×';
+}
+
+.download-link {
+  display: block;
+  padding: 0.5em 1em;
+  max-width: 15em;
+  text-decoration: none;
+  color: var(--the-blue);
+  clear: both;
+}
+
+.download-link:after {
+  margin-left: 1em;
+  content: '\21F2';
+}
+
+.description-text {
+  font-family: without-serif, sans-serif;
+  white-space: pre-line;
+}
+
+.bottom-right-container {
+  background-color: white;
+  text-align: center;
+}
+
+@keyframes pulse {
+  0%   { opacity: 0.7; }
+  50%  { opacity: 1.0; }
+  100% { opacity: 0.7; }
+}
+body {
+  overflow: hidden;
+}
+
+#playground {
+  display: flex;
+  flex-flow: row nowrap;
+
+  flex-direction: row;
+
+  width: auto;     /* will be changed by JS */
+  height: auto;    /* will be changed by JS */
+
+  padding: 0;
+  font-size: 0.9em;
+}
+
+#left-pane {
+  min-width: 36em; /* 40em */
+  display: flex;
+  flex-flow: column wrap;
+  flex: 0;
+}
+
+#left-pane #drawer {
+  display: block;
+  flex: 1;
+  min-height: 100%;
+  width: 0em; /* 4em */
+}
+
+#left-pane #drawer .button {
+  flex: 0;
+  margin: 0;
+  height: 4em;
+  line-height: 4em;
+  display: block;
+}
+
+#controls {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  width: 36em;
+}
+
+#visual {
+  flex: 1 0;
+  flex-flow: row nowrap;
+
+  position: relative;
+}
+
+#views {
+  display: flex;
+  flex: 1 100%;
+  justify-content: space-around;
+  z-index: 1;
+}
+
+#maparea {
+  position: relative;
+  flex: 1;
+  width: 100%;    /* will be changed by JS */
+  height: auto;    /* will be changed by JS */
+  padding: 0;
+  margin: auto;
+}
+
+#right-pane {
+  position: relative;
+  display: block;
+  width: 24em;
+}
+
+#right-pane .header {
+  padding: 0 1em;
+}
+
+#right-pane .graphs {
+  padding: 0 0.5em;
+}
+
+#filtered-pane,
+#indexes-pane,
+#cards-pane {
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+
+  width: inherit;
+  height: 100%;
+  z-index: 0;
+}
+
+#cards-list {
+  flex-grow: 1;
+}
+
+#timeline {
+  text-align: center;
+  height: 128px;
+}
+
+#timeline svg {
+  margin: 2em auto;
+}
+
+#drawer-right-pane {
+  border-top: 1px solid lightgray;
+  width: inherit;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  background-color: #F8F8F8;
+  position: absolute;
+  bottom: 0;
+  z-index: 2;
+}
+
+#drawer-right-pane > div {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-right: 1px solid lightgray;
+  cursor: pointer;
+  padding: 1em;
+}
+
+[bind=help-message] {
+  display: none;
+}
+
+#disclaimer-message {
+  display: none;
+  position: absolute;
+  background-color: #141414;
+  right: 0;
+  bottom: 0;
+  padding-right: 2em;
+}
+
+#disclaimer-message p {
+  color: #f1f1f1;
+  white-space: pre;
+}
+
+#drawer-right-pane > div:hover #disclaimer-message {
+  display: block;
+}
+
+#mapbox-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+}
+
+#mapbox-container {
+  z-index: 0;
+}
+
+#mapbox-theme-control-popup .radio-group + .radio-group {
+  margin-top: 8px;
+}
+
+.bottom-right-container {
+  height: auto;
+  margin-top: 3px;
+  margin-bottom: 47px;
+  box-sizing: border-box;
+  z-index: 0;
+}
+
+#canvas-output-select {
+  display: block;
+  padding: 0.7em 1em;
+}
+
+canvas#output {
+  max-height: 300px;
+  max-width: 100%;
+}
+#maparea {
+  background-color: var(--the-white);
+}
+
+canvas.mapboxgl-canvas {
+  cursor: auto;
+}
+
+.mapboxgl-ctrl-icon.active {
+  background-color: rgba(0,0,0,.07);
+}
+
+#coord-tooltip {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+
+  background: #fff;
+  color: #666;
+
+  padding: 5px;
+  border: solid #ccc 1px;
+
+  font-size: x-small;
+  font-family: monospace;
+  white-space: nowrap;
+}

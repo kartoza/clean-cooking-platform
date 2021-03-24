@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="/lib/cookie-notice.js"></script>
+
+    <link href="/stylesheets/style.css" rel="stylesheet" />
+    <link href="/stylesheets/banner.css" rel="stylesheet" />
+    <link href="/stylesheets/main.css" rel="stylesheet" />
+    <link href="/stylesheets/nav.css" rel="stylesheet" />
+    <link href="/stylesheets/partners-section.css" rel="stylesheet" />
+    <link href="/stylesheets/footer.css" rel="stylesheet" />
+
+    <title>Energy Access Explorer</title>
+  </head>
+
+  <body>
+    <nav>
+      <input id="toggle"
+             class="no-desktop"
+             type="checkbox">
+
+      <label for="toggle" class="no-desktop">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
+          <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+        </svg>
+      </label>
+
+      <a id="energy-access-link"
+         href="/">
+        Energy Access Explorer
+      </a>
+
+      <div id="navigation-links">
+        <a href="/tool/s"
+           class="toggleable">
+          Tool
+        </a>
+
+        <a href="/methodology"
+           class="toggleable">
+          Methodology
+        </a>
+
+        <a href="/about"
+           class="toggleable">
+          About
+        </a>
+
+        <a href="/user-stories"
+           class="toggleable">
+          User Stories
+        </a>
+
+        <!--
+        <a href="/faq"
+           class="toggleable">
+          FAQ
+        </a>
+        -->
+      </div>
+    </nav>
+
+    <script>
+      (function() {
+        const links = document.querySelectorAll('nav #navigation-links a');
+    	if (!links) return;
+
+        for (var l of links) {
+          if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
+            l.classList.add("active");
+        }
+      })();
+    </script>
+
+    <main>
+<!-- CONTENT-STARTS -->
+<style>
+  section {
+    display: flex;
+    align-items: center;
+    justify-content: center
+  }
+
+  section h1 {
+    font-size: 2em;
+    max-width: 25em;
+    margin: 1.5em auto;
+  }
+
+  section h2 {
+    max-width: 30em;
+    margin: 1.5em auto;
+  }
+
+  iframe {
+    width: 1024px;
+    height: 1200px;
+    border: none;
+  }
+</style>
+
+<section>
+  <iframe src="https://www.wri.org/upload/privacy-policy.html"></iframe>
+</section>
+
+<!-- CONTENT-ENDS -->
+    </main>
+
+    <footer>
+      <div>
+        <img id="footer-wri-logo"
+             src="/images/wri-footer.png"
+             alt="World Resources Institute">
+
+        <div>
+          <p>
+            <strong>World Resources Institute</strong>
+            <br><br>
+            10 G St NE, Suite 800, Washington, DC 20002, USA
+            <br><br>
+            Phone: +1 (202) 729-7600 | Fax: +1 (202) 720-7610
+            <br><br>
+            <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>
+            <br><br><br>
+            <a href="/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/javascripts/gapps.js"></script>
+  </body>
+</html>

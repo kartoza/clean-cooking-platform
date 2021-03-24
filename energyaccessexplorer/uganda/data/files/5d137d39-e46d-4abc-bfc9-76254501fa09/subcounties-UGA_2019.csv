@@ -1,0 +1,1379 @@
+OBJECTID,subcounty
+0,Namwendwa
+1,Kamuli Town Council
+2,Mbulamuti
+3,Bugulumbya
+4,Namasagali
+5,Nabwigulu
+6,Kisozi
+7,Balawoli
+8,Wankole
+9,Butansi
+10,Kitayunjwa
+11,Bulopa
+12,Nawanyago
+13,Dranya
+14,Ludara
+15,Abuku
+16,Koboko Town Council
+17,Kuluba
+18,Lobule
+19,Ayer
+20,Akalo
+21,Okwerodot
+22,Alito
+23,Kole Town Council
+24,Aboke
+25,Bukakata
+26,Buwunga
+27,Kabonera
+28,Mukungwe
+29,Budongo
+30,Pakanyi
+31,Central Division
+32,Kigulya Division
+33,Nyangahya Division
+34,Bwijanga
+35,Kimengo
+36,Miirya
+37,Karujubu Division
+38,Baitambogwe
+39,Bukabooli
+40,Bukatube
+41,Busakira
+42,Imanyiro
+43,Jaguzi
+44,Kigandalo
+45,Kityerera
+46,Malongo
+47,Mayuge Town Council
+48,Mpungwe
+49,Wairasa
+50,Nawaikoke
+51,Kaliro Town Council
+52,Gadumire
+53,Namwiwa
+54,Namugongo
+55,Bumanya
+56,Kalungu
+57,Kalungu Town Council
+58,Kyamulibwa
+59,Lukaya Town Council
+60,Lwabenge
+61,Bukulula
+62,Kawempe Division
+63,Nakawa Division
+64,Makindye Division
+65,Central Division
+66,Lubaga Division
+67,Busiriba
+68,Bwizi
+69,Kabambiro
+70,Kahunge
+71,Kamwenge
+72,Kamwenge Town Council
+73,Buhanda
+74,Kanara
+75,Kicheche
+76,Mahyoro
+77,Ntara
+78,Nyabbani
+79,Biguli
+80,Kihiihi
+81,Nyanga
+82,Kihiihi Town  Council
+83,Nyakinoni
+84,Nyamirama
+85,Katete
+86,Kambuga Town Council
+87,Kambuga
+88,Kanyantorogo
+89,Kirima
+90,Butogota Town Council
+91,Kayonza
+92,Mpungu
+93,Kinaaba
+94,Kanungu Town Council
+95,Rugyeyo
+96,Rutenga
+97,Amukol
+98,Chema
+99,Chepteret
+100,Gamogo
+101,Kabeywa
+102,Kapsinda
+103,Kaptanya
+104,Kaserem
+105,Kawowo
+106,Munarya
+107,Sipi
+108,Tegeres
+109,Bwera
+110,Hima Town Council
+111,Ihandiro
+112,Isango
+113,Kisinga
+114,Kitholhu
+115,Kyondo
+116,Nyakatonnzi
+117,Nyakiyumbu
+118,Bwesumbu
+119,Karusandara
+120,Katwe-Kabatoro Town Council
+121,Kilembe
+122,Kitswamba
+123,Kyabarungira
+124,Lake Katwe
+125,Mahango
+126,Muhokya
+127,Rukoki
+128,Nyamwamba Division
+129,Kyarumba
+130,Bulembia Division
+131,Katakwi Town Council
+132,Ngariam
+133,Ongongoja
+134,Usuk
+135,Magoro
+136,Katakwi
+137,Omodoi
+138,Bbaale
+139,Galiraaya
+140,Kitimbwa
+141,Kangulumira
+142,Kayunga
+143,Kayunga Town Council
+144,Nazigo
+145,Nkooko
+146,Kagadi
+147,Kakindo
+148,Rugashari
+149,Ndaiga
+150,Kyakabadiima
+151,Kabamba
+152,Mpasaana
+153,Kakumiro Town Council
+154,Birembo
+155,Kiryanga
+156,Nalweyo
+157,Kasambya
+158,Bwikara
+159,Kyaterekera
+160,Mpeefu
+161,Kibaale Town Council
+162,Mabaale
+163,Kyenzige
+164,Paacwa
+165,Burora
+166,Ruteete
+167,Kyanaisoke
+168,Kagadi Town Council
+169,Muhorro
+170,Muhorro Town Council
+171,Nyamarwa
+172,Kyebando
+173,Kasiita
+174,Bwamiramira
+175,Bubango
+176,Mugarama
+177,Matale
+178,Nyamarunda
+179,Bukomero
+180,Bukomero Town Council
+181,Ddwaniro
+182,Kapeke
+183,Kibiga
+184,Kiboga Town Council
+185,Lwamata
+186,Muwanga
+187,Bulangira
+188,Buseta
+189,Kabweri
+190,Kadama
+191,Kagumu
+192,Kasasira
+193,Kibuku
+194,Kibuku Town Council
+195,Kirika
+196,Tirinyi
+197,Nkungu
+198,Burunga
+199,Engari
+200,Kanoni
+201,Kazo Town Council
+202,Rwemikoma
+203,Kanyaryeru
+204,Kashongi
+205,Kenshunga
+206,Kinoni
+207,Kiruhura Town Council
+208,Nyakashashara
+209,Sanga
+210,Sanga Town Council
+211,Kikaatsi
+212,Kitura
+213,Kazo
+214,Kigumba Town Council
+215,Kiryandongo Refugee Settlement
+216,Kiryandongo Town Council
+217,Masindi Port
+218,Bweyale Town Council
+219,Kisoro Town Council
+220,Nyabwishenya
+221,Busanza
+222,Kirundo
+223,Nyarubuye
+224,Nyundo
+225,Bukimbiri
+226,Kanaba
+227,Nyakabande
+228,Nyakinama
+229,Chahi
+230,Muramba
+231,Nyarusiza
+232,Murora
+233,Kitgum Matidi
+234,Labongo Akwang
+235,Labongo Amida
+236,Labongo Layamo
+237,Lagoro
+238,Namokora
+239,Omiya Anyima
+240,Orom
+241,Kitgum Town Council
+242,Kacheri
+243,Kotido
+244,Kotido Town Council
+245,Nakaperimoru
+246,Panyangara
+247,Rengen
+248,Atutur
+249,Kanyum
+250,Kumi
+251,Kumi Town Council
+252,Mukongoro
+253,Nyero
+254,Ongino
+255,Binyiny
+256,Binyiny Town Council
+257,Kaproron
+258,Kaptoyoy
+259,Kaptum
+260,Kiriki
+261,Kwanyiy
+262,Moyok
+263,Ngenge
+264,Bananywa
+265,Butemba
+266,Butemba  Town  Council
+267,Gayaza
+268,Kyankwanzi
+269,Mulagi
+270,Nkandwa
+271,Nsambya
+272,Ntwetwe
+273,Ntwetwe  Town  Council
+274,Wattuba
+275,Hapuuyo
+276,Kyaka  Ii  Refugee Camp
+277,Kakabara
+278,Kyegegwa Town Council
+279,Kasule
+280,Bufunjo
+281,Bugaaki
+282,Butiiti
+283,Butunduzi
+284,Katooke Town Council
+285,Kihuura
+286,Kisojo
+287,Kyarusozi Town Council
+288,Kyenjojo Town Council
+289,Nyabuharwa
+290,Nyankwanzi
+291,Kyarusozi
+292,Nyantungo
+293,Kigaraale
+294,Butunduzi Town Council
+295,Katooke
+296,Agoro
+297,Madi Opei
+298,Padibe  West
+299,Padibe East
+300,Padibe Town Council
+301,Palabek- Ogili
+302,Palabek-Gem
+303,Palabek Kal
+304,Adekokwok
+305,Agali
+306,Agweng
+307,Aromo
+308,Barr
+309,Lira
+310,Ngetta
+311,Ogur
+312,Adyel Division
+313,Central Division
+314,Railway Division
+315,Ojwina Division
+316,Bukooma
+317,Bulongo
+318,Ikumbya
+319,Irongo
+320,Luuka Town Council
+321,Nawampiti
+322,Bukanga
+323,Waibuga
+324,Makulubita
+325,Luwero
+326,Kikyusa
+327,Zirobwe
+328,Luwero Town Council
+329,Katikamu
+330,Wobulenzi Town Council
+331,Bamunanika
+332,Nyimbwa
+333,Kalagala
+334,Bombo Town Council
+335,Butuntumula
+336,Kamira
+337,Kisekka
+338,Kkingo
+339,Lwengo
+340,Lwengo Town Council
+341,Malongo
+342,Ndagwe
+343,Lyantonde
+344,Kaliiro
+345,Mpumudde
+346,Lyantonde Town Council
+347,Kasagama
+348,Kinuuka
+349,Bubutu
+350,Bugobero
+351,Bukhabusi
+352,Bukhaweka
+353,Bukhofu
+354,Bukiabi
+355,Bukokho
+356,Bukusu
+357,Bumbo
+358,Bumwoni
+359,Bunabwana
+360,Bupoto
+361,Busukuya
+362,Butiru
+363,Butta
+364,Buwabwala
+365,Buwagogo
+366,Kaato
+367,Khabutoola
+368,Lwakhakha Town Council
+369,Magale
+370,Manafwa Town Council
+371,Mukoto
+372,Nalondo
+373,Namabya
+374,Namboko
+375,Sibanga
+376,Sisuni
+377,Tsekululu
+378,Weswa
+379,Maracha  Town Council
+380,Nyadri
+381,Oleba
+382,Olufee
+383,Yivu
+384,Kasitu
+385,Ngamba
+386,Ntotoro
+387,Sindila
+388,Bubandi
+389,Bubukwanga
+390,Bundibugyo Town Council
+391,Mirambi
+392,Nyahuka Town Council
+393,Kisuba
+394,Busaru
+395,Kirumya
+396,Nyakabirizi Division
+397,Bitooma
+398,Bumbaire
+399,Ibaare
+400,Kakanju
+401,Kyabugimbi
+402,Kyamuhunga
+403,Kyeizooba
+404,Nyabubare
+405,Ruhumuro
+406,Central Division
+407,Eastern Division
+408,Buhehe
+409,Bulumbi
+410,Busitema
+411,Buteba
+412,Buyanga
+413,Dabani
+414,Lumino
+415,Masaba
+416,Sikuda
+417,Busime
+418,Western Division
+419,Budumba
+420,Busaba
+421,Busabi
+422,Busolwe Town Council
+423,Butaleja Town Council
+424,Kachonga
+425,Mazimasa
+426,Nawanjofu
+427,Naweyo
+428,Budde
+429,Bulo
+430,Gombe Town Council
+431,Kalamba
+432,Kibibi
+433,Ngando
+434,Bugaya
+435,Busamuzi
+436,Buvuma Town Council
+437,Bweema
+438,Lwajje
+439,Lyabaana
+440,Nairambi
+441,Bugaya
+442,Buyende Town Council
+443,Kagulu
+444,Kidera
+445,Nkondo
+446,Adok
+447,Agwata
+448,Amwoma
+449,Batta
+450,Dokolo
+451,Dokolo Town Council
+452,Kangai
+453,Kwera
+454,Okwalongwen
+455,Okwongodul
+456,Adeknino
+457,Kabulasoke
+458,Kanoni Town Council
+459,Kyegonza
+460,Maddu
+461,Mpenja
+462,Palaro
+463,Patiko
+464,Bungatira
+465,Unyama
+466,Lakwana
+467,Odek
+468,Lalogi
+469,Koro
+470,Paicho
+471,Awach
+472,Bobi
+473,Ongako
+474,Pece Division
+475,Layibi Division
+476,Bar Dege Division
+477,Laroo Division
+478,Kitoba
+479,Kiziranfumbi
+480,Kabwoya
+481,Buhimba
+482,Bugambe
+483,Busiisi Division
+484,Mparo Division
+485,Kyangwali
+486,Kahoora Division
+487,Buhanika
+488,Buseruka
+489,Kigorobya
+490,Kigorobya Town Council
+491,Bujumbura Division
+492,Kyabigambire
+493,Ibanda Town Council
+494,Igorora Town Council
+495,Ishongororo
+496,Ishongororo Town Council
+497,Kashangura
+498,Keihangara
+499,Kicuzi
+500,Kijongo
+501,Kikyenkye
+502,Nsasi
+503,Nyabuhikye
+504,Nyamarebe
+505,Rukiri
+506,Rushango Town Council
+507,Bisheshe
+508,Busembatia Town Council
+509,Buyanga
+510,Ibulanku
+511,Igombe
+512,Makuutu
+513,Namalemba
+514,Central Division
+515,Northern Division
+516,Bulamogi
+517,Nabitende
+518,Nakalama
+519,Nakigo
+520,Nambale
+521,Namungalwe
+522,Nawandala
+523,Nawanyingi
+524,Rushasha
+525,Endiinzi
+526,Rugaaga
+527,Mbaare
+528,Kashumba
+529,Ngarama
+530,Masha
+531,Kabarebere Town Council
+532,Bireere
+533,Nyamuyanja
+534,Nyakitunda
+535,Isingiro Town Council
+536,Kikagate
+537,Kabuyanda
+538,Kabuyanda Town Council
+539,Ruborogota
+540,Bugembe Town Council
+541,Busedde
+542,Kakira Town Council
+543,Mafubira
+544,Jinja Central Division
+545,Budondo
+546,Butagaya
+547,Buwenge
+548,Buwenge Town Council
+549,Masese/Walukuba Division
+550,Kaabong  East
+551,Kaabong Town Council
+552,Kaabong West
+553,Kalapata
+554,Kamion
+555,Kapedo
+556,Kathile
+557,Kawalakol
+558,Lobalangit
+559,Lodiko
+560,Lolelia
+561,Loyoro
+562,Napore (Karenga)
+563,Sidok
+564,Central Division
+565,Kashambya
+566,Hamurwa
+567,Ruhija
+568,Ikumba
+569,Muko
+570,Hamurwa Town Council
+571,Kamwezi
+572,Bukinda
+573,Muhanga Town Council
+574,Rwamucucu
+575,Kaharo
+576,Maziba
+577,Nyamweru
+578,Bubaare
+579,Northern Division
+580,Southern Division
+581,Kitumba
+582,Bufundi
+583,Butanda
+584,Rubaya
+585,Buhara
+586,Kamuganguzi
+587,Kyanamira
+588,Karangura
+589,Busoro
+590,Karago Town Council
+591,Bukuuku
+592,Mugusu
+593,Karambi
+594,Southern Division
+595,Ruteete
+596,Kasenda
+597,Buheesi
+598,Rubona Town Council
+599,Kateebwa
+600,Kijura Town Council
+601,Kibiito Town Council
+602,Kibiito
+603,Rwimi
+604,Rwimi Town Council
+605,Kabonero
+606,Kiko Town Council
+607,Eastern Division
+608,Western  Division
+609,Kicwamba
+610,Aperikira
+611,Kaberamaido
+612,Kaberamaido Town Council
+613,Kobulubulu
+614,Ochero
+615,Apapai
+616,Bululu
+617,Kakure
+618,Kalaki
+619,Otuboi
+620,Kalangala Town Council
+621,Mugoye
+622,Bubeke
+623,Bufumira
+624,Kyamuswa
+625,Mazinga
+626,Bukhalu
+627,Bulaago
+628,Namisuni
+629,Buluganya
+630,Bumasobo
+631,Bunambutye
+632,Bwikhonge
+633,Lusha
+634,Masiira
+635,Nabongo
+636,Sisiyi
+637,Bumugibole
+638,Buginyanya
+639,Lyama
+640,Nansanga
+641,Budaka Town Council
+642,Budaka
+643,Naboa
+644,Kaderuna
+645,Iki-Iki
+646,Kameruka
+647,Kachomo
+648,Kamonkoli
+649,Mugiti
+650,Katiira
+651,Bukalasi.
+652,Bukibokolo
+653,Bukigai
+654,Bulukecheke
+655,Bumasheti
+656,Bumayoka.
+657,Bushika
+658,Bushiyi
+659,Bushiribo
+660,Buwali.
+661,Nabweya
+662,Nakatsi
+663,Nalwanza
+664,Bududa
+665,Bududa Town Council.
+666,Bubiita.
+667,Buluguyi
+668,Muterere
+669,Nabukalu
+670,Nankoma
+671,Bulidha
+672,Bulesa
+673,Kapyanga
+674,Buwunga
+675,Bugiri Town Council
+676,Iwemba
+677,Burere
+678,Engaju
+679,Karungu
+680,Nyakishana
+681,Nsiika Town Council
+682,Bitsya
+683,Bihanga
+684,Rwengwe
+685,Buikwe Town Council
+686,Kawolo
+687,Lugazi Town Council
+688,Najjembe
+689,Njeru Town Council
+690,Nkokonjeru Town Council
+691,Wakisi
+692,Bukedea
+693,Bukedea Town Council
+694,Kachumbala
+695,Kidongole
+696,Kolir
+697,Malera
+698,Bigasa
+699,Bukomasimbi Town Council
+700,Butenga
+701,Kibinge
+702,Kitanda
+703,Bukwo
+704,Bukwo Town Council
+705,Chepkwasta
+706,Kaptererwo
+707,Kortek
+708,Riwo
+709,Senendet
+710,Tulel
+711,Kamet
+712,Kabei
+713,Suam
+714,Biiso
+715,Buliisa
+716,Buliisa Town Council
+717,Butiaba
+718,Kigwera
+719,Kihungya
+720,Ngwedo
+721,Abim
+722,Abim Town Council
+723,Alerek
+724,Lotukei
+725,Morulem
+726,Arinyapi
+727,Okusijoni
+728,Dzaipi
+729,Adropi
+730,Adjumani Town Council
+731,Itirikwa
+732,Pakele
+733,Ofua
+734,Agago Town Council
+735,Arum
+736,Kalongo Town Council
+737,Kotomol
+738,Lamiyo
+739,Lapono
+740,Lira Palwo
+741,Lokole
+742,Omiya Pacwa
+743,Omot
+744,Paimol
+745,Parabong
+746,Patongo
+747,Patongo Town Council
+748,Wol
+749,Abia
+750,Amugu
+751,Awei
+752,Omoro
+753,Agwingiri
+754,Amolatar Town Council
+755,Arwotcek
+756,Awelo
+757,Etam
+758,Muntu
+759,Akwon
+760,Agikdak
+761,Aputi
+762,Karita
+763,Loroo
+764,Amudat
+765,Amudat Town Council
+766,Abarilela
+767,Akeriau
+768,Apeduru
+769,Asamuk
+770,Kuju
+771,Morungatuny
+772,Ogolai
+773,Orungo
+774,Wera
+775,Willa
+776,Acowa
+777,Akoromit
+778,Obalanga
+779,Okungur
+780,Amuria Town Council
+781,Amuru
+782,Amuru Town Council
+783,Atiak
+784,Pabo
+785,Chawente
+786,Inomo
+787,Chegere
+788,Aduku
+789,Aduku Town Council
+790,Ibuje
+791,Nambeiso
+792,Apac
+793,Apac Town Council
+794,Arua Hill
+795,River Oli
+796,Adumi
+797,Aroi
+798,Ayivuni
+799,Dadamu
+800,Manibe
+801,Oluko
+802,Anyiribu
+803,Offaka
+804,Okollo
+805,Pawor
+806,Rhino Camp
+807,Uleppi
+808,Bileafe
+809,Omugo
+810,Udupi
+811,Ogoko
+812,Arivu
+813,Vurra
+814,Katrini
+815,Uriama
+816,Aii-Vu
+817,Bufumbo
+818,Bukasakya
+819,Bukhiende
+820,Bukonde
+821,Bumbobi
+822,Bungokho
+823,Bungokho Mutoto
+824,Busiu
+825,Nakaloke
+826,Nakaloke Town Council
+827,Nyondo
+828,Industrial Division
+829,Wanale Division
+830,Lwasso
+831,Wanale
+832,Northern Division
+833,Bukiiro
+834,Kagongi
+835,Kakiika Division
+836,Kashare
+837,Rubaya
+838,Rubindi
+839,Kakoba Division
+840,Kamukuzi Division
+841,Nyamitanga Division
+842,Bugamba
+843,Mwizi
+844,Ndeija
+845,Rugando
+846,Bubaare
+847,Biharwe Division
+848,Bitereko
+849,Kabira
+850,Kanyabwanga
+851,Kashenshero
+852,Kashenshero Town Council
+853,Katenga
+854,Kiyanga
+855,Mayanga
+856,Mitooma
+857,Mitooma Town Council
+858,Mutara
+859,Rurehe
+860,Ssekanyonyi
+861,Bulera
+862,Malangala
+863,Maanyi
+864,Banda
+865,Kakindu
+866,Butayunja
+867,Namungo
+868,Mityana Town Council
+869,Kalangalo
+870,Kikandwa
+871,Katikekile
+872,Nadunget
+873,Tapac
+874,North Division
+875,South Division
+876,Aliba
+877,Gimara
+878,Itula
+879,Difule
+880,Lefori
+881,Metu
+882,Moyo
+883,Moyo Town Council
+884,Buwama
+885,Kammengo
+886,Kiringente
+887,Kituntu
+888,Mpigi Town Council
+889,Muduuma
+890,Nkozi
+891,Kitenga
+892,Kiyuni
+893,Madudu
+894,Mubende Town Council
+895,Bagezza
+896,Kasambya
+897,Kibalinga
+898,Kigando
+899,Nabingoola
+900,Bukuya
+901,Kalwana
+902,Kassanda
+903,Kiganda
+904,Kitumbi
+905,Makokoto
+906,Myanzi
+907,Koome
+908,Kyampisi
+909,Mpatta
+910,Mpunge
+911,Nakisunga
+912,Nama
+913,Ntenjeru
+914,Central Division
+915,Kasawo
+916,Kimenyedde
+917,Nabbaale
+918,Nagojje
+919,Ntunda
+920,Seeta-Namuganga
+921,Goma Division
+922,Loregae
+923,Nakapiripirit Town Council
+924,Namalu
+925,Kakomongole
+926,Lolachat
+927,Lorengedwat
+928,Nabilatuk
+929,Butalangu Town Council
+930,Kapeeka
+931,Kasangombe
+932,Kikamulo
+933,Kinoni
+934,Kinyogoga
+935,Kito
+936,Kiwoko Town Council
+937,Nakaseke
+938,Nakaseke Town Council
+939,Ngoma
+940,Ngoma Town Council
+941,Semuto
+942,Semuto Town Council
+943,Wakyato
+944,Migeera Town Council
+945,Kakooge
+946,Kalungi
+947,Lwabiyata
+948,Lwampanga
+949,Nakitoma
+950,Wabinyonyi
+951,Nakasongola Town Council
+952,Banda
+953,Buhemba
+954,Buyinja
+955,Mutumba
+956,Namayingo Town Council
+957,Lolwe
+958,Bulange
+959,Ivukula
+960,Kibaale
+961,Magada
+962,Namutumba
+963,Namutumba Town Council
+964,Nsinze
+965,Iriiri
+966,Lopeei
+967,Lorengecora
+968,Lotome
+969,Matany
+970,Napak Town Council
+971,Ngoleriet
+972,Panyango
+973,Atego
+974,Nyaravur
+975,Nebbi Town Council
+976,Pakwach
+977,Pakwach Town Council
+978,Parombo
+979,Wadelai
+980,Kucwiny
+981,Alwi
+982,Erussi
+983,Panyimur
+984,Ndhew
+985,Nebbi
+986,Kapir
+987,Kobwin
+988,Mukura
+989,Ngora
+990,Ngora Town Council
+991,Butungama
+992,Kibuuku Town Council
+993,Kanara
+994,Kanara Town Council
+995,Nombe
+996,Rwebisengo Town Council
+997,Karugutu Town Council
+998,Bwongyera
+999,Ihunga
+1000,Kibatsi
+1001,Nyabihoko
+1002,Rwashamaire Town Council
+1003,Central Division
+1004,Eastern Division
+1005,Ntungamo
+1006,Nyakyera
+1007,Ruhaama
+1008,Rukoni East
+1009,Rweikiniro
+1010,Western Division
+1011,Kayonza
+1012,Ngoma
+1013,Rubaare
+1014,Rubaare Town Council
+1015,Rugarama
+1016,Anaka (Payira)
+1017,Anaka Town Council
+1018,Purongo
+1019,Koch-Goma
+1020,Alero
+1021,Adwari
+1022,Alango
+1023,Ogor
+1024,Ogwette
+1025,Okwang
+1026,Olilm
+1027,Orum
+1028,Otuke Town Council
+1029,Aber
+1030,Kamdini
+1031,Minakulu
+1032,Iceme
+1033,Loro
+1034,Myene
+1035,Aleka
+1036,Abok
+1037,Otwal
+1038,Angangura
+1039,Atanga
+1040,Lapul
+1041,Ogom
+1042,Pader Town Council
+1043,Pajule
+1044,Awere
+1045,Puranga
+1046,Laguti
+1047,Acholi Bur
+1048,Pader
+1049,Latanya
+1050,Butebo
+1051,Kabwangasi
+1052,Kakoro
+1053,Kanginima
+1054,Kibale
+1055,Opwateta
+1056,Agule
+1057,Akisim
+1058,Apopong
+1059,Chelekura
+1060,Gogonyo
+1061,Kameke
+1062,Kamuge
+1063,Kasodo
+1064,Olok
+1065,Pallisa
+1066,Pallisa Town Council
+1067,Puti-Puti
+1068,Petete
+1069,Kakuuto
+1070,Kasasa
+1071,Kibanda
+1072,Kifamba
+1073,Kyebe
+1074,Byakabanda
+1075,Ddwaniro
+1076,Kacheera
+1077,Kagamba
+1078,Kiziba
+1079,Kyalulangira
+1080,Lwamagwa
+1081,Lwanda
+1082,Rakai Town Council
+1083,Kabira
+1084,Kalisizo
+1085,Kalisizo Town Council
+1086,Kirumba
+1087,Kyotera Town Council
+1088,Lwankoni
+1089,Nabigasa
+1090,Ryeru
+1091,Katunguru
+1092,Rutoto
+1093,Katerera Town Council
+1094,Kirugu
+1095,Kyabakara
+1096,Rubirizi Town Council
+1097,Kichwamba
+1098,Magambo
+1099,Katanda
+1100,Katerera
+1101,Bugangari
+1102,Ruhinda
+1103,Buyanja
+1104,Kebisoni
+1105,Eastern Division
+1106,Southern Division
+1107,Western Division
+1108,Nyakagyeme
+1109,Buhunga
+1110,Nyarushanje
+1111,Nyakishenyi
+1112,Lwemiyaga
+1113,Mateete
+1114,Mateete Town Council
+1115,Mijwala
+1116,Ssembabule Town Council
+1117,Lugusulu
+1118,Ntusi
+1119,Lwebitakuli
+1120,Kasilo Town Council
+1121,Labori
+1122,Pingire
+1123,Atiira
+1124,Kadungulu
+1125,Kateta
+1126,Kyere
+1127,Bugondo
+1128,Kyangyenyi
+1129,Masheruka
+1130,Rugarama
+1131,Sheema Town Council
+1132,Bugitimwa
+1133,Bukhulo
+1134,Bukiise
+1135,Bumasifwa
+1136,Bunyafa
+1137,Busulani
+1138,Buteza
+1139,Buwalasi
+1140,Buwasa
+1141,Buyobo
+1142,Masaba
+1143,Nalusala
+1144,Zesui
+1145,Olio
+1146,Serere Town Council
+1147,Kagango
+1148,Kasaana
+1149,Kigarama
+1150,Kitagata
+1151,Arapai
+1152,Asuret
+1153,Gweri
+1154,Kamuda
+1155,Katine
+1156,Soroti
+1157,Tubur
+1158,Eastern Division
+1159,Northern Division
+1160,Western Division
+1161,Kwapa
+1162,Malaba Town Council
+1163,Mella
+1164,Merikit
+1165,Molo
+1166,Mukuju
+1167,Osukuru
+1168,Eastern Division
+1169,Western Division
+1170,Iyolwa
+1171,Kirewa
+1172,Kisoko
+1173,Magola
+1174,Mulanda
+1175,Nagongera
+1176,Nagongera Town Council
+1177,Paya
+1178,Rubongi
+1179,Sop-Sop
+1180,Nabuyoga
+1181,Petta
+1182,Bussi
+1183,Kakiri
+1184,Kakiri Town Council
+1185,Kasanje
+1186,Katabi
+1187,Masulita
+1188,Masulita Town Council
+1189,Mende
+1190,Namayumba
+1191,Namayumba Town Council
+1192,Nsangi
+1193,Ssisa
+1194,Wakiso
+1195,Wakiso Town Council
+1196,Division A
+1197,Division B
+1198,Busukuma
+1199,Gombe
+1200,Kira Town Council
+1201,Nabweru
+1202,Nangabo
+1203,Nansana Town Council
+1204,Makindye-Ssabagabo
+1205,Apo
+1206,Ariwa
+1207,Drajini
+1208,Kei
+1209,Kerwa
+1210,Kuru
+1211,Lodonga
+1212,Midigo
+1213,Odravu
+1214,Yumbe Town Council
+1215,Atyak
+1216,Kango
+1217,Paidha Town Council
+1218,Zeu
+1219,Jangokoro
+1220,Nyapea
+1221,Zombo Town Council
+1222,Abanga
+1223,Paidha
+1224,Warr
+1225,Bala
+1226,Abongomola
+1227,Amach
+1228,Adilang
+1229,Kyesiiga
+1230,Nyakwae
+1231,Namasale
+1232,Namasale Town Council
+1233,Kapelebyong
+1234,Buikwe
+1235,Bulambuli Town Council
+1236,Bulegeni Town Council
+1237,Kamu
+1238,Muyembe
+1239,Simu
+1240,Bulegeni
+1241,Ishaka Division
+1242,Busolwe
+1243,Buyengo
+1244,Kisomoro
+1245,Palam
+1246,Lokopo
+1247,Buremba
+1248,Midia
+1249,Paloga
+1250,Bubyangu
+1251,Rupa
+1252,Laropi
+1253,Moruita
+1254,Kalongo
+1255,Kakooge Town Council
+1256,Bugana
+1257,Sigulu Islands
+1258,Akworo
+1259,Karugutu
+1260,Rwebisengo
+1261,Kasaali
+1262,Kabwohe-Itendero Town Council
+1263,Shuuku
+1264,Bugongi Town Council
+1265,Kashozi
+1266,Ssi Bukunja
+1267,Ngogwe
+1268,Najja
+1269,Nyenga
+1270,Chesower
+1271,Sironko Town Council
+1272,Budadiri Town Council
+1273,Bukiyi
+1274,Bukyambi
+1275,Bukyabo
+1276,Buhugu
+1277,Ciforo
+1278,Pacara
+1279,Tara
+1280,Kijomoro
+1281,Oluvu
+1282,Rigbo
+1283,Kululu
+1284,Romogi
+1285,Kochi
+1286,Lamogi
+1287,Buwaaya
+1288,Central Division
+1289,Akokoro
+1290,Namanyonyi
+1291,Busoba
+1292,Bumasikye
+1293,Lukhonge
+1294,Lubya
+1295,Buwooya
+1296,Bukonzo
+1297,Harugale
+1298,Ndugutu
+1299,Budwale
+1300,Busano
+1301,Mutunda
+1302,Kiryandongo
+1303,Bwambara
+1304,Pajulu
+1305,Alwa
+1306,Anyara
+1307,Abako
+1308,Butandiga
+1309,Bwanswa
+1310,Butoloogo
+1311,Nyakayojo Division
+1312,Kakule
+1313,Kigumba
+1314,Ajia
+1315,Manyogaseka
+1316,Nalutuntu
+1317,Nabisweera
+1318,Rwanyamahembe
+1319,Masafu
+1320,Masinya
+1321,Katuna Town Council
+1322,Bihanga
+1323,Nkoma
+1324,Hakibale
+1325,Kapteret
+1326,Kapchorwa Town Council
+1327,Kapujan
+1328,Toroma
+1329,Kayonza
+1330,Busana
+1331,Budhaya
+1332,Apala
+1333,Alebtong Town Council
+1334,Aloi
+1335,Akura
+1336,Ngai
+1337,Acaba
+1338,Oyam Town Council
+1339,Kabingo
+1340,Benet
+1341,Kwosir
+1342,Kitawoi
+1343,Logiri
+1344,Mucwini
+1345,Rwentuha
+1346,Ruyonza
+1347,Mpara
+1348,Lokung
+1349,Lamwo Town Council
+1350,Kyazanga Town Council
+1351,Kapchesombe
+1352,Kabweeza-Kyegegwa
+1353,Kyazanga
+1354,Bweramule
+1355,Katwe/Butego
+1356,Kimaanya/Kyabakuza
+1357,Nyendo-Ssenyange
+1358,Busimbi
+1359,Mukunyu
+1360,Karambi
+1361,Mpondwe/Lhubiriha Town Council
+1362,Buhuhira
+1363,Bugoye
+1364,Maliba
+1365,Rukoni West
+1366,Kitwe Town Council
+1367,Itojo
+1368,Bumalimba
+1369,Buswale
+1370,Lunyo
+1371,Bujumba
+1372,Majanji
+1373,Butaleja
+1374,Himutu
+1375,Buyende
+1376,Kimaka/Mpumudde/Nalufenya Division
+1377,Kyannamukaaka

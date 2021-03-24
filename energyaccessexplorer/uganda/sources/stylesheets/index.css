@@ -1,0 +1,35 @@
+h2 {
+  font-size: 2em;
+}
+
+section.banner {
+  height: 800px;
+}
+
+section#user-stories .thumbnails {
+  height: 400px;
+}
+
+section#blogs-publications .thumbnails {
+  flex-flow: column wrap;
+  height: 700px;
+}
+
+@media (max-width: 1080px) {
+  section {
+    height: unset !important;
+  }
+
+  section .thumbnails {
+    height: unset !important;
+    flex-flow: column;
+  }
+
+  section {
+    padding: 2em;
+  }
+
+  section.banner {
+    padding: 1em 0 2em 0;
+  }
+}

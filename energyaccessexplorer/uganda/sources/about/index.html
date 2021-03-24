@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="/lib/cookie-notice.js"></script>
+
+    <link href="/stylesheets/style.css" rel="stylesheet" />
+    <link href="/stylesheets/banner.css" rel="stylesheet" />
+    <link href="/stylesheets/main.css" rel="stylesheet" />
+    <link href="/stylesheets/nav.css" rel="stylesheet" />
+    <link href="/stylesheets/partners-section.css" rel="stylesheet" />
+    <link href="/stylesheets/footer.css" rel="stylesheet" />
+
+    <title>Energy Access Explorer</title>
+  </head>
+
+  <body>
+    <nav>
+      <input id="toggle"
+             class="no-desktop"
+             type="checkbox">
+
+      <label for="toggle" class="no-desktop">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
+          <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+        </svg>
+      </label>
+
+      <a id="energy-access-link"
+         href="/">
+        Energy Access Explorer
+      </a>
+
+      <div id="navigation-links">
+        <a href="/tool/s"
+           class="toggleable">
+          Tool
+        </a>
+
+        <a href="/methodology"
+           class="toggleable">
+          Methodology
+        </a>
+
+        <a href="/about"
+           class="toggleable">
+          About
+        </a>
+
+        <a href="/user-stories"
+           class="toggleable">
+          User Stories
+        </a>
+
+        <!--
+        <a href="/faq"
+           class="toggleable">
+          FAQ
+        </a>
+        -->
+      </div>
+    </nav>
+
+    <script>
+      (function() {
+        const links = document.querySelectorAll('nav #navigation-links a');
+    	if (!links) return;
+
+        for (var l of links) {
+          if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
+            l.classList.add("active");
+        }
+      })();
+    </script>
+
+    <main>
+<!-- CONTENT-STARTS -->
+<section class="banner"
+         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/51bee9f9903c0a2f51bea0e9415c88ad.jpg);">
+  <h1>About</h1>
+</section>
+
+<section>
+  <p>
+    Energy Access Explorer is an online, open-source, interactive platform that
+    uses mapping to visualize the state of energy access in unserved and
+    underserved areas. It analyzes credible and public data to make the
+    connection between the demand and supply of energy.  Individuals can create
+    custom analyses on Energy Access Explorer to identify and prioritize areas
+    where energy markets can be expanded.
+  </p>
+
+  <p>
+    Who are the primary audiences of Energy Access Explorer?
+  </p>
+
+  <ul>
+    <li><strong>Clean energy entrepreneurs</strong> can use the platform to
+      access demographic and socio-economic data, which indicate consumer
+      ability to pay for electricity. This information can help identify gaps in
+      market opportunities.
+      <a href="https://wri-public-data.s3.amazonaws.com/EnergyAccess/Documents/EAE%20-%20Clean%20Energy%20Entrepreneurs.pdf">Read more.</a>
+    </li>
+
+    <li><strong>Electrification planning agencies</strong> can use the platform
+      to explore the potential for grid extension, off-grid systems and
+      renewables for energy access in their countries.
+      <a href="https://wri-public-data.s3.amazonaws.com/EnergyAccess/Documents/EAE%20-%20Energy%20Planners.pdf">Read more.</a>
+    </li>
+
+    <li><strong>Impact investors </strong>and donors can use the platform to
+      identify areas that need funding to meet development goals on energy
+      access, education and more.
+      <a href="https://wri-public-data.s3.amazonaws.com/EnergyAccess/Documents/EAE%20-%20Investors%20%26%20DFIs.pdf">Read more.</a>
+    </li>
+  </ul>
+
+  <p>
+    World Resources Institute is committed to transparency and open data. The
+    data and methodology behind Energy Access Explorer are documented and
+    available for download. All the products, methodologies and datasets that
+    make up Energy Access Explorer are available for free use under the Creative
+    Commons CC BY 4.0 license.
+  </p>
+
+  <p>
+    Energy Access Explorer is a research initiative led by World Resources
+    Institute. Partners and local stakeholders contribute to the development and
+    update of the platform.  To learn more about Energy Access Explorer or
+    provide feedback, contact our team at <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>.
+  </p>
+</section>
+
+<section id="partners">
+  <div id="partners-title">Partners</div>
+
+  <div id="partners-container">
+    <div class="logo">
+      <a title="World Resources Insitute"
+         href="https://www.wri.org/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/wri.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Energy Sustaintable Development"
+         href="http://www.energy-gis.ug/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/energy-sustainable-development.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="eed Advisory"
+         href="http://www.eedadvisory.com/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/eed.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="East African Centre for Renewable Energy and Energy Efficiency"
+         href="https://www.eacreee.org/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/eacreeee.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Cafod"
+         href="https://cafod.org.uk/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/cafod.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="International Institute for Environment and Development"
+         href="https://www.iied.org/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/iied.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Rural Energy Agency"
+         href="http://www.rea.go.tz/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/rural-energy-agency.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Traditional Energy Development"
+         href="http://www.tatedo.org/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/tatedo.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Ministry Of Energy And Mineral Development"
+         href="http://www.energyandminerals.go.ug"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/memd.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Power for All"
+         href="http://www.powerforall.org"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/powerforall.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Sustaintable Energy for All"
+         href="https://www.seforall.org/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/sustaintable.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Tanzania Electric Supply Company Limited"
+         href="http://www.tanesco.co.tz/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/tanesco.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Mott Foundation"
+         href="https://www.mott.org/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/mott.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Oak Foundation"
+         href="http://www.oakfnd.org"
+         target="_blank">
+        <img style="width: 4em;" src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/oakfnd.svg">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Ikea Foundation"
+         href="https://www.ikeafoundation.org/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/ikea.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Good Energies Foundation"
+         href="https://www.goodenergies.org"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/good-energies-logo.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="United Nations Industrial Development Organization"
+         href="https://www.unido.org"
+         target="_blank">
+        <img style="height: 4em;" src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/unido.svg">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Uganda Electricity Transmission Company"
+         href="https://www.uetcl.com/"
+         target="_blank">
+        <img style="max-width: 12em;" src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/uetcl.png">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Rural Electrification Agency"
+         href="http://www.rea.or.ug/"
+         target="_blank">
+        <img style="max-width: 12em;" src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/rural-electrification-agency.jpg">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Umeme"
+         href="https://www.umeme.co.ug/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/umeme.svg">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Uganda Electricity Generation Company Limited"
+         href="https://uegcl.com/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/uegcl.gif">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Deutsche Gesellschaft für Internationale Zusammenarbeit"
+         href="https://www.giz.de/en/worldwide/310.html"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/giz.gif">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Uganda Electricity Distribution Company Limited"
+         href="http://www.uedcl.co.ug/"
+         target="_blank">
+        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/uedcl.jpg">
+      </a>
+    </div>
+
+    <div class="logo">
+      <a title="Strathmore University"
+         href="https://www.strathmore.edu/"
+         target="_blank">
+        <img style="height: 4em; max-width: unset;" src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/strathmore.png">
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT-ENDS -->
+    </main>
+
+    <footer>
+      <div>
+        <img id="footer-wri-logo"
+             src="/images/wri-footer.png"
+             alt="World Resources Institute">
+
+        <div>
+          <p>
+            <strong>World Resources Institute</strong>
+            <br><br>
+            10 G St NE, Suite 800, Washington, DC 20002, USA
+            <br><br>
+            Phone: +1 (202) 729-7600 | Fax: +1 (202) 720-7610
+            <br><br>
+            <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>
+            <br><br><br>
+            <a href="/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/javascripts/gapps.js"></script>
+  </body>
+</html>

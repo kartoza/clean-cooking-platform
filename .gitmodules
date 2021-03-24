@@ -1,0 +1,6 @@
+[submodule "frontend/explorer"]
+	path = frontend/explorer
+	url = https://github.com/kartoza/global-electrification-platform-explorer.git
+[submodule "backend/data-service"]
+	path = backend/data-service
+	url = https://github.com/kartoza/global-electrification-platform-data-service.git

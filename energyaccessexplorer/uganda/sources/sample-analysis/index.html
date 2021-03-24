@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="/lib/cookie-notice.js"></script>
+
+    <link href="/stylesheets/style.css" rel="stylesheet" />
+    <link href="/stylesheets/banner.css" rel="stylesheet" />
+    <link href="/stylesheets/main.css" rel="stylesheet" />
+    <link href="/stylesheets/nav.css" rel="stylesheet" />
+    <link href="/stylesheets/partners-section.css" rel="stylesheet" />
+    <link href="/stylesheets/footer.css" rel="stylesheet" />
+
+    <title>Energy Access Explorer</title>
+  </head>
+
+  <body>
+    <nav>
+      <input id="toggle"
+             class="no-desktop"
+             type="checkbox">
+
+      <label for="toggle" class="no-desktop">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
+          <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+        </svg>
+      </label>
+
+      <a id="energy-access-link"
+         href="/">
+        Energy Access Explorer
+      </a>
+
+      <div id="navigation-links">
+        <a href="/tool/s"
+           class="toggleable">
+          Tool
+        </a>
+
+        <a href="/methodology"
+           class="toggleable">
+          Methodology
+        </a>
+
+        <a href="/about"
+           class="toggleable">
+          About
+        </a>
+
+        <a href="/user-stories"
+           class="toggleable">
+          User Stories
+        </a>
+
+        <!--
+        <a href="/faq"
+           class="toggleable">
+          FAQ
+        </a>
+        -->
+      </div>
+    </nav>
+
+    <script>
+      (function() {
+        const links = document.querySelectorAll('nav #navigation-links a');
+    	if (!links) return;
+
+        for (var l of links) {
+          if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
+            l.classList.add("active");
+        }
+      })();
+    </script>
+
+    <main>
+<!-- CONTENT-STARTS -->
+<style>
+  :target::before {
+    content: "";
+    display: block;
+    height: 120px;
+    margin: -80px 0 0;
+  }
+</style>
+
+<section class="banner"
+         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/25b2777d.jpg); background-position: 0 75%;">
+  <h1>Sample Analysis</h1>
+
+  <h3>
+    Analyzing data on Energy Access Explorer reveals a number of findings
+    important for energy and development gains.
+  </h3>
+</section>
+
+<section id="services">
+  <h2>Better Quality Services</h2>
+
+  <p>
+    Expanding clean energy can improve healthcare and education in East Africa.
+  </p>
+
+  <p>
+   East African countries face some of the world’s most significant development
+   hurdles—including poverty, high maternal and child death rates, and low rates
+   of literacy and education. Lack of a grid connection or unreliable power
+   supplies are underlying contributors.
+  </p>
+
+  <p>
+   Donors and development agencies need better and more granular data to ensure
+   that their agricultural, health and education projects meet their full
+   potential – which can’t happen when electricity access is not guaranteed.
+  </p>
+
+  <p>
+   By demonstrating where there is high viable demand for electricity to power
+   schools and health clinics, Energy Access Explorer enables donors and
+   development finance institutions to determine where funding for
+   electrification efforts can be most impactful.
+  </p>
+
+  <p>
+   Data on Energy Access Explorer reveals that clean energy can help provide
+   reliable power to vitally important facilities like schools and hospitals,
+   which often lack stable electricity or rely on expensive back-up power
+   systems like diesel generators.
+  </p>
+
+  <ul>
+   <li>
+     68% of the area housing Kenyan schools and healthcare facilities, and home
+     to 81% of Kenya’s population, has strong hydropower potential. 82% of the
+     area has strong solar power potential.
+   </li>
+
+   <li>
+     69% of the area where Tanzanian schools and healthcare facilities are
+     located – home to 71% of the nation’s population – has high potential for
+     hydropower development. 98% of the area housing schools and hospitals has
+     high solar potential.
+   </li>
+
+   <li>
+     60% of the area where Ugandan schools and healthcare facilities are located
+     (where 50% of the country’s population lives) too has high potential for
+     small-scale hydropower. 93% of the area housing schools and hospitals has
+     high solar potential.
+   </li>
+  </ul>
+</section>
+
+<section id="livelihood">
+  <h2>Better Livelihoods</h2>
+
+  <p>
+    Renewable energy potential is high for many East African households without
+    reliable electricity.
+  </p>
+
+  <p>
+    In Kenya, nearly 70% of the total land area has high solar potential and a
+    high percentage of people lacking reliable electricity. Approximately 4.3
+    million people could benefit from this solar energy potential.
+  </p>
+
+  <p>
+    In Tanzania, nearly 25% of the total land area has high potential for
+    renewable energy (solar, wind and small hydropower) and a high percentage of
+    people lacking electricity. Renewables could provide energy to approximately
+    2.9 million people in these areas, about 6% of the total population.
+  </p>
+
+  <p>
+    In Uganda, approximately 38% of total land area has high solar potential and
+    a high percentage of people without reliable power.  Approximately 6.8
+    million people could benefit from this solar energy potential.
+  </p>
+</section>
+
+<section id="productivity">
+  <h2>Higher Productivity</h2>
+
+  <p>
+    Renewable energy can boost East African economies and businesses.
+  </p>
+
+  <p>
+    Kenya’s economy is highly dependent on agriculture: 70% of the population
+    earns all or part of their income from the agriculture industry. 20% of
+    Kenya’s irrigated and rainfed croplands have high wind speeds. Wind turbines
+    could also help power irrigation pumps and allow rainfed farms to use
+    irrigation technologies, which can help farmers increase crop yields and
+    become more resilient to changing rainfall patterns like droughts.
+  </p>
+
+  <p>
+    Installing wind turbines in these areas to power agricultural production can
+    improve electricity access without displacing agriculture.
+  </p>
+</section>
+
+<!-- CONTENT-ENDS -->
+    </main>
+
+    <footer>
+      <div>
+        <img id="footer-wri-logo"
+             src="/images/wri-footer.png"
+             alt="World Resources Institute">
+
+        <div>
+          <p>
+            <strong>World Resources Institute</strong>
+            <br><br>
+            10 G St NE, Suite 800, Washington, DC 20002, USA
+            <br><br>
+            Phone: +1 (202) 729-7600 | Fax: +1 (202) 720-7610
+            <br><br>
+            <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>
+            <br><br><br>
+            <a href="/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/javascripts/gapps.js"></script>
+  </body>
+</html>

@@ -1,0 +1,256 @@
+:root {
+  --the-yellow: #e4a82e;
+  --the-blue: #1c4478;
+  --the-gray: #333333;
+  --the-blueish-white: #F4F6F7;
+  --the-light-gray: #e5e5e5;
+  --the-redish-gray: #231F20;
+  --the-white: #f8f8f8;
+  --the-darker-white: #f4f4f4;
+  --the-darkest-white: #f1f1f1;
+  --the-green: #00794C;
+  --the-light-green: #98BC40;
+  --the-color: #393f44;
+}
+
+@font-face {
+  font-display: block;
+  font-family: without-serif;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(/lib/fonts/lato.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-display: block;
+  font-family: without-serif;
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url(/lib/fonts/lato-bold.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-display: block;
+  font-family: without-serif;
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url(/lib/fonts/lato-light.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-display: block;
+  font-family: with-serif;
+  font-style: normal;
+  src: local(''), url();
+}
+
+h1, h2, h3 {
+  font-weight: normal;
+  color: var(--the-green);
+}
+
+a {
+  text-decoration: none;
+  color: var(--the-green);
+}
+
+p {
+  display: block;
+  margin: auto;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+}
+
+ul {
+  margin: auto;
+  margin-top: 1em;
+}
+
+svg {
+  box-sizing: content-box;
+}
+
+body {
+  height: calc(100% - 7em);
+  padding: 0;
+  margin: 0;
+  font-family: without-serif, sans-serif;
+  background-color: #f8f8f8;
+  color: var(--the-color);
+}
+
+dialog {
+  color: var(--the-color);
+}
+
+button {
+  border: 0;
+  border-radius: 2px;
+  background-color: white;
+  color: var(--the-green);
+}
+
+button a {
+  color: var(--the-green);
+  text-decoration: none;
+  display: block;
+  padding: 0.9em 1.3em;
+  font-size: 1.2em;
+}
+
+.pop-hover.selected,
+.pop-hover:hover {
+  box-shadow: 0 20px 30px 0 rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+  transition: all .16s ease-in-out;
+}
+
+.loading {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0, 0.6);
+  text-align: center;
+  font-size: 24px;
+}
+
+.loading p {
+  color: #f1f1f1;
+  font-size: medium;
+  text-shadow: 0px 1px 5px rgba(0,0,0,0.3);
+}
+
+.spinner {
+  display: inline-block;
+  border: 1px solid #333;
+  border-radius: 50%;
+  border-top: 1px solid #f1f1f1;
+  animation: spin 2s linear infinite;
+  width: 48px;
+  height: 48px;
+  margin: auto auto;
+  margin-top: 1em;
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.3);
+}
+
+#playground {
+  display: flex;
+  flex-direction: row;
+
+  width: auto;     /* will be changed by JS */
+  height: auto;    /* will be changed by JS */
+
+  padding: 0;
+  margin: auto;
+}
+
+#app-loading {
+  z-index: 1001;
+}
+
+#app-loading .spinner {
+  margin: 8em auto 3em;
+  border-top: 3px solid #f1f1f1;
+  width: 120px;
+  height: 120px;
+}
+
+#cookieNotice {
+  font-size: 1em !important;
+  font-family: without-serif !important;
+}
+
+#gapps-ask {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: 1.2em;
+  height: 4em;
+  line-height: 4em;
+  text-align: center;
+  width: 100%;
+  background-color: var(--the-redish-gray);
+  color: var(--the-white);
+  z-index: 10;
+}
+
+#gapps-ask button {
+  font-size: 1em;
+  padding: 0.5em 1em;
+}
+
+.small {
+  font-size: 0.7em;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#maparea {
+  width: 100%;
+}
+
+.monospace {
+  font-family: monospace;
+}
+
+/* desktop specifics */
+@media (min-width: 1080px) {
+  .no-desktop {
+    display: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar:vertical {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background: rgba(0,0,0,0.3);
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  }
+}
+
+/* mobile specifics */
+@media (max-width: 1080px) {
+  .no-mobile {
+    display: none !important;
+  }
+
+  main {
+    width: 100% !important;
+  }
+
+  #gapps-ask {
+    position: fixed;
+    font-size: auto;
+    height: unset;
+    line-height: 1.8em;
+    padding: 1em 0;
+  }
+
+  #gapps-ask #gapps-buttons {
+    display: block;
+    margin: 1em;
+  }
+}

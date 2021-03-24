@@ -1,0 +1,48 @@
+main {
+  margin: auto;
+  padding: 0;
+  background-color: white;
+  line-height: 1.625;
+}
+
+section {
+  padding: 2em 4em;
+  margin: auto;
+}
+
+section * {
+  max-width: 1080px;
+}
+
+section p,
+section ul,
+section figure {
+  max-width: 42em;
+}
+
+section h2 {
+  max-width: 30em;
+}
+
+section figure {
+  margin: auto;
+}
+
+section > div {
+  margin: auto;
+}
+
+section h2 {
+  margin: auto;
+  margin-top: 1em;
+}
+
+section:nth-of-type(odd) {
+  background-color: var(--the-blueish-white);
+}
+
+@media (max-width: 1080px) {
+  section {
+    padding: 1em;
+  }
+}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block body_class %}{% trans "custom-home" %}{% endblock %}
+
+{% block extra_head %}
+    <script>
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function delete_cookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+        function checkCookieBanner() {
+            var hide_banner = getCookie("hideBanner");
+            if (hide_banner) {
+                var css = '.banner {display: none;} .open-banner {display: block;}',
+                    head = document.head || document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+
+                head.appendChild(style);
+
+                style.type = 'text/css';
+                if (style.styleSheet) {
+                    // This is required for IE8 and below.
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(document.createTextNode(css));
+                }
+            }
+        }
+
+        checkCookieBanner();
+    </script>
+{% endblock %}
+
+{% block banner %}
+{% endblock %}
+
+{% block extra_mainbody %}
+    {% include "landing_page_background.html" %}
+    <div class="container content top-content">
+        <div>
+            <h2>{% trans "WELCOME TO THE" %}</h2>
+            <h1>{{ SDI_TITLE }}</h1>
+        </div>
+    </div>
+    <div class="map-wrapper content bot-content">
+        <div class="row">
+            {% for map in maps %}
+                <div class="col-lg-4 map-item">
+                    <a class="map-item-wrappper" href="{% url 'map_view_slug' slug=map.slug %}" data-toggle="tooltip" data-placement="left" title="{{ map.map.title }}">
+                        <div class="viewer-thumb">
+                            <img src="{{ map.map.thumbnail_url }}"/>
+                        </div>
+                        <div class="viewer-desc">
+                            <div class="viewer-title"><strong>{{ map.map.title|truncatechars:40 }}</strong></div>
+                            <div class="map-abstract">{{ map.map.abstract|truncatechars:110 }}</div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block extra_script %}
+    <script>
+        $('.btn-hide').click(function () {
+            $('.banner').slideUp();
+            setCookie('hideBanner', true, 7);
+            $('.open-banner').show();
+        });
+
+        function openBanner() {
+            delete_cookie('hideBanner');
+            $('.banner').slideDown();
+            $('.open-banner').hide();
+        }
+    </script>
+{% endblock extra_script %}

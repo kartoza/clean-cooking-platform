@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <meta name="HandheldFriendly" content="true">
+    <meta name="MobileOptimized" content="640">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <script src="../lib/browsers.js"></script>
+    <script src="./browser.js"></script>
+
+    <script src="/lib/cookie-notice.js"></script>
+
+    <script src="./libs.js?v=2021-02-21--22:39:06"></script>
+    <script src="./main.js?v=2021-02-21--22:39:06"></script>
+
+    <link href="/stylesheets/style.css" rel="stylesheet" />
+    <link href="/stylesheets/nav.css" rel="stylesheet" />
+    <link href="/stylesheets/thumbnails.css" rel="stylesheet" />
+
+    <link href="./main.css" rel="stylesheet" />
+
+    <title>Energy Access Explorer</title>
+  </head>
+
+  <body>
+	<nav>
+	  <input id="toggle"
+	         class="no-desktop"
+	         type="checkbox">
+	
+	  <label for="toggle" class="no-desktop">
+	    <svg style="width:24px;height:24px" viewBox="0 0 24 14">
+	      <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+	    </svg>
+	  </label>
+	
+	  <a id="energy-access-link"
+	     href="/">
+	    Energy Access Explorer
+	  </a>
+	
+	  <div id="navigation-links">
+	    <a href="/tool/s"
+	       class="toggleable">
+	      Tool
+	    </a>
+	
+	    <a href="/methodology"
+	       class="toggleable">
+	      Methodology
+	    </a>
+	
+	    <a href="/about"
+	       class="toggleable">
+	      About
+	    </a>
+	
+	    <a href="/user-stories"
+	       class="toggleable">
+	      User Stories
+	    </a>
+	
+	    <!--
+	    <a href="/faq"
+	       class="toggleable">
+	      FAQ
+	    </a>
+	    -->
+	  </div>
+	</nav>
+	
+	<script>
+	  (function() {
+	    const links = document.querySelectorAll('nav #navigation-links a');
+		if (!links) return;
+	
+	    for (var l of links) {
+	      if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
+	        l.classList.add("active");
+	    }
+	  })();
+	</script>
+
+    <div id="playground"></div>
+
+	<div id="app-loading" class="loading">
+	  <div class="spinner"></div>
+	  <p>Loading data...</p>
+	</div>
+  </body>
+
+  <script>
+    ea_modal = new modal("ea-modal", {});
+    ea_flash = new flash();
+    ea_api = new pgrest(ea_settings.database, ea_flash);
+
+	MOBILE = false;
+  </script>
+
+  <script type="module">
+	import {init} from './s.js';
+	init();
+  </script>
+
+  <script src="/javascripts/gapps.js"></script>
+</html>

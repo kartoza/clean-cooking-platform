@@ -1,0 +1,56 @@
+#contact-section {
+  background-color: var(--the-green);
+  max-width: unset;
+}
+
+#contact-section h2 {
+  color: var(--the-yellow);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#contact-form,
+#contact-email-note {
+  display: block;
+  width: 600px;
+}
+
+#contact-form {
+  margin: 3em auto;
+}
+
+#contact-form input,
+#contact-form textarea {
+  display:block;
+
+  margin: 1em 0;
+
+  width: 100%;
+
+  padding: 0.5em;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+
+  border: none;
+}
+
+#contact-email-note {
+  text-align: center;
+  color: var(--the-yellow);
+  /* border-top: solid 1px var(--the-yellow); */
+  padding: 1em;
+  margin: auto;
+}
+
+#contact-email-note a {
+  color: var(--the-yellow);
+}
+
+#contact-form [type="submit"] {
+  background-color: var(--the-yellow);
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  text-transform: uppercase;
+  font-weight: bold;
+}
