@@ -1,0 +1,173 @@
+{
+    "id": "9a2f4b58-ab75-4e8e-9695-d40da2a37ebd",
+    "category_id": "ec600b4f-d314-40b6-bfce-accdcd0b2260",
+    "geography_id": "5d137d39-e46d-4abc-bfc9-76254501fa09",
+    "name": null,
+    "name_long": null,
+    "unit": null,
+    "pack": "all",
+    "circle": "public",
+    "online": true,
+    "presets": null,
+    "configuration": {
+      "attributes_map": [
+        {
+          "target": "type",
+          "dataset": "amenity"
+        },
+        {
+          "target": "name",
+          "dataset": "name"
+        }
+      ],
+      "features_attr_map": [
+        {
+          "target": "type",
+          "dataset": "amenity"
+        },
+        {
+          "target": "name",
+          "dataset": "name"
+        }
+      ]
+    },
+    "category_overrides": null,
+    "metadata": {
+      "license": "Open Data Commons Open Database License",
+      "sources": "https://energydata.info/dataset/education-facilities",
+      "cautions": "Credibility of data relies on user input and validation. Not all points have been validated.",
+      "description": "School locations were collected from the OpenStreetMap (OSM) database in 2016 for all of Sub-Saharan Africa. Every amenity tagged with 'college', 'school', 'kindergarten', and 'university' are included.",
+      "content_date": "2016",
+      "learn_more_url": "https://energydata.info/dataset/education-facilities",
+      "spatial_resolution": null,
+      "suggested_citation": "OpenStreetMap, 2016. Amenity = 'school', 'college', 'university', 'kindergarten'. Accessed through Energy Access Explorer, [date]. www.energyaccessexplorer.org.",
+      "download_original_url": "https://energydata.info/dataset/education-facilities"
+    },
+    "created": "2020-01-01",
+    "created_by": "admin",
+    "updated": "2020-09-21T21:05:33.719094+02:00",
+    "updated_by": null,
+    "category": {
+      "id": "ec600b4f-d314-40b6-bfce-accdcd0b2260",
+      "name": "schools-2019",
+      "name_long": "Schools",
+      "unit": null,
+      "domain": {
+        "max": 250,
+        "min": 0
+      },
+      "domain_init": null,
+      "colorstops": null,
+      "raster": {
+        "init": {
+          "max": 250,
+          "min": 0
+        },
+        "scale": "linear",
+        "domain": {
+          "max": 250,
+          "min": 0
+        },
+        "factor": 1,
+        "intervals": null,
+        "precision": 0,
+        "color_stops": [
+          
+        ]
+      },
+      "vectors": {
+        "fill": "#008000",
+        "specs": null,
+        "width": 3,
+        "stroke": "#ffffff",
+        "opacity": 1,
+        "dasharray": "1",
+        "shape_type": "points",
+        "color_stops": [
+          
+        ],
+        "stroke-width": 1
+      },
+      "csv": null,
+      "analysis": {
+        "clamp": false,
+        "index": "demand",
+        "scale": "linear",
+        "weight": 2,
+        "indexes": [
+          {
+            "index": "demand",
+            "scale": "linear",
+            "invert": true
+          },
+          {
+            "index": "eai",
+            "scale": "linear",
+            "invert": true
+          },
+          {
+            "index": "ani",
+            "scale": "linear",
+            "invert": true
+          }
+        ],
+        "intervals": null
+      },
+      "timeline": null,
+      "controls": {
+        "path": [
+          "demand",
+          "productive-uses"
+        ],
+        "range": "double",
+        "weight": true,
+        "range_label": "proximity in km",
+        "range_steps": null
+      },
+      "metadata": {
+        "why": "The provision of electricity for educational facilities is considered a quick-win intervention to maximize the social and economic benefits of energy access."
+      },
+      "created": "2020-01-01",
+      "created_by": "admin",
+      "updated": "2020-11-25T15:56:19.234304+01:00",
+      "updated_by": null
+    },
+    "df": [
+      {
+        "dataset_id": "9a2f4b58-ab75-4e8e-9695-d40da2a37ebd",
+        "file_id": "28fcd896-0a3b-4f46-a82a-efb08cf4b0b8",
+        "func": "vectors",
+        "active": true,
+        "file": {
+          "id": "28fcd896-0a3b-4f46-a82a-efb08cf4b0b8",
+          "label": "Schools geojson",
+          "configuration": null,
+          "test": true,
+          "endpoint": "/UGA/schools.geojson",
+          "comment": "Schools geojson in Uganda",
+          "created": "2020-01-01",
+          "created_by": "admin",
+          "updated": "2021-02-21T23:35:29.151514+01:00",
+          "updated_by": null
+        }
+      },
+      {
+        "dataset_id": "9a2f4b58-ab75-4e8e-9695-d40da2a37ebd",
+        "file_id": "bf5e3eb6-e29c-4be1-ab43-73cf6cb51f42",
+        "func": "raster",
+        "active": true,
+        "file": {
+          "id": "bf5e3eb6-e29c-4be1-ab43-73cf6cb51f42",
+          "label": "Schools heatmap",
+          "configuration": null,
+          "test": true,
+          "endpoint": "/UGA/schools-distance.tif",
+          "comment": "Schools heatmap in Uganda",
+          "created": "2020-01-01",
+          "created_by": "admin",
+          "updated": "2021-02-21T23:35:29.151514+01:00",
+          "updated_by": null
+        }
+      }
+    ]
+  }
