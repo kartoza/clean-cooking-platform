@@ -3,6 +3,7 @@ from geonode.settings import *
 from .utils import absolute_path  # noqa
 
 INSTALLED_APPS += (
+    'django_json_widget',
     'custom',
 )
 
