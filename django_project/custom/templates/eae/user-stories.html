@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="/lib/cookie-notice.js"></script>
+
+    <link href="/static/eae/stylesheets/style.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/banner.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/main.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/nav.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/partners-section.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/footer.css" rel="stylesheet" />
+
+    <title>Energy Access Explorer</title>
+  </head>
+
+  <body>
+    <nav>
+      <input id="toggle"
+             class="no-desktop"
+             type="checkbox">
+
+      <label for="toggle" class="no-desktop">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
+          <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+        </svg>
+      </label>
+
+      <a id="energy-access-link"
+         href="/">
+        Energy Access Explorer
+      </a>
+
+       <div id="navigation-links">
+        <a href="/tool/"
+           class="toggleable">
+          Tool
+        </a>
+
+        <a href="/layers/"
+           class="toggleable">
+          Geonode
+        </a>
+
+        <a href="/methodology"
+           class="toggleable">
+          Methodology
+        </a>
+
+        <a href="/about-us"
+           class="toggleable">
+          About
+        </a>
+
+        <a href="/user-stories"
+           class="toggleable">
+          User Stories
+        </a>
+
+        <!--
+        <a href="/faq"
+           class="toggleable">
+          FAQ
+        </a>
+        -->
+      </div>
+    </nav>
+
+    <script>
+      (function() {
+        const links = document.querySelectorAll('nav #navigation-links a');
+    	if (!links) return;
+
+        for (var l of links) {
+          if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
+            l.classList.add("active");
+        }
+      })();
+    </script>
+
+    <main>
+<!-- CONTENT-STARTS -->
+<link href="/static/eae/stylesheets/user-stories.css" rel="stylesheet" />
+
+<style>
+  :target::before {
+    content: "";
+    display: block;
+    height: 120px;
+    margin: -80px 0 0;
+  }
+</style>
+
+<section class="banner"
+         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/4895f74319c95fd431f8a03af46c52fb.jpg);">
+  <h1>User Stories</h1>
+</section>
+
+<section id="announce">
+  <p>
+    Does your organization use Energy Access Explorer?
+  </p>
+
+  <p>
+    Submit your story by emailing us <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>
+  </p>
+</section>
+
+<section id="video">
+  <iframe width="760" height="405" src="https://www.youtube-nocookie.com/embed/eSlHjnmVRQA" frameborder="0" allow="encrypted-media" allowfullscreen=""></iframe>
+</section>
+
+<section>
+  <h2>Aaron Leopold</h2>
+  <h4>CEO Africa Mini Grid Developers Association (AMDA)</h4>
+
+  <blockquote>
+    <p>
+      If you want to carry out intelligent market based and techology appropriate
+      planning, Energy Access Explorer is what you should use.
+    </p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>David Kariuki</h2>
+  <h4>
+    Deputy Director, Energy Planning, Energy and Petroleum Regulatory Authority
+    of Kenya
+  </h4>
+
+  <blockquote>
+    <p>
+      Energy Access Explorer will be critical for facilitating planners to access
+      data on load centers, energy resource availability, infrastructure in a
+      timely manner.
+    </p>
+
+    <p>
+      This is a platform that will link the stakeholders that generate data with
+      the ones that use it. EAE is likely to become very critical when it comes to
+      energy planning as it will take into account the spatial dimension of energy
+      systems and will inform the other planning tools (demand forecasting, short
+      term optimization and long term expansion) that are currently being used in
+      Kenya.
+    </p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>Sitra Mulepo</h2>
+  <h4>Senior Engineer, Ministry of Health, Uganda</h4>
+
+  <blockquote>
+    <p>
+      Energy Access Explorer is a tool that can help the Ministry of Health assess
+      the best options for providing energy in healthcare facilities and make
+      related decisions. It provides important initial information before moving
+      towards the project planning and implementation phases.  And as such, it can
+      reduce the time-intensive data collection and analysis efforts to identify
+      the facilities and their needs. Once these are mapped out, there is no need
+      to visit all facilities (but for some verification) and we (MoH) can assess
+      the best way to provide energy either via solar systems or connecting to the
+      grid.
+    </p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>Joyce DeMucci</h2>
+  <h4>Deputy Team Lead, Africa Clean Energy Technical Facility</h4>
+
+  <blockquote>
+    <p>
+      We can use EAE and geospatial data to help local government officials figure
+      out how to get access in unserved communities.
+    </p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>Jonas Mwende</h2>
+  <h4>GIS and IT Officer, Rural Energy Agency, Tanzania</h4>
+
+  <blockquote>
+    <p>
+      Energy Access Explorer is crucial for rolling out projects for rural
+      electrification. At the Rural Energy Agency in Tanzania we are going to use
+      it in planning to realize the cost and the opportunities for expanding
+      energy access.  EAE will help REA move towards a more sophisticated way of
+      planning.
+    </p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>Richard Muhangi</h2>
+  <h4>GIS Lead, Rural Electrification Agency, Uganda</h4>
+
+  <blockquote>
+    <p>
+      With Energy Access Explorer, you don’t need a GIS software to overlay a
+      number of layers, such as solar potential, population density, network data
+      and carry out analysis. All you need is an Internet browser. Stakeholders in
+      the energy sector should make use of the platform to make informed decisions
+      in the sector.
+    </p>
+  </blockquote>
+</section>
+
+<section>
+  <h2>Alexander Komakech Akena</h2>
+  <h4>
+    East Africa Regional Coordinator, Rocky Mountain Institute / Chairman of
+    Uganda National Renewable Energy and Energy Efficiency Alliance (UNREEEA)
+  </h4>
+
+  <blockquote>
+    <p>
+      Energy Access Explorer provides a great opportunity for the private sector
+      to identify areas where they can expand their businesses.
+    </p>
+  </blockquote>
+</section>
+
+<!--
+ * <section>
+ *   <h2>Name Lastname</h2>
+ *   <h4>titles titles titles</h4>
+ *
+ *   <blockquote>
+ *     <p>
+ *     </p>
+ *
+ *     <p>
+ *     </p>
+ *   </blockquote>
+ * </section>
+  -->
+
+<!-- CONTENT-ENDS -->
+    </main>
+
+    <footer>
+      <div>
+        <img id="footer-wri-logo"
+             src="/static/eae/images/wri-footer.png"
+             alt="World Resources Institute">
+
+        <div>
+          <p>
+            <strong>World Resources Institute</strong>
+            <br><br>
+            10 G St NE, Suite 800, Washington, DC 20002, USA
+            <br><br>
+            Phone: +1 (202) 729-7600 | Fax: +1 (202) 720-7610
+            <br><br>
+            <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>
+            <br><br><br>
+            <a href="/privacy-policy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/javascripts/gapps.js"></script>
+  </body>
+</html>

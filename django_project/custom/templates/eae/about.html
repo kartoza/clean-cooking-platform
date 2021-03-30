@@ -1,5 +1,3 @@
-{% load i18n %}
-{% load staticfiles %}
 <!DOCTYPE html>
 
 <html>
@@ -8,12 +6,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="{% static "eae/stylesheets/style.css" %}" rel="stylesheet" />
-    <link href="{% static "eae/stylesheets/banner.css" %}" rel="stylesheet" />
-    <link href="{% static "eae/stylesheets/main.css" %}" rel="stylesheet" />
-    <link href="{% static "eae/stylesheets/nav.css" %}" rel="stylesheet" />
-    <link href="{% static "eae/stylesheets/partners-section.css" %}" rel="stylesheet" />
-    <link href="{% static "eae/stylesheets/footer.css" %}" rel="stylesheet" />
+    <script src="/lib/cookie-notice.js"></script>
+
+    <link href="/static/eae/stylesheets/style.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/banner.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/main.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/nav.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/partners-section.css" rel="stylesheet" />
+    <link href="/static/eae/stylesheets/footer.css" rel="stylesheet" />
 
     <title>Energy Access Explorer</title>
   </head>
@@ -35,7 +35,7 @@
         Energy Access Explorer
       </a>
 
-      <div id="navigation-links">
+       <div id="navigation-links">
         <a href="/tool/"
            class="toggleable">
           Tool
@@ -84,87 +84,60 @@
 
     <main>
 <!-- CONTENT-STARTS -->
-<link href="{% static "eae/stylesheets/index.css" %}" rel="stylesheet" />
-<link href="{% static "eae/stylesheets/thumbnails.css" %}" rel="stylesheet" />
-
 <section class="banner"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/4271331030_b70c27cea8_b.jpg);">
-  <h1>Energy Access Explorer</h1>
-
-  <h3>
-    Energy Access Explorer provides the data and tools necessary to
-    create a future where all people have access to affordable,
-    reliable and modern energy.
-  </h3>
-
-  <button class="pop-hover" style="font-size: 1em;"><a href="/tool">Explore Data</a></button>
+         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/51bee9f9903c0a2f51bea0e9415c88ad.jpg);">
+  <h1>About</h1>
 </section>
 
 <section>
-  <h2>Sample Analysis</h2>
+  <p>
+    Energy Access Explorer is an online, open-source, interactive platform that
+    uses mapping to visualize the state of energy access in unserved and
+    underserved areas. It analyzes credible and public data to make the
+    connection between the demand and supply of energy.  Individuals can create
+    custom analyses on Energy Access Explorer to identify and prioritize areas
+    where energy markets can be expanded.
+  </p>
 
-  <div class="thumbnails">
-    <div class="thumbnail thumbnail-med pop-hover"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/ce5fb292c6279dc7d9372bb1ddea107b.png);"
-         onclick="window.location = '/sample-analysis#services';">
-      <h3>Better Quality Services</h3>
+  <p>
+    Who are the primary audiences of Energy Access Explorer?
+  </p>
 
-      <p>Expanding clean energy can improve healthcare and education in East Africa.</p>
-    </div>
+  <ul>
+    <li><strong>Clean energy entrepreneurs</strong> can use the platform to
+      access demographic and socio-economic data, which indicate consumer
+      ability to pay for electricity. This information can help identify gaps in
+      market opportunities.
+      <a href="https://wri-public-data.s3.amazonaws.com/EnergyAccess/Documents/EAE%20-%20Clean%20Energy%20Entrepreneurs.pdf">Read more.</a>
+    </li>
 
-    <div class="thumbnail thumbnail-med pop-hover"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/90f1f98c41132a8a997c1f8523359693.png);"
-         onclick="window.location = '/sample-analysis#livelihood';">
-      <h3>Better Livelihoods</h3>
+    <li><strong>Electrification planning agencies</strong> can use the platform
+      to explore the potential for grid extension, off-grid systems and
+      renewables for energy access in their countries.
+      <a href="https://wri-public-data.s3.amazonaws.com/EnergyAccess/Documents/EAE%20-%20Energy%20Planners.pdf">Read more.</a>
+    </li>
 
-      <p>Renewable energy potential is high for many East African households without reliable electricity.</p>
-    </div>
+    <li><strong>Impact investors </strong>and donors can use the platform to
+      identify areas that need funding to meet development goals on energy
+      access, education and more.
+      <a href="https://wri-public-data.s3.amazonaws.com/EnergyAccess/Documents/EAE%20-%20Investors%20%26%20DFIs.pdf">Read more.</a>
+    </li>
+  </ul>
 
-    <div class="thumbnail thumbnail-med pop-hover"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/4271331728_f1486cc127_b.jpg);"
-         onclick="window.location = '/sample-analysis#productivity';">
-      <h3>Higher Productivity</h3>
+  <p>
+    World Resources Institute is committed to transparency and open data. The
+    data and methodology behind Energy Access Explorer are documented and
+    available for download. All the products, methodologies and datasets that
+    make up Energy Access Explorer are available for free use under the Creative
+    Commons CC BY 4.0 license.
+  </p>
 
-      <p>Renewable energy can boost East African economies and businesses.</p>
-    </div>
-  </div>
-</section>
-
-<section id="blogs-publications">
-  <h2>Relevant Blogs and Publications</h2>
-
-  <div class="thumbnails">
-    <div class="thumbnail thumbnail-small pop-hover"
-         onclick="window.open('https://www.wri.org/blog/2019/09/millions-east-africans-who-need-electricity-data-shows-renewable-energy-most-viable-affordable-solution', '_blank');"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/195d146676959545b5201969cec61842.jpg);">
-      <h3>Blog</h3>
-
-      <p>For the millions of East Africans who need electricity most, data shows
-      renewable energy is a viable and affordable solution</p>
-    </div>
-
-    <div class="thumbnail thumbnail-small pop-hover"
-         onclick="window.open('https://www.shineinvest.org/eae-wri/', '_blank');"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/4271332050_b6f636683b_b.jpg);">
-      <h3>Blog</h3>
-
-      <p>Energy Access Explorer - A data driven tool to ensure strategic clean energy access</p>
-    </div>
-
-    <div class="thumbnail thumbnail-huge pop-hover"
-         onclick="window.open('https://www.wri.org/publication/energy-access-explorer-data-and-methods', '_blank');"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/9271377331_50f71581fd_b.jpg);">
-      <div>
-        <h3>Technical note</h3>
-
-        <br><br>
-
-        <p>
-          Energy Access Explorer: Data and Methods
-        </p>
-      </div>
-    </div>
-  </div>
+  <p>
+    Energy Access Explorer is a research initiative led by World Resources
+    Institute. Partners and local stakeholders contribute to the development and
+    update of the platform.  To learn more about Energy Access Explorer or
+    provide feedback, contact our team at <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>.
+  </p>
 </section>
 
 <section id="partners">
@@ -371,7 +344,7 @@
     <footer>
       <div>
         <img id="footer-wri-logo"
-             src="{% static "eae/images/wri-footer.png" %}"
+             src="/static/eae/images/wri-footer.png"
              alt="World Resources Institute">
 
         <div>
@@ -390,7 +363,6 @@
       </div>
     </footer>
 
-    <script src="{% static "eae/javascripts/cookie.notice.min.js" %}"></script>
-    <script src="{% static "eae/javascripts/gapps.js" %}"></script>
+    <script src="/javascripts/gapps.js"></script>
   </body>
 </html>
