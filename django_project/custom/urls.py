@@ -9,6 +9,8 @@ urlpatterns = [
     url(r'^$',
         view=HomeView.as_view(),
         name='home'),
+    url(r'^api/',
+        include('custom.api_urls')),
     url(r'^tool/$',
         view=ToolView.as_view(),
         name='tool'),

@@ -1,8 +1,8 @@
 window.ea_settings = {
-  "database": "http://localhost:6789",
-  "storage": "http://localhost:6789/files",
-  "mapbox_token": "",
-  "mapbox_theme": ""
+  "database": "/",
+  "storage": "/",
+  "mapbox_token": "pk.eyJ1IjoicmVzb3VyY2V3YXRjaCIsImEiOiJjam54YzhjemcxemNzM3Bta3FkNXk1Z2E1In0.RqblpgU2zkMIsMCP8QPdlQ",
+  "mapbox_theme": "mapbox/basic-v9"
 }
 /* eslint no-unused-vars: "off" */
 

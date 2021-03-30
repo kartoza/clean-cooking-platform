@@ -46,6 +46,9 @@ x-common-django:
     - SESSION_EXPIRED_CONTROL_ENABLED=False
     - MONITORING_ENABLED=False
     - PYTHONPATH=/home/web/django_project:/spcgeonode
+    # cca
+    - MAPBOX_TOKEN=${MAPBOX_TOKEN}
+    - MAPBOX_THEME=${MAPBOX_THEME}
   volumes:
     - ../django_project:/home/web/django_project
     - ./volumes/static:/home/web/static:rw
@@ -132,17 +135,7 @@ services:
   # Celery worker that executes celery tasks created by Django.
   celery:
     <<: *default-common-django
-    command: 'celery worker --app=geonode.celery_app:app -l debug'
-  # Celery beat that triggers scheduled tasks
-
-  celerybeat:
-    <<: *default-common-django
-    command: 'celery beat --app=geonode.celery_app:app --pidfile="/celerybeat.pid" -l debug'
-
-  # Celery camera that monitors celery tasks and populate the djcelery django admin interface
-  celerycam:
-    <<: *default-common-django
-    command: 'celery events --app=geonode.celery_app:app --pidfile="/celeryev.pid" --camera=django_celery_monitor.camera.Camera --frequency=2.0 -l debug'
+    command: 'celery -A geonode.celery_app:app worker -B -E --statedb=worker.state -s celerybeat-schedule --loglevel=DEBUG --concurrency=10 -n worker1@%h'
 
   # Gets and installs letsencrypt certificates
   letsencrypt:

@@ -81,3 +81,5 @@ LOCALE_PATHS += (
 GEP_TITLE = os.getenv('GEP_TITLE', 'Global Electrification Programme')
 GEP_SHORT_TITLE = os.getenv('GEP_SHORT_TITLE', 'BEP')
 SDI_TITLE = os.getenv('SDI_TITLE', 'Global Electrification Platform SDI')
+MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN', '')
+MAPBOX_THEME = os.getenv('MAPBOX_THEME', '')

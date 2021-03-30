@@ -8,6 +8,10 @@
     <meta name="HandheldFriendly" content="true">
     <meta name="MobileOptimized" content="640">
     <meta name="apple-mobile-web-app-capable" content="yes" />
+  <script>
+      const MAPBOX_TOKEN = "{{ MAPBOX_TOKEN }}";
+      const MAPBOX_THEME = "{{ MAPBOX_THEME }}";
+  </script>
 
     <script src="{% static "eae/lib/browsers.js" %}"></script>
     <script src="{% static "eae/tool/browser.js" %}"></script>
@@ -20,6 +24,7 @@
 
     <link href="{% static "eae/lib/mapbox-gl.css" %}" rel="stylesheet" />
     <link href="{% static "eae/tool/main.css" %}" rel="stylesheet" />
+
 
     <title>Energy Access Explorer</title>
   </head>

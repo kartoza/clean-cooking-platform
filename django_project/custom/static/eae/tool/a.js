@@ -6,6 +6,8 @@ import * as views from './views.js';
 
 import * as indexes from './indexes.js';
 
+import api_get from "./api.js";
+
 import {
 	init as timeline_init,
 	lines_draw as timeline_lines_draw,
@@ -234,9 +236,9 @@ function mobile() {
 
 export async function init() {
 	const url = new URL(location);
-	const id = url.searchParams.get('id');
+	const id = 1;
 
-	GEOGRAPHY = await ea_api.get("geographies", { "id": `eq.${id}` }, { one: true });
+	GEOGRAPHY = await api_get(`/api/geography/?name=nepal`);
 	GEOGRAPHY.timeline = maybe(GEOGRAPHY, 'configuration', 'timeline');
 	GEOGRAPHY.timeline_dates = maybe(GEOGRAPHY, 'configuration', 'timeline_dates');
 
@@ -294,44 +296,20 @@ async function dsinit(id, inputs, pack, callback) {
 	let select = ["*", "category:categories(*)", "df:_datasets_files(*,file:files(*))"];
 
 	let bounds;
-	let boundaries_id;
 
-	await ea_api.get("geography_boundaries", { "geography_id": `eq.${id}` }, { one: true })
-		.catch(_ => {
-			const m = `
-Failed to get the geography's 'boundaries' dataset.
-This is fatal. Thanks for all the fish.`;
+	const datasetBoundaries = await api_get(`/api/dataset/?name=boundaries&geography=${id}`)
+	let ds = new DS(datasetBoundaries, false);
+	await ds.load('csv');
+	await ds.load('vectors');
+	await ds.load('raster');
+	if (!(bounds = ds.vectors.bounds)) throw `'boundaries' dataset has no vectors.bounds`;
+	const c = ds.config;
+	if (c.column_name) {
+		GEOGRAPHY.boundaries = {};
 
-			ea_super_error("Geography error", m);
-
-			throw Error("No 'boundaries' dataset. Ciao.");
-		})
-		.then(r => { console.log(r); boundaries_id = r.id; return true });
-
-	const bp = {
-		"id": `eq.${boundaries_id}`,
-		"select": select,
-		"df.active": "eq.true"
-	};
-
-	await ea_api.get("datasets", bp, { one: true })
-		.then(async e => {
-			let ds = new DS(e, false);
-
-			await ds.load('csv');
-			await ds.load('vectors');
-			await ds.load('raster');
-
-			if (!(bounds = ds.vectors.bounds)) throw `'boundaries' dataset has no vectors.bounds`;
-
-			const c = ds.config;
-			if (c.column_name) {
-				GEOGRAPHY.boundaries = {};
-
-				for (let r of ds.csv.data)
-					GEOGRAPHY.boundaries[r[c.column]] = r[c.column_name];
-			}
-		});
+		for (let r of ds.csv.data)
+			GEOGRAPHY.boundaries[r[c.column]] = r[c.column_name];
+	}
 
 	pack = maybe(pack, 'length') ? pack : 'all';
 
@@ -343,9 +321,11 @@ This is fatal. Thanks for all the fish.`;
 		"df.active": "eq.true"
 	};
 
-	await ea_api.get("datasets", p)
-		.then(r => r.filter(d => d.category.name !== 'boundaries'))
-		.then(r => r.map(e => new DS(e, inputs.includes(e.category.name))));
+	// let datasets = await api_get(`/api/datasets/?geography=${id}`)
+	// datasets = datasets.map(e => new DS(e, inputs.includes(e.category.name)))
+
+	await api_get(`/api/datasets/?geography=${id}`)
+		.then(r => { console.log(r); return r.map(e => new DS(e, inputs.includes(e.category.name))) });
 
 	U.params.inputs = [...new Set(DS.array.map(e => e.id))];
 
