@@ -1,5 +1,6 @@
 version: '3.4'
-
+volumes:
+  eae-database:
 services:
   eae:
     build: ../energyaccessexplorer
@@ -8,3 +9,17 @@ services:
       - "9876:9876"
     volumes:
       - ../energyaccessexplorer/uganda:/uganda
+
+  eaedb:
+    build:
+      context: ../energyaccessexplorer/database-docker
+    environment:
+      ALLOW_IP_RANGE: 0.0.0.0/0
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      EAE_DB_USER: ${EAE_DB_USER:-docker}
+      EAE_DB_PASS: ${EAE_DB_PASS:-docker}
+      POSTGRES_DBNAME: ${EAE_DBNAME:-eae}
+    volumes:
+      - eae-database:/var/lib/postgresql/data/
+      - ../energyaccessexplorer/database-docker/database:/database

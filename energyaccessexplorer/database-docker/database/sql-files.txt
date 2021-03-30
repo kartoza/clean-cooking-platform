@@ -1,0 +1,8 @@
+db
+categories
+files
+geographies
+datasets
+_datasets_files
+circles
+tablegrants

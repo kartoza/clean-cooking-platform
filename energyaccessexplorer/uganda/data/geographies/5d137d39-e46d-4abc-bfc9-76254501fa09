@@ -1,1 +1,45 @@
-{"id":"5d137d39-e46d-4abc-bfc9-76254501fa09","name":"Uganda","adm":0,"cca3":"UGA","circle":"public","pack":"all","parent_id":null,"online":true,"boundary_file":null,"configuration":{"flag": {"x": -4, "y": 0, "width": 24, "height": 16, "aspect-ratio": "none"}, "timeline": false, "sort_branches": ["census", "demand", "supply", "other"], "sort_datasets": ["ghi", "windspeed", "mines", "schools"], "boundaries_name": "Subcounty", "sort_subbranches": ["demographics", "resources", "energy-consumption", "environment", "finance"]},"created":"2020-01-01","created_by":"admin","updated":"2020-09-22T17:13:48.35691+02:00","updated_by":null}
+{
+  "id": "5d137d39-e46d-4abc-bfc9-76254501fa09",
+  "name": "Nepal",
+  "adm": 0,
+  "cca3": "NPL",
+  "circle": "public",
+  "pack": "all",
+  "parent_id": null,
+  "online": true,
+  "boundary_file": null,
+  "configuration": {
+    "flag": {
+      "x": -4,
+      "y": 0,
+      "width": 24,
+      "height": 16,
+      "aspect-ratio": "none"
+    },
+    "timeline": false,
+    "sort_branches": [
+      "census",
+      "demand",
+      "supply",
+      "other"
+    ],
+    "sort_datasets": [
+      "ghi",
+      "windspeed",
+      "mines",
+      "schools"
+    ],
+    "boundaries_name": "Subcounty",
+    "sort_subbranches": [
+      "demographics",
+      "resources",
+      "energy-consumption",
+      "environment",
+      "finance"
+    ]
+  },
+  "created": "2020-01-01",
+  "created_by": "admin",
+  "updated": "2020-09-22T17:13:48.35691+02:00",
+  "updated_by": null
+}

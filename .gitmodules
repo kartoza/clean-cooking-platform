@@ -4,3 +4,6 @@
 [submodule "backend/data-service"]
 	path = backend/data-service
 	url = https://github.com/kartoza/global-electrification-platform-data-service.git
+[submodule "energyaccessexplorer/admin"]
+	path = energyaccessexplorer/admin
+	url = git@github.com:energyaccessexplorer/admin.git

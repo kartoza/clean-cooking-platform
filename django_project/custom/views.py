@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from geonode.maps.views import map_view
 from .models.map_slug import MapSlugMapping
 
@@ -7,8 +7,13 @@ from .models.map_slug import MapSlugMapping
 class HomeView(ListView):
     model = MapSlugMapping
     paginate_by = 100
-    template_name = 'landing_page.html'
+    template_name = 'eae/index.html'
     context_object_name = 'maps'
+
+
+class ToolView(TemplateView):
+    template_name = 'eae/tool.html'
+    context_object_name = 'tool'
 
 
 def map_view_with_slug(request, slug):

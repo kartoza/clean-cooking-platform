@@ -4,22 +4,6 @@ from .utils import absolute_path  # noqa
 
 INSTALLED_APPS += (
     'custom',
-
-    # Wagtail
-    'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
-    'wagtail.embeds',
-    'wagtail.sites',
-    'wagtail.users',
-    'wagtail.snippets',
-    'wagtail.documents',
-    'wagtail.images',
-    'wagtail.search',
-    'wagtail.admin',
-    'wagtail.core',
-    'wagtail.contrib.modeladmin',
-    'wagtailmenus',
-    'modelcluster',
 )
 
 MIDDLEWARE = (
@@ -39,10 +23,6 @@ MIDDLEWARE = (
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'geonode.base.middleware.MaintenanceMiddleware',
     'geonode.base.middleware.ReadOnlyMiddleware',  # a Middleware enabling Read Only mode of Geonode
-
-    # Wagtail moddleware
-    'wagtail.core.middleware.SiteMiddleware',
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -69,10 +49,6 @@ TEMPLATES = [
 
                 # custom context processor
                 'custom.context_processors.configs',
-
-                # WAGTAIL
-                'wagtail.contrib.settings.context_processors.settings',
-                'wagtailmenus.context_processors.wagtailmenus',
             ],
             'debug': DEBUG,
         },

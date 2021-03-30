@@ -1,0 +1,22 @@
+.columns-container {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: top;
+  justify-content: center;
+  align-content: center;
+}
+
+.column {
+  width: 500px;
+  margin: 2em;
+}
+
+@media (max-width: 1080px) {
+  .columns-container {
+    flex-flow: column;
+  }
+
+  .column {
+    width: unset;
+  }
+}

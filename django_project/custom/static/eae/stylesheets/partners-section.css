@@ -1,0 +1,52 @@
+#partners {
+  position: relative;
+  background-color: white;
+}
+
+#partners-title {
+  text-transform: uppercase;
+  font-weight: bold;
+
+  background-color: white;
+  font-size: 0.8em;
+
+  position: absolute;
+  padding: 1em;
+
+  top: 1em;
+  left: calc(50% - 6em);
+
+  height: auto !important;
+}
+
+#partners-container {
+  display: flex;
+  flex-flow: row wrap;
+
+  border-top: 1px solid rgba(26,28,34,.1);
+  margin: auto;
+}
+
+#partners-container .logo {
+  flex: 1;
+  height: 5em;
+  line-height: 6em;
+  display: block;
+  text-align: center;
+  margin: 20px;
+}
+
+#partners-container .logo img {
+  max-height: 5em;
+  max-width: 7.5em;
+}
+
+@media (max-width: 1080px) {
+  #partners-container .logo img {
+    max-width: 100px;
+  }
+
+  #partners-title {
+    left: calc(50% - 3em);
+  }
+}

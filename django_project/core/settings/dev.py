@@ -1,5 +1,7 @@
 from .base import *  # noqa
 
+ALLOWED_HOSTS = ["*"]
+
 DATABASES = {
     'default': {
         'NAME': 'geonode',

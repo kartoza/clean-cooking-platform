@@ -1,0 +1,103 @@
+.thumbnails {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+
+  margin: auto;
+
+  color: white;
+}
+
+.thumbnail {
+  margin: 1em;
+  color: var(--the-black);
+  position: relative;
+  padding: 2em;
+  box-sizing: border-box;
+
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  flex-flow: column nowrap;
+
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+.thumbnail * {
+  position: relative;
+}
+
+.thumbnail,
+.thumbnail:before {
+   border-radius: 6px;
+}
+
+.thumbnail:before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: linear-gradient(180deg,hsla(0,0%,9%,.5),hsla(0,0%,9%,.4) 50%);
+}
+
+.thumbnail p {
+  color: var(--the-white);
+}
+
+.thumbnail p > a {
+  color: var(--the-yellow);
+}
+
+.thumbnail h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--the-white);
+  margin: 0;
+}
+
+.thumbnail-small {
+  width: 17em;
+  height: 17em;
+}
+
+.thumbnail-med {
+  width: 20.625em;
+  height: 20.625em;
+}
+
+.thumbnail-big {
+  width: 24em;
+  height: 24em;
+}
+
+.thumbnail-huge {
+  width: 36em;
+  height: 36em;
+}
+
+@media (max-width: 1080px) {
+  .thumbnails {
+    flex-flow: column;
+  }
+
+  .thumbnail {
+    display: block;
+  }
+
+  .thumbnail,
+  .thumbnail-small,
+  .thumbnail-med,
+  .thumbnail-big,
+  .thumbnail-huge {
+    width: 100%;
+    height: auto;
+  }
+}

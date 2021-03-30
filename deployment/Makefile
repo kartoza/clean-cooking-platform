@@ -1,18 +1,13 @@
-PROJECT_ID := gep-somalia
+PROJECT_ID := cca
 
 SHELL := /bin/bash
-COMPOSE := -f docker-compose-gep.yml -f docker-compose-eae.yml -f docker-compose.yml
 
-build-up:
+build:
 	@echo
 	@echo "------------------------------------------------------------------"
 	@echo "Building in production mode"
 	@echo "------------------------------------------------------------------"
-	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up -d db
-	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up -d frontend
-	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up -d backend
-	@make prepare-dev-db
-	@make up
+	@docker-compose -p $(PROJECT_ID) build
 
 up:
 	@echo
@@ -20,27 +15,6 @@ up:
 	@echo "Building in production mode"
 	@echo "------------------------------------------------------------------"
 	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up -d
-
-frontend-up:
-	@echo
-	@echo "------------------------------------------------------------------"
-	@echo "up frontend"
-	@echo "------------------------------------------------------------------"
-	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up -d frontend
-
-frontend-build:
-	@echo
-	@echo "------------------------------------------------------------------"
-	@echo "prepare database"
-	@echo "------------------------------------------------------------------"
-	@docker exec -it $(PROJECT_ID)_frontend_1 yarn build
-
-backend-up:
-	@echo
-	@echo "------------------------------------------------------------------"
-	@echo "up frontend"
-	@echo "------------------------------------------------------------------"
-	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up -d backend
 
 dev-up:
 	@echo
@@ -55,13 +29,6 @@ geonode-up:
 	@echo "Building in production mode"
 	@echo "------------------------------------------------------------------"
 	@cd geonode/scripts/spcgeonode; docker-compose up --build -d django geoserver postgres nginx
-
-prepare-dev-db:
-	@echo
-	@echo "------------------------------------------------------------------"
-	@echo "prepare database"
-	@echo "------------------------------------------------------------------"
-	@docker exec -it $(PROJECT_ID)_backend_1 npm run prepare-dev-db
 
 kill:
 	@echo
@@ -82,5 +49,5 @@ rm-volumes:
 	@echo "------------------------------------------------------------------"
 	@echo "Removing all volumes!!!! "
 	@echo "------------------------------------------------------------------"
-	@docker volume rm $(PROJECT_ID)_certificates $(PROJECT_ID)_database $(PROJECT_ID)_geodatadir $(PROJECT_ID)_pgdumps $(PROJECT_ID)_rabbitmq $(PROJECT_ID)_gep-database
+	@docker volume rm $(PROJECT_ID)_certificates $(PROJECT_ID)_database $(PROJECT_ID)_geodatadir $(PROJECT_ID)_pgdumps $(PROJECT_ID)_rabbitmq
 	@docker volume rm $(PROJECT_ID)_osm-postgis-data $(PROJECT_ID)_import_queue $(PROJECT_ID)_import_done $(PROJECT_ID)_cache
