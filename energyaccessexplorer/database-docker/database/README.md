@@ -1,4 +1,4 @@
-# Energy Access Explorer Database
+# Clean Cooking Explorer Database
 
 This is the SQL (PostgreSQL) code for the platform's database.
 

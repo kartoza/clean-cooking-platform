@@ -204,7 +204,7 @@ export function modal() {
 	}
 
 	ea_modal.set({
-		header: "Energy Access Explorer Indexes",
+		header: "Clean Cooking Explorer Indexes",
 		content: c,
 		footer: elem(`
 <a style="text-align: right; display: block;" href="https://www.wri.org/publication/energy-access-explorer-data-and-methods">
