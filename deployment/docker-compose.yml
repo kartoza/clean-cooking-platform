@@ -175,6 +175,7 @@ services:
   # django application for development
   dev:
     <<: *default-common-django
+    entrypoint: []
     build:
       context: ./docker/
       dockerfile: Dockerfile-dev
@@ -182,7 +183,7 @@ services:
       # for django test server
       - "5002:8080"
       # for ssh
-      - "5003:22"
+      - "5004:22"
 
 volumes:
   database:

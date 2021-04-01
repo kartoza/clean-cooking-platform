@@ -24,6 +24,10 @@ urlpatterns = [
     url(r'^user-stories/$',
         view=TemplateView.as_view(template_name='eae/user-stories.html'),
         name='tool'),
+
+    url(r'^sample-analysis/$',
+        view=TemplateView.as_view(template_name='eae/sample-analysis.html'),
+        name='tool'),
     url(r'^view/(?P<slug>[^/]+)$',
         view=map_view_with_slug,
         name='map_view_slug'),

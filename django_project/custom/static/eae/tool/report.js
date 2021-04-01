@@ -62,16 +62,16 @@ export function pdf() {
 		doc.setTextColor("#00794C");
 		doc.setFontSize(16);
 
-		doc.text("Energy Access Explorer", hhalf + 80, c);
+		doc.text("Clean Cooking Explorer", hhalf + 80, c);
 	};
 
 	function add_about() {
 		add_title("About");
 
 		const about = `
-Energy Access Explorer is a research initiative led by World Resources Institute.
+Clean Cooking Explorer is a research initiative led by World Resources Institute.
 Partners and local stakeholders contribute to the development and update of
-the platform. To learn more about Energy Access Explorer or provide feedback,
+the platform. To learn more about Clean Cooking Explorer or provide feedback,
 contact our team at`;
 
 		doc.text(about, lpad, c);
