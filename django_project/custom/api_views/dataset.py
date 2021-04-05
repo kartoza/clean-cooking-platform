@@ -1,6 +1,5 @@
 # coding=utf-8
-import json
-from django.http.response import HttpResponse, Http404
+from django.http.response import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from custom.models.dataset import Dataset
@@ -12,9 +11,11 @@ class DatasetList(APIView):
     def get(self, request, *args):
         geography_id = self.request.GET.get('geography', None)
         datasets = Dataset.objects.filter(
-            geography_id=geography_id
+            geography_id=geography_id,
+            online=True
         ).exclude(
-            category__name__iexact='boundaries'
+            category__name__iexact='boundaries',
+            datasetfile__active=False
         )
         return Response(
             DatasetSerializer(datasets, many=True).data

@@ -711,7 +711,7 @@ function options() {
 };
 
 export function init() {
-	_selectlist();
+	// _selectlist();
 
 	const tab_all = ce('div', "all", { id: 'controls-tab-all', class: 'controls-branch-tab up-title' });
 
