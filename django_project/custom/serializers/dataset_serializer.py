@@ -14,10 +14,14 @@ class DatasetFileSerializer(serializers.ModelSerializer):
     file = serializers.SerializerMethodField()
 
     def get_file(self, obj):
+        geonode_layer = None
+        if obj.use_geonode_layer and obj.geonode_layer:
+            geonode_layer = obj.geonode_layer
         return {
             'id': obj.id,
             'endpoint': obj.endpoint.url,
             'configuration': obj.configuration,
+            'geonode_layer': geonode_layer.name if geonode_layer else '-',
             'test': obj.test,
             'comment': obj.comment,
             'created': obj.created_at,

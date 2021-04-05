@@ -313,17 +313,6 @@ async function dsinit(id, inputs, pack, callback) {
 
 	pack = maybe(pack, 'length') ? pack : 'all';
 
-	const p = {
-		"geography_id": `eq.${id}`,
-		"select": select,
-		"pack": `eq.${pack}`,
-		"online": "eq.true",
-		"df.active": "eq.true"
-	};
-
-	// let datasets = await api_get(`/api/datasets/?geography=${id}`)
-	// datasets = datasets.map(e => new DS(e, inputs.includes(e.category.name)))
-
 	await api_get(`/api/datasets/?geography=${id}`)
 		.then(r => { console.log(r); return r.map(e => new DS(e, inputs.includes(e.category.name))) });
 
