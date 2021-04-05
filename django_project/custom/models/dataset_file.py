@@ -4,6 +4,7 @@
 from django.contrib.gis.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
+from geonode.layers.models import Layer
 
 CSV = 'csv'
 VECTORS = 'vectors'
@@ -25,8 +26,21 @@ class DatasetFile(models.Model):
         on_delete=models.CASCADE
     )
 
+    use_geonode_layer = models.BooleanField(
+        default=False
+    )
+
     endpoint = models.FileField(
         upload_to='datasets/',
+        null=True,
+        blank=True
+    )
+
+    geonode_layer = models.ForeignKey(
+        Layer,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
     )
 
     label = models.CharField(

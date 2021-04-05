@@ -31,6 +31,8 @@ class DatasetFileInline(admin.StackedInline):
         fields.JSONField: {'widget': JSONEditorWidget},
     }
 
+    class Media:
+        js = ('/static/admin/js/show_geonode_layer.js', )
 
 class DatasetAdmin(admin.ModelAdmin):
     list_display = ('name', 'name_long', 'category', 'geography', 'created_at', 'updated', 'get_total_files')
