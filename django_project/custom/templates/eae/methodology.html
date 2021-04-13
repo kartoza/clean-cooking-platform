@@ -1,161 +1,71 @@
-<!DOCTYPE html>
+{% extends 'eae_base.html' %}
+{% load staticfiles %}
 
-<html>
-  <head>
-    <meta charset="utf-8">
+{% block content %}
+    <!-- CONTENT-STARTS -->
+    <link href="/static/eae/stylesheets/methodology.css" rel="stylesheet"/>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <section class="banner"
+             style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/e2fbd60c4493fc5d9b55376c8282c092.jpg);">
+        <h1>Methodology</h1>
+    </section>
 
-    <script src="/lib/cookie-notice.js"></script>
+    <section>
+        <p>
+            Clean Cooking Explorer is an online, open-source, interactive
+            platform that
+            synthesizes and analyzes more than 20 geographic data sets on both
+            energy
+            supply and demand. It is a multi-criteria analysis tool that uses
+            location-specific resource availability and infrastructure data to
+            represent
+            energy supply. It also incorporates demographic data and data on
+            social and
+            productive uses to visualize demand for energy services. Together,
+            these
+            supply and demand indicators enable more comprehensive energy
+            planning. Spatial analysis tools, including multi-criteria
+            analysis,
+            overlays, filters and buffer zones, help users identify and
+            prioritize areas
+            where energy access can be expanded.
+        </p>
 
-    <link href="/static/eae/stylesheets/style.css" rel="stylesheet" />
-    <link href="/static/eae/stylesheets/banner.css" rel="stylesheet" />
-    <link href="/static/eae/stylesheets/main.css" rel="stylesheet" />
-    <link href="/static/eae/stylesheets/nav.css" rel="stylesheet" />
-    <link href="/static/eae/stylesheets/partners-section.css" rel="stylesheet" />
-    <link href="/static/eae/stylesheets/footer.css" rel="stylesheet" />
+        <p>
+            The tool incorporates remote sensing data as well as data from
+            global,
+            national, sub-national and census databases that are either
+            publicly
+            available or provided by international partners and local
+            stakeholders. It
+            can host data available in various resolutions, scales and formats
+            allowing
+            for better or new datasets to be incorporated once available. The
+            selection
+            of data is based on a literature review and a survey WRI conducts
+            on the
+            importance of certain datasets in geospatial energy access
+            planning. The
+            list of essential data is reviewed by local stakeholders to ensure
+            the
+            platform is relevant and applicable in the local context.
+        </p>
 
-    <title>Clean Cooking Explorer</title>
-  </head>
+        <p>
+            <a href="https://www.wri.org/publication/energy-access-explorer-data-and-methods">
+                See technical note for more detailed methodology
+            </a>
+        </p>
 
-  <body>
-    <nav>
-      <input id="toggle"
-             class="no-desktop"
-             type="checkbox">
+        <br>
 
-      <label for="toggle" class="no-desktop">
-        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
-          <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
-        </svg>
-      </label>
+        <figure style="flex: unset; width: 100%;">
+            <img src="/static/eae/images/eae-framework.png"
+                 style="width: 100%;">
+            <figcaption>Methodological Flowchart of Clean Cooking Explorer
+            </figcaption>
+        </figure>
+    </section>
 
-      <a id="energy-access-link"
-         href="/">
-        Clean Cooking Explorer
-      </a>
-
-      <div id="navigation-links">
-        <a href="/tool/"
-           class="toggleable">
-          Tool
-        </a>
-
-        <a href="/layers/"
-           class="toggleable">
-          Geonode
-        </a>
-
-        <a href="/methodology"
-           class="toggleable">
-          Methodology
-        </a>
-
-        <a href="/about-us"
-           class="toggleable">
-          About
-        </a>
-
-        <a href="/user-stories"
-           class="toggleable">
-          User Stories
-        </a>
-
-        <!--
-        <a href="/faq"
-           class="toggleable">
-          FAQ
-        </a>
-        -->
-      </div>
-    </nav>
-
-    <script>
-      (function() {
-        const links = document.querySelectorAll('nav #navigation-links a');
-    	if (!links) return;
-
-        for (var l of links) {
-          if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
-            l.classList.add("active");
-        }
-      })();
-    </script>
-
-    <main>
-<!-- CONTENT-STARTS -->
-<link href="/static/eae/stylesheets/methodology.css" rel="stylesheet" />
-
-<section class="banner"
-         style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/e2fbd60c4493fc5d9b55376c8282c092.jpg);">
-  <h1>Methodology</h1>
-</section>
-
-<section>
-  <p>
-    Clean Cooking Explorer is an online, open-source, interactive platform that
-    synthesizes and analyzes more than 20 geographic data sets on both energy
-    supply and demand. It is a multi-criteria analysis tool that uses
-    location-specific resource availability and infrastructure data to represent
-    energy supply. It also incorporates demographic data and data on social and
-    productive uses to visualize demand for energy services. Together, these
-    supply and demand indicators enable more comprehensive energy
-    planning. Spatial analysis tools, including multi-criteria analysis,
-    overlays, filters and buffer zones, help users identify and prioritize areas
-    where energy access can be expanded.
-  </p>
-
-  <p>
-    The tool incorporates remote sensing data as well as data from global,
-    national, sub-national and census databases that are either publicly
-    available or provided by international partners and local stakeholders.  It
-    can host data available in various resolutions, scales and formats allowing
-    for better or new datasets to be incorporated once available. The selection
-    of data is based on a literature review and a survey WRI conducts on the
-    importance of certain datasets in geospatial energy access planning. The
-    list of essential data is reviewed by local stakeholders to ensure the
-    platform is relevant and applicable in the local context.
-  </p>
-
-  <p>
-    <a href="https://www.wri.org/publication/energy-access-explorer-data-and-methods">
-      See technical note for more detailed methodology
-    </a>
-  </p>
-
-  <br>
-
-  <figure style="flex: unset; width: 100%;">
-    <img src="/static/eae/images/eae-framework.png" style="width: 100%;">
-    <figcaption>Methodological Flowchart of Clean Cooking Explorer</figcaption>
-  </figure>
-</section>
-
-<!-- CONTENT-ENDS -->
-    </main>
-
-    <footer>
-      <div>
-        <img id="footer-wri-logo"
-             src="/static/eae/images/wri-footer.png"
-             alt="World Resources Institute">
-
-        <div>
-          <p>
-            <strong>World Resources Institute</strong>
-            <br><br>
-            10 G St NE, Suite 800, Washington, DC 20002, USA
-            <br><br>
-            Phone: +1 (202) 729-7600 | Fax: +1 (202) 720-7610
-            <br><br>
-            <a href="mailto:energyaccessexplorer@wri.org">energyaccessexplorer@wri.org</a>
-            <br><br><br>
-            <a href="/privacy-policy">Privacy Policy</a>
-          </p>
-        </div>
-      </div>
-    </footer>
-
-    <script src="/javascripts/gapps.js"></script>
-  </body>
-</html>
+    <!-- CONTENT-ENDS -->
+{% endblock %}
