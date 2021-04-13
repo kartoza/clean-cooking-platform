@@ -1,0 +1,115 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{% static 'eae/images/favicon-32x32.png' %}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{% static 'eae/images/favicon-16x16.png' %}" sizes="16x16" />
+
+    <link href="{% static "eae/stylesheets/style.css" %}" rel="stylesheet"/>
+    <link href="{% static "eae/stylesheets/banner.css" %}" rel="stylesheet"/>
+    <link href="{% static "eae/stylesheets/main.css" %}" rel="stylesheet"/>
+    <link href="{% static "eae/stylesheets/nav.css" %}" rel="stylesheet"/>
+    <link href="{% static "eae/stylesheets/partners-section.css" %}"
+          rel="stylesheet"/>
+    <link href="{% static "eae/stylesheets/footer.css" %}" rel="stylesheet"/>
+    <title>Clean Cooking Explorer</title>
+</head>
+
+<body>
+<nav>
+    <input id="toggle"
+           class="no-desktop"
+           type="checkbox">
+
+    <label for="toggle" class="no-desktop">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
+            <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
+        </svg>
+    </label>
+
+    <a id="energy-access-link"
+       href="/">
+        Clean Cooking Explorer
+    </a>
+
+    <div id="navigation-links">
+        <a href="/tool/"
+           class="toggleable">
+            Tool
+        </a>
+
+        <a href="/layers/"
+           class="toggleable">
+            Geonode
+        </a>
+
+        <a href="/methodology"
+           class="toggleable">
+            Methodology
+        </a>
+
+        <a href="/about-us"
+           class="toggleable">
+            About
+        </a>
+
+        <a href="/user-stories"
+           class="toggleable">
+            User Stories
+        </a>
+
+        <!--
+        <a href="/faq"
+           class="toggleable">
+          FAQ
+        </a>
+        -->
+    </div>
+</nav>
+
+<script>
+    (function () {
+        const links = document.querySelectorAll('nav #navigation-links a');
+        if (!links) return;
+
+        for (var l of links) {
+            if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
+                l.classList.add("active");
+        }
+    })();
+</script>
+
+<main>
+    {% block content %}
+
+    {% endblock %}
+</main>
+<footer>
+    <div>
+        <img id="footer-wri-logo"
+             src="{% static "eae/images/newlogo.png" %}"
+             alt="Clean Cooking Alliance">
+
+        <div>
+            <p>
+                <strong>CONTACT US</strong>
+                <br><br>
+                1750 Pennsylvania Ave NW, Suite 300
+                <br><br>
+                Washington, D.C. 20006
+                <br><br>
+                <a href="mailto:info@cleancookingalliance.org">info@cleancookingalliance.org</a>
+                <br><br><br>
+{#                <a href="/privacy-policy">Privacy Policy</a>#}
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static "eae/javascripts/cookie.notice.min.js" %}"></script>
+<script src="{% static "eae/javascripts/gapps.js" %}"></script>
+</body>

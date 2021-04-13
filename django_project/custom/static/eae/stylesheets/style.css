@@ -1,18 +1,18 @@
 :root {
-  --the-yellow: #e4a82e;
+  --the-yellow: #f65b2a;
   --the-blue: #003893;
   --the-gray: #333333;
   --the-blueish-white: #F4F6F7;
   --the-light-gray: #e5e5e5;
-  --the-redish-gray: #231F20;
+  --the-redish-gray: #144172;
   --the-white: #f8f8f8;
   --the-darker-white: #f4f4f4;
   --the-darkest-white: #f1f1f1;
-  --the-green: #DC143C;
+  --the-green: #144172;
   --the-light-green: #98BC40;
   --the-color: #393f44;
 }
-
+@import url('https://fonts.googleapis.com/css?family=Bree+Serif|Roboto&display=swap');
 @font-face {
   font-display: block;
   font-family: without-serif;
@@ -47,9 +47,10 @@
   src: local(''), url();
 }
 
-h1, h2, h3 {
+h1, h2, h3, strong {
   font-weight: normal;
   color: var(--the-green);
+  font-family: 'Bree Serif',serif;
 }
 
 a {
@@ -77,7 +78,7 @@ body {
   height: calc(100% - 7em);
   padding: 0;
   margin: 0;
-  font-family: without-serif, sans-serif;
+  font-family: Roboto, sans-serif;
   background-color: #f8f8f8;
   color: var(--the-color);
 }
@@ -253,4 +254,9 @@ button a {
     display: block;
     margin: 1em;
   }
+}
+
+.banner h1 {
+  color: #f65b2a !important;
+  text-shadow: 1px 1px 1px #000000 !important;
 }
