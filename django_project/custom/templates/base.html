@@ -310,7 +310,7 @@
                         {% if user.is_authenticated %}
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Map Viewers" %}<i class="fa fa-angle-down fa-lg"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% url "maps_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}{{ DEFAULT_GROUP_FILTER }}">{% trans "Explore Map Viewers" %}</a></li>
+                                <li><a href="{% url "maps_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Explore Map Viewers" %}</a></li>
                                 {% if not READ_ONLY_MODE %}
                                     <li><a href="{% url "new_map" %}">{% trans "Create Map Viewer" %}</a></li>
                                 {% endif %}
