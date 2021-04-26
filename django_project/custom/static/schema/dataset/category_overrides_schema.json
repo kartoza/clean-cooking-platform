@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "title": "Category Overrides",
+  "properties": {
+    "name": {
+      "type": "string"
+    }
+  }
+}

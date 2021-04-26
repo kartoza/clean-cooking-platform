@@ -49,6 +49,14 @@ class DatasetFile(models.Model):
         blank=False
     )
 
+    func = models.CharField(
+        max_length=50,
+        choices=FUNC_CHOICES,
+        default='',
+        blank=True,
+        verbose_name='Dataset File Type'
+    )
+
     configuration = JSONField(
         null=True,
         blank=True
@@ -65,13 +73,6 @@ class DatasetFile(models.Model):
 
     active = models.BooleanField(
         default=False
-    )
-
-    func = models.CharField(
-        max_length=50,
-        choices=FUNC_CHOICES,
-        default='',
-        blank=True
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

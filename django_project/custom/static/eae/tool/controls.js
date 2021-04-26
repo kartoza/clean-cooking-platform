@@ -628,17 +628,13 @@ cursor: pointer;
 	set_default(sl.input);
 };
 
-function 	sort_datasets(config) {
-	try {
-		const {sort_datasets, sort_subbranches, sort_branches} = config;
-	} catch (e) {
-		console.log(e);
-		return false;
-	}
+function sort_datasets(config) {
+	const {sort_datasets, sort_subbranches, sort_branches} = config;
 
 	const controls_elements = qsa('ds-controls', contents_el);
 
 	if (maybe(sort_datasets, 'length'))
+		console.log(sort_datasets)
 		for (let id of sort_datasets.slice(0).reverse()) {
 			for (let el of controls_elements) {
 				if (el.ds.id === id)

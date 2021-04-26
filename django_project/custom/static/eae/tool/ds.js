@@ -90,8 +90,13 @@ This is not fatal but the dataset is now disabled.`
 			if (!f) ferr('vectors', indicator);
 			else {
 				this.vectors = {};
-				Object.assign(this.vectors, o.category.vectors, f);
+				if (Object.keys(o.category.vectors).length > 0) {
+					Object.assign(this.vectors, o.category.vectors, f);
+				} else {
+					Object.assign(this.vectors, f.configuration, f);
+				}
 
+				console.log('files', this.vectors);
 				this.vectors.key = maybe(f, 'configuration', 'key') || f.key || 'OBJECTID';
 				this.vectors.fileid = f.id;
 				this.vectors.features = f.features;

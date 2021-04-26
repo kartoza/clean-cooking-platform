@@ -2,6 +2,7 @@ from rest_framework import serializers
 from custom.models.dataset import Dataset
 from custom.models.category import Category
 from custom.models.dataset_file import DatasetFile
+from geonode.base.models import Link
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -16,12 +17,21 @@ class DatasetFileSerializer(serializers.ModelSerializer):
     def get_file(self, obj):
         geonode_layer = None
         if obj.use_geonode_layer and obj.geonode_layer:
-            geonode_layer = obj.geonode_layer
+            if obj.func == 'raster':
+                file_type = 'geotiff'
+            else:
+                file_type = 'geojson'
+            links = Link.objects.filter(
+                resource = obj.geonode_layer,
+                name__iexact= file_type
+            )
+            if links.exists():
+                geonode_layer = '/proxy_cca/' + links[0].url
         return {
             'id': obj.id,
             'endpoint': obj.endpoint.url,
             'configuration': obj.configuration,
-            'geonode_layer': geonode_layer.name if geonode_layer else '-',
+            'geonode_layer': geonode_layer if geonode_layer else '-',
             'test': obj.test,
             'comment': obj.comment,
             'created': obj.created_at,
