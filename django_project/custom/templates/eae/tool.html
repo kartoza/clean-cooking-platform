@@ -21,6 +21,8 @@
     <script src="{% static "eae/tool/browser.js" %}"></script>
 
     <script src="{% static "eae/tool/libs.js" %}"></script>
+    <script src="{% static "sldStyleParser.js" %}"></script>
+    <script src="{% static "mapboxStyleParser.js" %}"></script>
     <script src="{% static "eae/tool/main.js" %}"></script>
 
     <link href="{% static "eae/stylesheets/style.css" %}" rel="stylesheet" />
@@ -28,7 +30,6 @@
 
     <link href="{% static "eae/lib/mapbox-gl.css" %}" rel="stylesheet" />
     <link href="{% static "eae/tool/main.css" %}" rel="stylesheet" />
-
 
     <title>Clean Cooking Explorer</title>
   </head>
@@ -747,6 +748,11 @@
     </svg>
   </template>
 
+
+  <script>
+      let parser = new GeoStylerSLDParser.SldStyleParser();
+      let mapboxParser = new GeoStylerMapboxParser.MapboxStyleParser();
+  </script>
 
   <script src="{% static "eae/javascripts/cookie.notice.min.js" %}"></script>
   <script src="{% static "eae/javascripts/gapps.js" %}"></script>

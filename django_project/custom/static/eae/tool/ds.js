@@ -41,12 +41,58 @@ export default class DS {
 		if (this.id === 'boundaries')
 			this.__domain = { min: -Infinity, max: Infinity };
 
-		if (o.category.domain)
-			this.domain = o.category.domain; // will be set by csv/raster data
-		else
+		let df_domain = null;
+		let df_colorstops = null;
+
+		o.df.forEach(function (item, index) {
+			try {
+				if (item.file.configuration.domain) {
+					df_domain = item.file.configuration.domain;
+				}
+				if (item.file.configuration.color_stops) {
+					df_colorstops = item.file.configuration.color_stops;
+				}
+			} catch (e) {
+				console.log(e)
+			}
+		})
+
+		if (df_colorstops) {
+			this.colorstops = df_colorstops;
+		} else {
+			this.colorstops = o.category.colorstops;
+		}
+
+		if (o.category.domain || df_domain) {
+			if (df_domain) {
+				this.domain = df_domain;
+			} else {
+				this.domain = o.category.domain; // will be set by csv/raster data
+			}
+		}
+		else {
 			this.__domain = null;
+		}
 
 		this._domain = o.category.domain_init || JSON.parse(JSON.stringify(this.__domain));
+
+		this.raster_configuration = {
+          "init": {
+            "max": 0,
+            "min": 99
+          },
+          "scale": "intervals",
+          "domain": {
+            "max": 0,
+            "min": 99
+          },
+          "factor": 1,
+          "intervals": [
+          ],
+          "precision": 0,
+          "color_stops": [
+          ]
+        };
 
 		this.init();
 
@@ -438,23 +484,58 @@ This is not fatal but the dataset is now disabled.`
 	};
 
 	set_colorscale() {
+		let that = this;
 		if (this.colorscale) return;
 
 		switch (this.datatype) {
 		case 'raster': {
-			this.colorscale = ea_colorscale({
-				stops: this.category.colorstops,
-				domain: this.domain,
-				intervals: this.raster.intervals
-			});
-
+			if (this.raster.style) {
+				fetch(this.raster.style).then(response => response.text())
+					.then(str => {
+					   parser.readStyle(str).then(function (styleObject) {
+						   if (JSON.stringify(styleObject).includes('"kind":"Raster"')) {
+							   try {
+								   styleObject.rules[0].symbolizers[0].colorMap.colorMapEntries.forEach(function (item, index) {
+									   that.raster_configuration.intervals.push(item.quantity);
+									   that.raster_configuration.color_stops.push(item.color);
+									   if (item.quantity > that.raster_configuration.init.max) {
+										   that.raster_configuration.init.max = item.quantity;
+										   that.raster_configuration.domain.max = item.quantity;
+									   }
+									   if (item.quantity < that.raster_configuration.init.min) {
+										   that.raster_configuration.init.min = item.quantity;
+										   that.raster_configuration.domain.min = item.quantity;
+									   }
+								   })
+							   } catch (e) {
+								   console.log(e)
+							   }
+							   that.colorscale = ea_colorscale({
+									stops: that.raster_configuration.color_stops,
+									domain: that.raster_configuration.domain,
+									intervals: that.raster_configuration.intervals
+								});
+						   } else {
+							   mapboxParser.writeStyle(styleObject).then(function (mapboxObject) {
+								   console.log(mapboxObject)
+							   })
+						   }
+					   }).catch(error => console.log(error));
+					});
+			} else {
+				this.colorscale = ea_colorscale({
+					stops: this.raster.configuration.color_stops,
+					domain: this.raster.configuration.domain,
+					intervals: this.raster.configuration.intervals
+				});
+			}
 			break;
 		}
 
 		case 'polygons-fixed': {
 			if (this.config.column) {
 				this.colorscale = ea_colorscale({
-					stops: this.category.colorstops,
+					stops: this.colorstops,
 				});
 			}
 			break;
@@ -462,7 +543,7 @@ This is not fatal but the dataset is now disabled.`
 
 		case 'polygons-timeline': {
 			this.colorscale = ea_colorscale({
-				stops: this.category.colorstops,
+				stops: this.colorstops,
 			});
 
 			break;
