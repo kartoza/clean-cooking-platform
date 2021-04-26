@@ -634,7 +634,6 @@ function sort_datasets(config) {
 	const controls_elements = qsa('ds-controls', contents_el);
 
 	if (maybe(sort_datasets, 'length'))
-		console.log(sort_datasets)
 		for (let id of sort_datasets.slice(0).reverse()) {
 			for (let el of controls_elements) {
 				if (el.ds.id === id)

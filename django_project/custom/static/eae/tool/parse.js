@@ -183,7 +183,7 @@ function geojson() {
 		endpoint = this.vectors.geonode_layer
 	}
 	return fetchcheck.call(this, endpoint, "GEOJSON")
-		.then(r => { console.log(r); return r.json() })
+		.then(r => { return r.json() })
 		.then(r => {
 			this.vectors.features = r;
 			if (this.id === 'boundaries') this.vectors.bounds = geojsonExtent(r);
