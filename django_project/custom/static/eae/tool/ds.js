@@ -34,6 +34,8 @@ export default class DS {
 
 		this.metadata = o.metadata;
 
+		this.geonode_metadata = o.geonode_metadata;
+
 		this.mutant = !!config.mutant;
 
 		this.items = config.collection ? [] : undefined;
@@ -481,16 +483,49 @@ This is not fatal but the dataset is now disabled.`
 
 	info_modal() {
 		const b = this.metadata
-
 		const content = tmpl('#ds-info-modal', b);
-		qs('#metadata-sources', content).href = this.metadata.download_original_url;
-		qs('#learn-more', content).href = this.metadata.learn_more_url;
+		let spinner = qs('.spinner', content);
+		let right = qs('.right', content);
+		let left = qs('.left', content);
+		console.log(b)
 
-		ea_modal.set({
-			header: this.name,
-			content: content,
-			footer: null
-		}).show();
+		if ((Object.keys(b).length > 0 && this.metadata.description !== "") || !this.geonode_metadata) {
+			spinner.style.display = 'none';
+			right.style.display = 'block';
+			left.style.display = 'block';
+			qs('#metadata-sources', content).href = this.metadata.download_original_url;
+			qs('#learn-more', content).href = this.metadata.learn_more_url;
+			ea_modal.set({
+				header: this.name,
+				content: content,
+				footer: null
+			}).show();
+			return;
+		}
+
+		if (this.geonode_metadata) {
+			spinner.style.display = 'block';
+			right.style.display = 'none';
+			left.style.display = 'none';
+			ea_modal.set({
+				header: this.name,
+				content: content,
+				footer: null
+			}).show();
+
+			fetch(this.geonode_metadata).then(response => response.text()).then(
+				html => {
+					let parser = new DOMParser();
+					let htmlDoc = parser.parseFromString(html, 'text/html');
+					ea_modal.set({
+						header: this.name,
+						content: decodeHtml(htmlDoc.getElementsByClassName('container')[0].innerHTML),
+						footer: null
+					}).show();
+				}
+			)
+		}
+
 	};
 
 	async _active(v, draw) {

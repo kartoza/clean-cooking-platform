@@ -50,6 +50,20 @@ class DatasetSerializer(serializers.ModelSerializer):
         many=True
     )
     category = serializers.SerializerMethodField()
+    geonode_metadata = serializers.SerializerMethodField()
+
+    def get_geonode_metadata(self, obj):
+        dataset_files = DatasetFile.objects.filter(
+            category_id=obj.id,
+            use_geonode_layer=True,
+            geonode_layer__isnull=False
+        )
+        if dataset_files.exists():
+            dataset_file = dataset_files[0]
+            return '/catalogue/csw_to_extra_format/{}/metadata.html'.format(
+                dataset_file.geonode_layer.uuid
+            )
+        return '-'
 
     def get_category(self, obj):
         return {
@@ -75,6 +89,7 @@ class DatasetSerializer(serializers.ModelSerializer):
             'online',
             'configuration',
             'metadata',
+            'geonode_metadata',
             'category',
             'df'
         ]

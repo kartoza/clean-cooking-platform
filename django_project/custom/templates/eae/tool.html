@@ -30,6 +30,27 @@
 
     <link href="{% static "eae/lib/mapbox-gl.css" %}" rel="stylesheet" />
     <link href="{% static "eae/tool/main.css" %}" rel="stylesheet" />
+      <style>
+          dl dd {
+              margin-left: 20px;
+          }
+
+          dl dt {
+              margin-top: 10px;
+              font-weight: bolder;
+          }
+
+          ul.nop {
+              list-style-type: none;
+          }
+          #ea-modal table {
+              max-width: 90% !important;
+          }
+          #ea-modal .page-header {
+              display: none;
+          }
+      </style>
+
 
     <title>Clean Cooking Explorer</title>
   </head>
@@ -274,6 +295,7 @@
   
   <template id="ds-info-modal">
     <div style="display:flex; flex-flow: row nowrap;">
+      <div class="m-loading" style="width: 100%; min-width: 400px"><div class="spinner"></div></div>
       <div class="left" style="flex: 1;">
         <section bind-cond="description">
           <h3>Description</h3><pre class="description-text" bind="description"></pre>
