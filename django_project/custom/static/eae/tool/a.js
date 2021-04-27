@@ -373,28 +373,30 @@ async function dsinit(id, inputs, pack, callback) {
 								vectorConfObj['shape_type'] = 'lines';
 								item.file.configuration = vectorConfObj
 								e.category.vectors.specs = vectorConfObj.layers;
-								let customVectorConfiguration = {
-									"attributes": [],
-									"attributes_map": [],
-									"features_specs": []
-								};
-								for (const layer of vectorConfObj.layers) {
-									let filters = layer.filter;
-									if (!customVectorConfiguration.attributes.includes(filters[1])) {
-										customVectorConfiguration.attributes.push(filters[1]);
-										customVectorConfiguration.attributes_map.push({
-											'target': filters[1],
-											'dataset': filters[1]
+								if (!e.configuration) {
+									let customVectorConfiguration = {
+										"attributes": [],
+										"attributes_map": [],
+										"features_specs": []
+									};
+									for (const layer of vectorConfObj.layers) {
+										let filters = layer.filter;
+										if (!customVectorConfiguration.attributes.includes(filters[1])) {
+											customVectorConfiguration.attributes.push(filters[1]);
+											customVectorConfiguration.attributes_map.push({
+												'target': filters[1],
+												'dataset': filters[1]
+											})
+										}
+										customVectorConfiguration.features_specs.push({
+											"key": filters[1],
+											"match": filters[2],
+											"stroke": layer.paint['line-color'],
+											"stroke-width": layer.paint['line-width']
 										})
 									}
-									customVectorConfiguration.features_specs.push({
-										"key": filters[1],
-										"match": filters[2],
-										"stroke": layer.paint['line-color'],
-										"stroke-width": layer.paint['line-width']
-									})
+									e.configuration = customVectorConfiguration;
 								}
-								e.configuration = customVectorConfiguration;
 							}
 						}
 					}

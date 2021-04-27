@@ -44,7 +44,7 @@ class CategoryAdmin(admin.ModelAdmin):
         }),
         ('Advanced configurations', {
             'classes': ('grp-collapse grp-closed',),
-            'fields': ('analysis', 'domain', 'domain_init', 'timeline', 'vectors'),
+            'fields': ('analysis', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors'),
         }),
     )
 
