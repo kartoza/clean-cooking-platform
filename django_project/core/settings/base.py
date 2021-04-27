@@ -4,6 +4,7 @@ from .utils import absolute_path  # noqa
 
 INSTALLED_APPS += (
     'django_json_widget',
+    'preferences',
     'custom',
 )
 
@@ -50,6 +51,7 @@ TEMPLATES = [
 
                 # custom context processor
                 'custom.context_processors.configs',
+                'preferences.context_processors.preferences_cp',
             ],
             'debug': DEBUG,
         },

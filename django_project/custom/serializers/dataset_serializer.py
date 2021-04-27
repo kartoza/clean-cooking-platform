@@ -1,8 +1,8 @@
 from rest_framework import serializers
+from preferences import preferences
 from custom.models.category import Category
 from custom.models.dataset_file import DatasetFile
 from geonode.base.models import Link
-from geonode.layers.models import Style
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -27,7 +27,13 @@ class DatasetFileSerializer(serializers.ModelSerializer):
                 name__iexact= file_type
             )
             if links.exists():
-                geonode_layer = '/proxy_cca/' + links[0].url + '&SCALESIZE=i(604),j(636)'
+                x = preferences.CCAPreferences.boundary_dimension_x
+                y = preferences.CCAPreferences.boundary_dimension_y
+                geonode_layer = '/proxy_cca/{url}&SCALESIZE=i({x}),j({y})'.format(
+                    url=links[0].url,
+                    x=x,
+                    y=y
+                )
             style = '/proxy_cca/' + obj.geonode_layer.default_style.sld_url
         return {
             'id': obj.id,
