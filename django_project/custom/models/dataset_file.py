@@ -19,11 +19,17 @@ class DatasetFile(models.Model):
         (RASTER, 'Raster')
     )
 
-    dataset = models.ForeignKey(
-        'custom.Dataset',
-        null=False,
-        blank=False,
+    category = models.ForeignKey(
+        'custom.Category',
+        null=True,
+        blank=True,
         on_delete=models.CASCADE
+    )
+
+    label = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True
     )
 
     use_geonode_layer = models.BooleanField(
@@ -43,12 +49,6 @@ class DatasetFile(models.Model):
         on_delete=models.SET_NULL
     )
 
-    label = models.CharField(
-        max_length=100,
-        null=False,
-        blank=False
-    )
-
     func = models.CharField(
         max_length=50,
         choices=FUNC_CHOICES,
@@ -60,10 +60,6 @@ class DatasetFile(models.Model):
     configuration = JSONField(
         null=True,
         blank=True
-    )
-
-    test = models.BooleanField(
-        default=False
     )
 
     comment = models.TextField(

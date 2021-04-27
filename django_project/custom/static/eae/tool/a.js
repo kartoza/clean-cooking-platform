@@ -365,7 +365,6 @@ async function dsinit(id, inputs, pack, callback) {
 				return new DS(e, inputs.includes(e.category.name))
 			}))
 		});
-	console.log('OK')
 	U.params.inputs = [...new Set(DS.array.map(e => e.id))];
 
 	// We need all the datasets to be initialised _before_ setting

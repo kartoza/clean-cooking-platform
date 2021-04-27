@@ -3,7 +3,6 @@ from django.contrib.postgres import fields
 from django_json_widget.widgets import JSONEditorWidget
 from .models.geography import Geography
 from .models.category import Category
-from .models.dataset import Dataset
 from .models.dataset_file import DatasetFile
 
 
@@ -18,13 +17,6 @@ class GeographyAdmin(admin.ModelAdmin):
     }
 
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'name_long', 'created_at', 'updated')
-    formfield_overrides = {
-        fields.JSONField: {'widget': JSONEditorWidget},
-    }
-
-
 class DatasetFileInline(admin.StackedInline):
     model = DatasetFile
     formfield_overrides = {
@@ -34,14 +26,20 @@ class DatasetFileInline(admin.StackedInline):
     class Media:
         js = ('/static/admin/js/show_geonode_layer.js', )
 
-class DatasetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'name_long', 'category', 'geography', 'created_at', 'updated', 'get_total_files')
+
+class DatasetFileAdmin(admin.ModelAdmin):
+    list_display = (
+        'category', 'label', 'func', 'geonode_layer', 'active'
+    )
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'name_long', 'created_at', 'updated', 'get_total_files')
 
     def get_total_files(self, obj):
         return obj.datasetfile_set.count()
 
-    get_total_files.short_description = 'Total files'
-
+    get_total_files.short_description = 'Total Dataset Files'
     formfield_overrides = {
         fields.JSONField: {'widget': JSONEditorWidget},
     }
@@ -52,4 +50,4 @@ class DatasetAdmin(admin.ModelAdmin):
 
 admin.site.register(Geography, GeographyAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Dataset, DatasetAdmin)
+admin.site.register(DatasetFile, DatasetFileAdmin)

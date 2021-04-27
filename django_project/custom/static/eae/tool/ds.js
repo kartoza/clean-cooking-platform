@@ -30,6 +30,8 @@ export default class DS {
 
 		this.name = o.name_long || o.name || this.category.name_long || this.category.name;
 
+		this.category_name = o.name || this.category_name;
+
 		this.metadata = o.metadata;
 
 		this.mutant = !!config.mutant;
@@ -69,7 +71,7 @@ export default class DS {
 				timeout: 5000,
 				title: "Dataset/File error",
 				message: `
-'${this.name}' has category '${this.category.name}' which requires a ${t} file.
+'${this.name}' has category '${this.category_name}' which requires a ${t} file.
 
 This is not fatal but the dataset is now disabled.`
 			});
@@ -78,7 +80,7 @@ This is not fatal but the dataset is now disabled.`
 
 		let indicator = false;
 
-		if (this.category.name.match(/^(timeline-)?indicator/)) {
+		if (this.category_name.match(/^(timeline-)?indicator/)) {
 			const b = DST.get('boundaries');
 			this.raster = b.raster;
 			this.vectors = b.vectors;
@@ -478,8 +480,7 @@ This is not fatal but the dataset is now disabled.`
 	};
 
 	info_modal() {
-		const b = this.metadata;
-		b['why'] = this.category.metadata.why;
+		const b = this.metadata
 
 		const content = tmpl('#ds-info-modal', b);
 		qs('#metadata-sources', content).href = this.metadata.download_original_url;
