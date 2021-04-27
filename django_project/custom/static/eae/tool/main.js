@@ -526,7 +526,6 @@ function ea_coordinates_in_raster(coords, bounds, raster) {
 	return a;
 };
 const ea_nanny_steps = [];
-console.log(ea_nanny_steps);
 ea_views = {
 	"inputs": {
 		"name": "Data",

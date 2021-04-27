@@ -314,8 +314,57 @@ async function dsinit(id, inputs, pack, callback) {
 	pack = maybe(pack, 'length') ? pack : 'all';
 
 	await api_get(`/api/datasets/?geography=${id}`)
-		.then(r => { console.log(r); return r.map(e => new DS(e, inputs.includes(e.category.name))) });
-
+		.then(async r => {
+			return Promise.all(r.map(async e => {
+				for (const item of e.df) {
+					if (item.file.style) {
+						let raster_configuration = {
+							"init": {
+								"max": 0,
+								"min": 0
+							},
+							"scale": "intervals",
+							"domain": {
+								"max": 0,
+								"min": 0
+							},
+							"factor": 1,
+							"intervals": [],
+							"precision": 0,
+							"color_stops": []
+						};
+						let sldStr = await fetch(item.file.style).then(response => response.text()).then(str => str);
+						let styleObject = await parser.readStyle(sldStr).then(styleObject => styleObject)
+						if (JSON.stringify(styleObject).includes('"kind":"Raster"')) {
+							try {
+								styleObject.rules[0].symbolizers[0].colorMap.colorMapEntries.forEach(function (item, index) {
+									raster_configuration.intervals.push(item.quantity);
+									raster_configuration.color_stops.push(item.color);
+									if (item.quantity > raster_configuration.init.max) {
+										raster_configuration.init.max = item.quantity;
+										raster_configuration.domain.max = item.quantity;
+									}
+									if (item.quantity < raster_configuration.init.min) {
+										raster_configuration.init.min = item.quantity;
+										raster_configuration.domain.min = item.quantity;
+									}
+								})
+							} catch (e) {
+								console.log(e)
+							}
+							e.category.domain = raster_configuration.domain;
+							e.category.colorstops = raster_configuration.color_stops;
+							e.category.analysis.intervals = raster_configuration.intervals;
+							e.category.raster = raster_configuration;
+							item.file.configuration = raster_configuration;
+						} else {
+							item.file.configuration = await mapboxParser.writeStyle(styleObject).then(mObj => mObj)
+						}
+					}
+				}
+				return new DS(e, inputs.includes(e.category.name))
+			}))
+		});
 	U.params.inputs = [...new Set(DS.array.map(e => e.id))];
 
 	// We need all the datasets to be initialised _before_ setting

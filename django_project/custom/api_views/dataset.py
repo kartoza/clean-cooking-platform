@@ -2,7 +2,7 @@
 from django.http.response import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from custom.models.dataset import Dataset
+from custom.models.category import Category
 from custom.serializers.dataset_serializer import DatasetSerializer
 
 
@@ -10,12 +10,11 @@ class DatasetList(APIView):
 
     def get(self, request, *args):
         geography_id = self.request.GET.get('geography', None)
-        datasets = Dataset.objects.filter(
+        datasets = Category.objects.filter(
             geography_id=geography_id,
             online=True
         ).exclude(
-            category__name__iexact='boundaries',
-            datasetfile__active=False
+            name__iexact='boundaries'
         )
         return Response(
             DatasetSerializer(datasets, many=True).data
@@ -26,8 +25,8 @@ class DatasetDetail(APIView):
 
     def get_object(self, pk):
         try:
-            return Dataset.objects.get(pk=pk)
-        except Dataset.DoesNotExist:
+            return Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
             raise Http404
 
     def get(self, request, *args):
@@ -44,7 +43,7 @@ class DatasetDetail(APIView):
             filters['geography_id'] = geography
 
         if filters:
-            datasets = Dataset.objects.filter(
+            datasets = Category.objects.filter(
                 **filters
             )
             if datasets.exists():

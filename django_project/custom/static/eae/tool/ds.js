@@ -30,6 +30,8 @@ export default class DS {
 
 		this.name = o.name_long || o.name || this.category.name_long || this.category.name;
 
+		this.category_name = o.name || this.category_name;
+
 		this.metadata = o.metadata;
 
 		this.mutant = !!config.mutant;
@@ -41,10 +43,12 @@ export default class DS {
 		if (this.id === 'boundaries')
 			this.__domain = { min: -Infinity, max: Infinity };
 
-		if (o.category.domain)
+		if (o.category.domain) {
 			this.domain = o.category.domain; // will be set by csv/raster data
-		else
+		}
+		else {
 			this.__domain = null;
+		}
 
 		this._domain = o.category.domain_init || JSON.parse(JSON.stringify(this.__domain));
 
@@ -67,7 +71,7 @@ export default class DS {
 				timeout: 5000,
 				title: "Dataset/File error",
 				message: `
-'${this.name}' has category '${this.category.name}' which requires a ${t} file.
+'${this.name}' has category '${this.category_name}' which requires a ${t} file.
 
 This is not fatal but the dataset is now disabled.`
 			});
@@ -76,7 +80,7 @@ This is not fatal but the dataset is now disabled.`
 
 		let indicator = false;
 
-		if (this.category.name.match(/^(timeline-)?indicator/)) {
+		if (this.category_name.match(/^(timeline-)?indicator/)) {
 			const b = DST.get('boundaries');
 			this.raster = b.raster;
 			this.vectors = b.vectors;
@@ -90,7 +94,11 @@ This is not fatal but the dataset is now disabled.`
 			if (!f) ferr('vectors', indicator);
 			else {
 				this.vectors = {};
-				Object.assign(this.vectors, o.category.vectors, f);
+				if (Object.keys(o.category.vectors).length > 0) {
+					Object.assign(this.vectors, o.category.vectors, f);
+				} else {
+					Object.assign(this.vectors, f.configuration, f);
+				}
 
 				this.vectors.key = maybe(f, 'configuration', 'key') || f.key || 'OBJECTID';
 				this.vectors.fileid = f.id;
@@ -440,9 +448,8 @@ This is not fatal but the dataset is now disabled.`
 			this.colorscale = ea_colorscale({
 				stops: this.category.colorstops,
 				domain: this.domain,
-				intervals: this.raster.intervals
+				intervals: this.raster.configuration.intervals
 			});
-
 			break;
 		}
 
@@ -473,8 +480,7 @@ This is not fatal but the dataset is now disabled.`
 	};
 
 	info_modal() {
-		const b = this.metadata;
-		b['why'] = this.category.metadata.why;
+		const b = this.metadata
 
 		const content = tmpl('#ds-info-modal', b);
 		qs('#metadata-sources', content).href = this.metadata.download_original_url;

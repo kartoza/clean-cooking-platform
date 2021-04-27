@@ -21,7 +21,7 @@ dev-up:
 	@echo "------------------------------------------------------------------"
 	@echo "up frontend"
 	@echo "------------------------------------------------------------------"
-	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up -d dev
+	@docker-compose $(COMPOSE) -p $(PROJECT_ID) up --build -d dev
 
 geonode-up:
 	@echo

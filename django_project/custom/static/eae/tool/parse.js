@@ -9,7 +9,6 @@ import {
 async function fetchcheck(endpoint, format) {
 	if (!endpoint.match(/^http/))
 		endpoint = ea_settings.storage + endpoint;
-
 	return fetch(endpoint)
 		.catch(_ => fail.call(this, `Could not fetch ${format}`))
 		.then(r => {
@@ -166,8 +165,12 @@ boundaries: ${b.raster.width} × ${b.raster.height}
 	};
 
 	let t;
+	let endpoint = this.raster.endpoint;
+	if (this.raster.geonode_layer !== '-') {
+		endpoint = this.raster.geonode_layer;
+	}
 	if (maybe(this.raster, 'data')) t = Whatever;
-	else t = fetchcheck.call(this, this.raster.endpoint, "TIFF").then(r => r.blob());
+	else t = fetchcheck.call(this, endpoint, "TIFF").then(r => r.blob());
 
 	return t.then(b => run_it.call(this, b));
 };
@@ -175,9 +178,12 @@ boundaries: ${b.raster.width} × ${b.raster.height}
 function geojson() {
 	if (this.vectors.features)
 		return Whatever;
-
-	return fetchcheck.call(this, this.vectors.endpoint, "GEOJSON")
-		.then(r => r.json())
+	let endpoint = this.vectors.endpoint
+	if (this.vectors.geonode_layer !== '-') {
+		endpoint = this.vectors.geonode_layer
+	}
+	return fetchcheck.call(this, endpoint, "GEOJSON")
+		.then(r => { return r.json() })
 		.then(r => {
 			this.vectors.features = r;
 			if (this.id === 'boundaries') this.vectors.bounds = geojsonExtent(r);

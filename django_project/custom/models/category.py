@@ -9,6 +9,13 @@ from django.contrib.postgres.fields import JSONField
 class Category(models.Model):
     """Category model"""
 
+    geography = models.ForeignKey(
+        'custom.Geography',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
+
     name = models.CharField(
         max_length=100,
         default="",
@@ -64,6 +71,27 @@ class Category(models.Model):
         blank=True
     )
 
+    configuration = JSONField(
+        null=True,
+        blank=True
+    )
+
+    pack = models.CharField(
+        default="all",
+        max_length=50,
+        blank=True
+    )
+
+    circle = models.CharField(
+        default="public",
+        max_length=50,
+        blank=True
+    )
+
+    online = models.BooleanField(
+        default=True
+    )
+
     controls = JSONField(
         default={
             'range': '',
@@ -78,9 +106,16 @@ class Category(models.Model):
 
     metadata = JSONField(
         default={
-            'why': ''
+            'description': '',
+            'suggested_citation': '',
+            'cautions': '',
+            'spatial_resolution': '',
+            'license': '',
+            'sources': '',
+            'content_date': '',
+            'download_original_url': '',
+            'learn_more_url': ''
         },
-        null=True,
         blank=True
     )
 
