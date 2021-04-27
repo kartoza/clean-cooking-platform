@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.contrib.postgres import fields
 from django_json_widget.widgets import JSONEditorWidget
+from preferences.admin import PreferencesAdmin
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
+from .models.cca_preference import CCAPreferences
 
 
 class MapSlugMappingAdmin(admin.ModelAdmin):
@@ -61,3 +63,4 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Geography, GeographyAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(DatasetFile, DatasetFileAdmin)
+admin.site.register(CCAPreferences, PreferencesAdmin)
