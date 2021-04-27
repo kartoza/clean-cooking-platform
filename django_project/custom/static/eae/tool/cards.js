@@ -91,7 +91,6 @@ export default class dscard extends HTMLElement {
 		super();
 
 		this.ds = d;
-		console.log('DS', d)
 
 		if (d.disabled) return undefined;
 
