@@ -54,6 +54,27 @@ UUID_REGEXP = "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$";
 
 Whatever = new Promise((resolve, reject) => resolve());
 
+var entities = {
+  'amp': '&',
+  'apos': '\'',
+  'lt': '<',
+  'gt': '>',
+  'quot': '"',
+  'nbsp': '\xa0'
+};
+var entityPattern = /&([a-z]+);/ig;
+
+function decodeHtml(html) {
+  return html.replace(entityPattern, function(match, entity) {
+    entity = entity.toLowerCase();
+    if (entities.hasOwnProperty(entity)) {
+      return entities[entity];
+    }
+    // return original string if there is no matching entity (no replace)
+    return match;
+  });
+};
+
 function qs(str, el) {
   if (!el) el = document;
   else if (!(el instanceof Node))
@@ -532,7 +553,7 @@ width: -moz-fit-content;
     m.prepend(h);
 
     let c = document.createElement('content');
-    c.style = `padding: 1em;`;
+    c.style = `padding: 1em;max-height: 800px;overflow-y: auto;min-width: 600px`;
     m.append(c);
 
     let f = document.createElement('footer');
