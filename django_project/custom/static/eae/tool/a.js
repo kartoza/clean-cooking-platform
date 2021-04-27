@@ -358,7 +358,46 @@ async function dsinit(id, inputs, pack, callback) {
 							e.category.raster = raster_configuration;
 							item.file.configuration = raster_configuration;
 						} else {
-							item.file.configuration = await mapboxParser.writeStyle(styleObject).then(mObj => mObj)
+							if (JSON.stringify(styleObject).includes(('"kind":"Mark"'))) {
+								let pointConfiguration = {
+								  "fill": styleObject.rules[0].symbolizers[0].color,
+								  "width": styleObject.rules[0].symbolizers[0].radius,
+								  "opacity": 1,
+								  "shape_type": "points"
+								}
+								item.file.configuration = pointConfiguration;
+								e.category.vectors = pointConfiguration;
+							} else {
+								let vectorConf = await mapboxParser.writeStyle(styleObject).then(mObj => mObj)
+								let vectorConfObj = JSON.parse(vectorConf);
+								vectorConfObj['shape_type'] = 'lines';
+								item.file.configuration = vectorConfObj
+								e.category.vectors.specs = vectorConfObj.layers;
+								if (!e.configuration) {
+									let customVectorConfiguration = {
+										"attributes": [],
+										"attributes_map": [],
+										"features_specs": []
+									};
+									for (const layer of vectorConfObj.layers) {
+										let filters = layer.filter;
+										if (!customVectorConfiguration.attributes.includes(filters[1])) {
+											customVectorConfiguration.attributes.push(filters[1]);
+											customVectorConfiguration.attributes_map.push({
+												'target': filters[1],
+												'dataset': filters[1]
+											})
+										}
+										customVectorConfiguration.features_specs.push({
+											"key": filters[1],
+											"match": filters[2],
+											"stroke": layer.paint['line-color'],
+											"stroke-width": layer.paint['line-width']
+										})
+									}
+									e.configuration = customVectorConfiguration;
+								}
+							}
 						}
 					}
 				}
