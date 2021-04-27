@@ -63,7 +63,31 @@ class Category(models.Model):
 
     analysis = JSONField(
         null=True,
-        blank=True
+        blank=True,
+        default= {
+            "clamp": False,
+            "index": "supply",
+            "scale": "linear",
+            "weight": 2,
+            "indexes": [
+                {
+                    "index": "supply",
+                    "scale": "linear",
+                    "invert": True
+                },
+                {
+                    "index": "eai",
+                    "scale": "linear",
+                    "invert": True
+                },
+                {
+                    "index": "ani",
+                    "scale": "linear",
+                    "invert": True
+                }
+            ],
+            "intervals": {}
+        }
     )
 
     timeline = JSONField(

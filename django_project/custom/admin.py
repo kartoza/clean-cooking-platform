@@ -36,12 +36,22 @@ class DatasetFileAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'name_long', 'created_at', 'updated', 'get_total_files')
 
+    fieldsets = (
+        (None, {
+            'fields': ('geography', 'name', 'name_long', 'unit', 'online', 'controls', 'metadata')
+        }),
+        ('Advanced configurations', {
+            'classes': ('grp-collapse grp-closed',),
+            'fields': ('analysis', 'domain', 'domain_init', 'timeline'),
+        }),
+    )
+
     def get_total_files(self, obj):
         return obj.datasetfile_set.count()
 
     get_total_files.short_description = 'Total Dataset Files'
     formfield_overrides = {
-        fields.JSONField: {'widget': JSONEditorWidget},
+        fields.JSONField: {'widget': JSONEditorWidget(height='250px')},
     }
     inlines = [
         DatasetFileInline
