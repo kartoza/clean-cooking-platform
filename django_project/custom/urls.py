@@ -4,7 +4,7 @@
 from django.conf.urls import url
 from django.urls import include
 from django.views.generic import TemplateView
-from proxy.views import proxy_view
+from custom.proxy import proxy_request
 from custom.views import HomeView, map_view_with_slug, ToolView
 
 urlpatterns = [
@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^tool/$',
         view=ToolView.as_view(),
         name='tool'),
-    url('proxy_cca/(?P<url>.*)', proxy_view),
+    url('proxy_cca/(?P<path>.*)', proxy_request),
     url(r'^methodology/$',
         view=TemplateView.as_view(template_name='eae/methodology.html'),
         name='tool'),

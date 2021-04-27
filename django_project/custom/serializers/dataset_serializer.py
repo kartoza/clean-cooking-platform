@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.sites.models import Site
 from rest_framework import serializers
 from preferences import preferences
 from custom.models.category import Category
@@ -34,7 +36,14 @@ class DatasetFileSerializer(serializers.ModelSerializer):
                     x=x,
                     y=y
                 )
-            style = '/proxy_cca/' + obj.geonode_layer.default_style.sld_url
+            style_url = obj.geonode_layer.default_style.sld_url
+            current_site = Site.objects.get_current()
+            if 'example' not in current_site.domain:
+                style_url = style_url.replace(
+                    settings.GEOSERVER_LOCATION,
+                    'http://{}/geoserver/'.format(current_site.domain)
+                )
+            style = '/proxy_cca/' + style_url
         return {
             'id': obj.id,
             'endpoint': obj.endpoint.url if obj.endpoint else '-',
