@@ -334,6 +334,12 @@ async function dsinit(id, inputs, pack, callback) {
 							"color_stops": []
 						};
 						let sldStr = await fetch(item.file.style).then(response => response.text()).then(str => str);
+
+						if (sldStr.includes('<UserLayer>')) {
+							sldStr = sldStr.replace('<UserLayer>', '<sld:NamedLayer>');
+							sldStr = sldStr.replace('</UserLayer>', '</sld:NamedLayer>');
+						}
+
 						let styleObject = await parser.readStyle(sldStr).then(styleObject => styleObject)
 						if (JSON.stringify(styleObject).includes('"kind":"Raster"')) {
 							try {
