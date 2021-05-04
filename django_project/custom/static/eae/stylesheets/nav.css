@@ -4,7 +4,7 @@ nav {
   display: flex;
   font-size: 1.3em;
   background-color: var(--the-green);
-  font-family: Roboto;
+  font-family: 'Aktiv Grotesk Corp', sans-serif;
   clear: both;
   line-height: 3.6em;
   padding: 0 2em;
