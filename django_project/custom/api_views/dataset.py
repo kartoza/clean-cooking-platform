@@ -14,7 +14,7 @@ class DatasetList(APIView):
             geography_id=geography_id,
             online=True
         ).exclude(
-            name__iexact='boundaries'
+            boundary_layer=True
         )
         return Response(
             DatasetSerializer(datasets, many=True).data
@@ -33,12 +33,18 @@ class DatasetDetail(APIView):
         pk = self.request.GET.get('id', None)
         name = self.request.GET.get('name', None)
         geography = self.request.GET.get('geography', None)
+        layer = self.request.GET.get('layer', None)
         dataset = None
         filters = {}
         if name:
             filters = {
-                'name__iexact': name
+                'name_long__iexact': name
             }
+        if layer:
+            if layer == 'boundary' or layer == 'boundaries':
+                filters = {
+                    'boundary_layer': True
+                }
         if geography:
             filters['geography_id'] = geography
 

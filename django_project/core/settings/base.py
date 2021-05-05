@@ -5,6 +5,7 @@ from .utils import absolute_path  # noqa
 INSTALLED_APPS += (
     'django_json_widget',
     'preferences',
+    'adminsortable2',
     'custom',
 )
 
@@ -95,3 +96,4 @@ MAPBOX_THEME = os.getenv('MAPBOX_THEME', '')
 GRAPPELLI_INDEX_DASHBOARD = 'custom.dashboard.CustomIndexDashboard'
 FILEBROWSER_DIRECTORY = ''
 DIRECTORY = ''
+

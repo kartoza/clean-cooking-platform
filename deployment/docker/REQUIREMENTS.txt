@@ -18,3 +18,4 @@ django-proxy==1.2.1
 django-preferences==1.0.0
 django-filebrowser==3.14.1
 python-slugify==4.0.1
+django-admin-sortable2==1.0

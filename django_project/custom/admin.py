@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.contrib.postgres import fields
+from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
 from preferences.admin import PreferencesAdmin
+from adminsortable2.admin import SortableAdminMixin
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
@@ -35,23 +37,45 @@ class DatasetFileAdmin(admin.ModelAdmin):
     )
 
 
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'name_long', 'created_at', 'updated', 'get_total_files', 'online')
+class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('order', 'name_long', 'sidebar_main_menu', 'sidebar_sub_menu', 'dataset', 'online')
+
+    list_display_links = ('name_long', )
+
+    list_filter = (
+        'online',
+    )
 
     fieldsets = (
         (None, {
-            'fields': ('geography', 'name', 'name_long', 'unit', 'online', 'sidebar_main_menu', 'sidebar_sub_menu', 'legend_range_steps')
+            'fields': ('geography', 'name_long', 'unit', 'online', 'sidebar_main_menu', 'sidebar_sub_menu', 'legend_range_steps')
         }),
         ('Advanced configurations', {
             'classes': ('grp-collapse grp-closed',),
-            'fields': ('analysis', 'controls', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
+            'fields': ('boundary_layer', 'analysis', 'controls', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
         }),
     )
 
-    def get_total_files(self, obj):
-        return obj.datasetfile_set.count()
+    def dataset(self, obj):
+        html = ''
+        for dataset_file in obj.datasetfile_set.all():
+            if dataset_file.use_geonode_layer:
+                html += '<a href={} target="_blank"> <span class="badge badge-secondary">Layer</span> '.format(
+                    dataset_file.geonode_layer.detail_url
+                )
+            else:
+                html += '<a href={}>'.format(
+                    dataset_file.endpoint.url
+                )
+            if dataset_file.label:
+                html += dataset_file.label
+            else:
+                html += '{} file'.format(dataset_file.func)
+            html += '</a>'
+            html += '<br>'
+        return format_html(html)
 
-    get_total_files.short_description = 'Total Dataset Files'
+    dataset.short_description = 'Dataset'
     formfield_overrides = {
         fields.JSONField: {'widget': JSONEditorWidget(height='250px')},
     }
