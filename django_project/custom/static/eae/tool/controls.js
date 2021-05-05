@@ -563,8 +563,6 @@ async function overview() {
 			err.change(0);
 		}
 
-		console.log(r);
-
 		ea_modal.set({
 			header: r.name,
 			content: tmpl('#country-overview', r),
@@ -727,7 +725,7 @@ export function init() {
 		tab_all.classList.add('active');
 	};
 
-	sort_datasets(GEOGRAPHY.configuration);
+	sort_datasets(SIDEBAR);
 
 	const first = qs('.controls-branch-tab', tabs_el);
 	select_tab(first, first.id.replace('controls-tab-', ''));

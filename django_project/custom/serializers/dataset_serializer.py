@@ -67,13 +67,22 @@ class DatasetSerializer(serializers.ModelSerializer):
     )
     category = serializers.SerializerMethodField()
     geonode_metadata = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        if obj.boundary_layer:
+            return 'boundaries'
+        return slugify(obj.name_long)
 
     def get_custom_controls(self, obj):
         controls = obj.controls
-        controls['path'] = [
-            slugify(obj.sidebar_main_menu),
-            slugify(obj.sidebar_sub_menu)
-        ]
+        if not obj.boundary_layer:
+            controls['path'] = [
+                slugify(obj.sidebar_main_menu),
+                slugify(obj.sidebar_sub_menu)
+            ]
+        else:
+            controls['path'] = []
         controls['range_label'] = obj.unit
         return controls
 

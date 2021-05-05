@@ -238,6 +238,11 @@ export async function init() {
 	const url = new URL(location);
 	const id = 1;
 
+	SIDEBAR = {
+		sort_subbranches: [],
+		sort_branches: []
+	}
+
 	GEOGRAPHY = await api_get(`/api/geography/?name=nepal`);
 	GEOGRAPHY.timeline = maybe(GEOGRAPHY, 'configuration', 'timeline');
 	GEOGRAPHY.timeline_dates = maybe(GEOGRAPHY, 'configuration', 'timeline_dates');
@@ -297,7 +302,7 @@ async function dsinit(id, inputs, pack, callback) {
 
 	let bounds;
 
-	const datasetBoundaries = await api_get(`/api/dataset/?name=boundaries&geography=${id}`)
+	const datasetBoundaries = await api_get(`/api/dataset/?layer=boundaries&geography=${id}`)
 	let ds = new DS(datasetBoundaries, false);
 	await ds.load('csv');
 	await ds.load('vectors');
@@ -316,6 +321,14 @@ async function dsinit(id, inputs, pack, callback) {
 	await api_get(`/api/datasets/?geography=${id}`)
 		.then(async r => {
 			return Promise.all(r.map(async e => {
+				const branch_name = e.category.controls.path[0];
+				const subbranch_name = e.category.controls.path[1];
+				if (!SIDEBAR.sort_branches.includes(branch_name)) {
+					SIDEBAR.sort_branches.push(branch_name)
+				}
+				if (!SIDEBAR.sort_subbranches.includes(subbranch_name)) {
+					SIDEBAR.sort_subbranches.push(subbranch_name)
+				}
 				for (const item of e.df) {
 					if (item.file.style) {
 						let raster_configuration = {

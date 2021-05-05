@@ -16,13 +16,8 @@ class Category(models.Model):
         on_delete=models.CASCADE
     )
 
-    name = models.CharField(
-        max_length=100,
-        default="",
-        blank=True
-    )
-
     name_long = models.TextField(
+        verbose_name='Name',
         blank=True
     )
 
@@ -59,6 +54,16 @@ class Category(models.Model):
     csv = JSONField(
         null=True,
         blank=True
+    )
+
+    boundary_layer = models.BooleanField(
+        default=False
+    )
+
+    order = models.PositiveIntegerField(
+        default=0,
+        blank=False,
+        null=False
     )
 
     analysis = JSONField(
@@ -182,6 +187,7 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = 'Categories'
+        ordering = ['order']
 
     def __str__(self):
         return self.name_long
