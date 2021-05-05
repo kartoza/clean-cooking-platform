@@ -8,6 +8,11 @@ INSTALLED_APPS += (
     'custom',
 )
 
+INSTALLED_APPS = (
+    'grappelli.dashboard',
+    'filebrowser',
+) + INSTALLED_APPS
+
 MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -86,3 +91,7 @@ GEP_SHORT_TITLE = os.getenv('GEP_SHORT_TITLE', 'BEP')
 SDI_TITLE = os.getenv('SDI_TITLE', 'Global Electrification Platform SDI')
 MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN', '')
 MAPBOX_THEME = os.getenv('MAPBOX_THEME', '')
+
+GRAPPELLI_INDEX_DASHBOARD = 'custom.dashboard.CustomIndexDashboard'
+FILEBROWSER_DIRECTORY = ''
+DIRECTORY = ''

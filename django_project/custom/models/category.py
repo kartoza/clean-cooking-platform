@@ -116,6 +116,25 @@ class Category(models.Model):
         default=True
     )
 
+    sidebar_main_menu = models.CharField(
+        default='-',
+        blank=False,
+        null=False,
+        max_length=125
+    )
+
+    sidebar_sub_menu = models.CharField(
+        default='-',
+        blank=False,
+        null=False,
+        max_length=125
+    )
+
+    legend_range_steps = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
     controls = JSONField(
         default={
             'range': '',

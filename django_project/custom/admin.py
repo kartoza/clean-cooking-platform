@@ -36,15 +36,15 @@ class DatasetFileAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'name_long', 'created_at', 'updated', 'get_total_files')
+    list_display = ('name', 'name_long', 'created_at', 'updated', 'get_total_files', 'online')
 
     fieldsets = (
         (None, {
-            'fields': ('geography', 'name', 'name_long', 'unit', 'online', 'controls', 'metadata')
+            'fields': ('geography', 'name', 'name_long', 'unit', 'online', 'sidebar_main_menu', 'sidebar_sub_menu', 'legend_range_steps')
         }),
         ('Advanced configurations', {
             'classes': ('grp-collapse grp-closed',),
-            'fields': ('analysis', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors'),
+            'fields': ('analysis', 'controls', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
         }),
     )
 

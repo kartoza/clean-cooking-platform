@@ -11,6 +11,11 @@
   --the-green: #144172;
   --the-light-green: #98BC40;
   --the-color: #393f44;
+  --primary-blue-1: #042549;
+  --primary-blue-2: #144172;
+  --primary-blue-3: #6fb7d1;
+  --secondary-orange-1: #f65b2a;
+  --secondary-orange-2: #ff9325;
 }
 @import url('https://fonts.googleapis.com/css?family=Bree+Serif|Roboto&display=swap');
 @font-face {

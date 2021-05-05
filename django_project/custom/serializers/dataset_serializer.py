@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.sites.models import Site
 from rest_framework import serializers
+from slugify import slugify
 from preferences import preferences
 from custom.models.category import Category
 from custom.models.dataset_file import DatasetFile
@@ -67,6 +68,15 @@ class DatasetSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     geonode_metadata = serializers.SerializerMethodField()
 
+    def get_custom_controls(self, obj):
+        controls = obj.controls
+        controls['path'] = [
+            slugify(obj.sidebar_main_menu),
+            slugify(obj.sidebar_sub_menu)
+        ]
+        controls['range_label'] = obj.unit
+        return controls
+
     def get_geonode_metadata(self, obj):
         dataset_files = DatasetFile.objects.filter(
             category_id=obj.id,
@@ -90,7 +100,7 @@ class DatasetSerializer(serializers.ModelSerializer):
             'csv': obj.csv,
             'analysis': obj.analysis,
             'timeline': obj.timeline,
-            'controls': obj.controls
+            'controls': self.get_custom_controls(obj)
         }
 
     class Meta:
