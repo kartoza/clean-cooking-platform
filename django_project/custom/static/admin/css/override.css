@@ -1,0 +1,61 @@
+p {
+    font-family: 'Aktiv Grotesk Corp', sans-serif;
+}
+
+h1 {
+    font-family: 'Aktiv Grotesk Corp', sans-serif;
+}
+
+
+#grp-navigation {
+    background-color: var(--primary-blue-2) !important;
+    color: #ffffff !important;
+    background-image: none;
+    padding-bottom: 20px;
+}
+
+#grp-navigation a {
+    color: #ffffff !important;
+}
+
+#site-name {
+    color: #ffffff !important;
+}
+
+h1, h2, h3, strong {
+    font-family: 'Aktiv Grotesk Corp', sans-serif;
+}
+
+#grp-user-tools {
+    position: absolute;
+    float: right;
+    font-weight: bold;
+    margin: 0 -10px 0 0;
+    border-left: 0;
+    right: 0;
+    top: 0;
+    margin-right: 30px;
+}
+
+#grp-admin-title {
+    display: none;
+}
+
+h2.grp-collapse-handler {
+    color: #ffff;
+    text-shadow: none !important;
+    background-color: var(--primary-blue-3) !important;
+}
+
+.grp-collapse.grp-closed > h2.grp-collapse-handler, .grp-collapse.grp-open > h2.grp-collapse-handler {
+    background-image: none;
+}
+
+.grp-collapse.grp-closed > h2.grp-collapse-handler:hover {
+    background-image: none;
+    filter: brightness(90%);
+}
+
+#grp-user-tools > li {
+    border-left: 0;
+}
