@@ -388,7 +388,7 @@ canvas#output {
   -ms-user-select: none;
   user-select: none;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column;
   border-top: solid 1px var(--the-white);
 }
 
@@ -813,4 +813,34 @@ table.summary .index-name {
   border: none;
   font-size: 1em;
   background-color: white;
+}
+
+.search-input {
+    font-weight: lighter;
+    font-size: 1.7em;
+    align-items: center;
+    box-sizing: border-box;
+    color: var(--the-white);
+    background-color: var(--the-green);
+    padding: 1em 1em;
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
+}
+
+#controls .search-results {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    overflow: hidden;
+}
+
+.search-results {
+    flex-grow: 1;
+    height: -webkit-fill-available;
+    height: -moz-available;
+    background-color: white;
+    padding: 1em;
+    overflow-y: scroll;
 }
