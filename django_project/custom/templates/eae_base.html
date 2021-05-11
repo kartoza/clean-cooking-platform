@@ -62,7 +62,12 @@
            class="toggleable">
             User Stories
         </a>
-
+        {% if user.is_superuser %}
+            <a href="/admin"
+               class="toggleable">
+              Admin
+            </a>
+        {% endif %}
         <!--
         <a href="/faq"
            class="toggleable">
@@ -106,9 +111,36 @@
                 <a href="mailto:info@cleancookingalliance.org">info@cleancookingalliance.org</a>
                 <br><br><br>
 {#                <a href="/privacy-policy">Privacy Policy</a>#}
+                <span id="google_translate_element"></span>
             </p>
         </div>
     </div>
+    <!-- Code provided by Google -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+            type="text/javascript"></script>
+
+    <!-- Flag click handler -->
+    <script type="text/javascript">
+        $('.translation-links a').click(function () {
+            var lang = $(this).data('lang');
+            var $frame = $('.goog-te-menu-frame:first');
+            if (!$frame.size()) {
+                alert("Error: Could not find Google translate frame.");
+                return false;
+            }
+            $frame.contents().find('.goog-te-menu2-item span.text:contains(' + lang + ')').get(0).click();
+            return false;
+        });
+    </script>
 </footer>
 
 <script src="{% static "eae/javascripts/cookie.notice.min.js" %}"></script>
