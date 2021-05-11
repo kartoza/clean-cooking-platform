@@ -1,4 +1,5 @@
 import DS from './ds.js';
+import { select_tab } from './controls-search.js';
 
 let slider_width;
 
@@ -587,10 +588,7 @@ async function _selectlist() {
 		"order": "name.asc"
 	};
 
-	const list = await ea_api.get("geographies", p).then(j => {
-		j.forEach(g => data[g.name] = g.name);
-		return j;
-	});
+	const list = ['Nepal']
 
 	function set_default(input) {
 		const g = list.find(x => x.id === GEOGRAPHY.id);
@@ -603,11 +601,11 @@ async function _selectlist() {
 		'change': function(_) {
 			const c = list.find(x => x.name === this.value);
 
-			if (maybe(c, 'id') && GEOGRAPHY.id !== c.id) {
-				const url = new URL(location);
-				url.searchParams.set('id', c.id);
-				location = url;
-			}
+			// if (maybe(c, 'id') && GEOGRAPHY.id !== c.id) {
+			// 	const url = new URL(location);
+			// 	url.searchParams.set('id', c.id);
+			// 	location = url;
+			// }
 		}
 	});
 
@@ -711,37 +709,22 @@ function options() {
 export function init() {
 	// _selectlist();
 
-	const tab_all = ce('div', "all", { id: 'controls-tab-all', class: 'controls-branch-tab up-title' });
-
-	tabs_el.append(tab_all);
-
-	tab_all.onclick = function() {
-		for (let e of qsa('.controls-branch-tab', tabs_el))
-			e.classList.remove('active');
-
-		for (let e of qsa('.controls-branch', contents_el))
-			e.style.display = '';
-
-		tab_all.classList.add('active');
-	};
+	// const tab_all = ce('div', "all", { id: 'controls-tab-all', class: 'controls-branch-tab up-title' });
+	//
+	// tabs_el.append(tab_all);
+	//
+	// tab_all.onclick = function() {
+	// 	for (let e of qsa('.controls-branch-tab', tabs_el))
+	// 		e.classList.remove('active');
+	//
+	// 	for (let e of qsa('.controls-branch', contents_el))
+	// 		e.style.display = '';
+	//
+	// 	tab_all.classList.add('active');
+	// };
 
 	sort_datasets(SIDEBAR);
 
 	const first = qs('.controls-branch-tab', tabs_el);
 	select_tab(first, first.id.replace('controls-tab-', ''));
-};
-
-export function select_tab(tab, name) {
-	for (let e of qsa('.controls-branch-tab', tabs_el))
-		e.classList.remove('active');
-
-	for (let e of qsa('.controls-branch', contents_el)) {
-		let all = (name === 'all');
-		e.style.display = all ? '' : 'none';
-	}
-
-	tab.classList.add('active');
-
-	const b = qs('#controls-branch-' + name, contents_el);
-	if (b) b.style.display = 'block';
 };

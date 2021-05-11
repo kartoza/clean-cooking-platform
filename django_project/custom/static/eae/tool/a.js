@@ -2,6 +2,8 @@ import * as cards from './cards.js';
 
 import * as controls from './controls.js';
 
+import * as controlssearch from './controls-search.js';
+
 import * as views from './views.js';
 
 import * as indexes from './indexes.js';
@@ -269,6 +271,7 @@ export async function init() {
 
 	cards.init();
 	controls.init();
+	controlssearch.init();
 
 	if (MOBILE) mobile();
 
