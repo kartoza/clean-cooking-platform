@@ -89,6 +89,13 @@ export function init() {
 
 	root.prepend(input);
 
+	if (GEOGRAPHY.icon) {
+		input.style.background = `url('${GEOGRAPHY.icon}') no-repeat scroll 0.4em 0.4em`;
+		input.style.backgroundSize = "auto 2.45em";
+		console.log(input);
+		console.log(GEOGRAPHY.icon);
+	}
+
 	input.onfocus = function(_) {
 		openall();
 	};

@@ -12,10 +12,12 @@ $(document).ready(function(){
         }
         if ($checkbox.is(':checked')) {
             $checkbox.parent().parent().parent().parent().find('.geonode_layer').show();
+            $checkbox.parent().parent().parent().parent().find('.configuration').hide();
             $checkbox.parent().parent().parent().parent().find('.endpoint').hide();
             hide_containers[id]=true;
         } else {
             $checkbox.parent().parent().parent().parent().find('.geonode_layer').hide();
+            $checkbox.parent().parent().parent().parent().find('.configuration').show();
             $checkbox.parent().parent().parent().parent().find('.endpoint').show();
             hide_containers[id]=false;
         }
@@ -29,13 +31,16 @@ $(document).ready(function(){
         }
         hide_containers[id]=!hide_containers[id];
         const _geonode_layer_container = target.parent().parent().parent().parent().find('.geonode_layer')
+        const _configuration_container = target.parent().parent().parent().parent().find('.configuration')
         const _endpoint_container = target.parent().parent().parent().parent().find('.endpoint')
         if (hide_containers[id]) {
             _geonode_layer_container.show();
             _endpoint_container.hide();
+            _configuration_container.hide();
         } else {
             _geonode_layer_container.hide();
             _endpoint_container.show();
+            _configuration_container.show();
         }
     })
 

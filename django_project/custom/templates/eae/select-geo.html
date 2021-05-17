@@ -1,0 +1,27 @@
+{% extends 'eae_base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <script src="{% static 'eae/javascripts/select-geo-libs.js' %}"></script>
+    <script src="{% static 'eae/javascripts/select-geo-main.js' %}"></script>
+    <script src="{% static "lib/js/jquery.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/select-geo.css' %}" />
+    <div id="playground"></div>
+
+	<div id="app-loading" class="loading">
+	  <div class="spinner"></div>
+	  <p>Loading data...</p>
+	</div>
+
+    <script>
+        ea_modal = new modal("ea-modal", {});
+        ea_flash = new flash();
+        ea_api = new pgrest(ea_settings.database, ea_flash);
+        MOBILE = false;
+    </script>
+
+    <script type="module">
+        import {init} from '/static/eae/javascripts/select-geo.js';
+        init();
+    </script>
+{% endblock %}
