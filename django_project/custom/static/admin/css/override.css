@@ -75,3 +75,7 @@ h2.grp-collapse-handler {
     color: #fff;
     background-color: var(--secondary-orange-1);
 }
+
+p.grp-help {
+    max-width: 100% !important;
+}

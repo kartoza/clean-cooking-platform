@@ -16,6 +16,7 @@ class MapSlugMappingAdmin(admin.ModelAdmin):
 
 class GeographyAdmin(admin.ModelAdmin):
     list_display = ('name', 'cca3', 'created_at', 'updated')
+    exclude = ('configuration', 'circle', 'pack', 'parent', 'adm')
     formfield_overrides = {
         fields.JSONField: {'widget': JSONEditorWidget},
     }
@@ -23,6 +24,7 @@ class GeographyAdmin(admin.ModelAdmin):
 
 class DatasetFileInline(admin.StackedInline):
     model = DatasetFile
+    autocomplete_fields = ['geonode_layer', ]
     formfield_overrides = {
         fields.JSONField: {'widget': JSONEditorWidget},
     }

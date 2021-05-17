@@ -33,7 +33,7 @@ class DatasetFile(models.Model):
     )
 
     use_geonode_layer = models.BooleanField(
-        default=False
+        default=True
     )
 
     endpoint = models.FileField(

@@ -820,12 +820,12 @@ table.summary .index-name {
     font-size: 1.7em;
     align-items: center;
     box-sizing: border-box;
-    color: var(--the-white);
-    background-color: var(--the-green);
     padding: 1em 1em;
+    padding-left: 3.25em;
     text-align: center;
     border: none;
     border-bottom: 1px solid rgba(0,0,0,0.3);
+    color: var(--the-green);
 }
 
 #controls .search-results {

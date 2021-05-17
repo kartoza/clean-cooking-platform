@@ -238,14 +238,14 @@ function mobile() {
 
 export async function init() {
 	const url = new URL(location);
-	const id = 1;
+	const id = url.searchParams.get('geo') || DEFAULT_GEO_ID;
 
 	SIDEBAR = {
 		sort_subbranches: [],
 		sort_branches: []
 	}
 
-	GEOGRAPHY = await api_get(`/api/geography/?name=nepal`);
+	GEOGRAPHY = await api_get(`/api/geography/?geo=${id}`);
 	GEOGRAPHY.timeline = maybe(GEOGRAPHY, 'configuration', 'timeline');
 	GEOGRAPHY.timeline_dates = maybe(GEOGRAPHY, 'configuration', 'timeline_dates');
 

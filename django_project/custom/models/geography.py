@@ -22,11 +22,15 @@ class Geography(models.Model):
         blank=True
     )
 
-    adm = models.IntegerField()
+    adm = models.IntegerField(
+        default=0
+    )
 
     cca3 = models.CharField(
         max_length=3,
-        blank=False
+        blank=False,
+        verbose_name='CCA3',
+        help_text='Three-letter country codes'
     )
 
     circle = models.CharField(
@@ -43,6 +47,12 @@ class Geography(models.Model):
 
     online = models.BooleanField(
         default=True
+    )
+
+    icon = models.FileField(
+        null=True,
+        blank=True,
+        upload_to='geography_icons/'
     )
 
     boundary_file = models.FileField(
