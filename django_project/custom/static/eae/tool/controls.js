@@ -274,8 +274,8 @@ function dstoggle() {
 
 function humanformat(s) {
 	return s
-		.replace('_', ' ')
-		.replace('-', ' ')
+		.replace(/_/g, ' ')
+		.replace(/-/g, ' ')
 		.replace(/^([a-z])/, x => x.toUpperCase())
 		.replace(/ ([a-z])/g, x => x.toUpperCase());
 };
