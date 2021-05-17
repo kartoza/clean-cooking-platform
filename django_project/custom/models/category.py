@@ -142,7 +142,7 @@ class Category(models.Model):
 
     controls = JSONField(
         default={
-            'range': '',
+            'range': 'double',
             'range_steps': '',
             'range_label': '',
             'path': [],
