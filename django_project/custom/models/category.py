@@ -125,18 +125,14 @@ class Category(models.Model):
         default=True
     )
 
-    sidebar_main_menu = models.CharField(
-        default='-',
-        blank=False,
-        null=False,
-        max_length=125
-    )
-
-    sidebar_sub_menu = models.CharField(
-        default='-',
-        blank=False,
-        null=False,
-        max_length=125
+    sidebar_sub_menu_obj = models.ForeignKey(
+        'custom.SubMenu',
+        related_name='category_sidebar_sub_menu',
+        verbose_name='Sidebar menu',
+        help_text='[Main Menu] - Sub Menu',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE
     )
 
     legend_range_steps = models.IntegerField(

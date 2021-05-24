@@ -3,12 +3,13 @@ from django.contrib.postgres import fields
 from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
 from preferences.admin import PreferencesAdmin
-from adminsortable2.admin import SortableAdminMixin
+from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
 from .models.cca_preference import CCAPreferences
 from .models.unit import Unit
+from .models.menu import *
 
 
 class MapSlugMappingAdmin(admin.ModelAdmin):
@@ -23,6 +24,7 @@ class UnitAdmin(admin.ModelAdmin):
 class GeographyAdmin(admin.ModelAdmin):
     list_display = ('name', 'cca3', 'created_at', 'updated')
     exclude = ('configuration', 'circle', 'pack', 'parent', 'adm')
+    search_fields = ('name', )
     formfield_overrides = {
         fields.JSONField: {'widget': JSONEditorWidget},
     }
@@ -45,20 +47,33 @@ class DatasetFileAdmin(admin.ModelAdmin):
     )
 
 
-class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('order', 'name_long', 'sidebar_main_menu', 'sidebar_sub_menu', 'dataset', 'online')
+class MainMenuAdmin(SortableAdminMixin, admin.ModelAdmin):
+    autocomplete_fields = ['geography', ]
+    search_fields = ('name', )
+    list_display = ('name', 'geography')
 
-    autocomplete_fields = ['unit_object', ]
+
+class SubMenuAdmin(SortableAdminMixin, admin.ModelAdmin):
+    autocomplete_fields = ['main_menu', ]
+    search_fields = ('name', 'main_menu__name')
+    list_display = ('name', 'main_menu')
+
+
+class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('order', 'name_long', 'sidebar_sub_menu_obj', 'dataset', 'online')
+
+    autocomplete_fields = ['unit_object', 'sidebar_sub_menu_obj' ]
 
     list_display_links = ('name_long', )
 
     list_filter = (
         'online',
+        'sidebar_sub_menu_obj'
     )
 
     fieldsets = (
         (None, {
-            'fields': ('geography', 'name_long', 'unit_object', 'online', 'sidebar_main_menu', 'sidebar_sub_menu', 'legend_range_steps')
+            'fields': ('geography', 'name_long', 'unit_object', 'online', 'sidebar_sub_menu_obj', 'legend_range_steps')
         }),
         ('Advanced configurations', {
             'classes': ('grp-collapse grp-closed',),
@@ -99,3 +114,5 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(DatasetFile, DatasetFileAdmin)
 admin.site.register(CCAPreferences, PreferencesAdmin)
 admin.site.register(Unit, UnitAdmin)
+admin.site.register(MainMenu, MainMenuAdmin)
+admin.site.register(SubMenu, SubMenuAdmin)
