@@ -32,7 +32,8 @@ class CustomIndexDashboard(Dashboard):
                     collapsible=False,
                     models=(
                         'custom.models.geography.Geography',
-                        'custom.models.category.Category')
+                        'custom.models.category.Category',
+                        'custom.models.unit.Unit')
                 )
             ]
         ))

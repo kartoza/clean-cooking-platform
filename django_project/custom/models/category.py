@@ -4,6 +4,7 @@
 from django.contrib.gis.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
+from custom.models.unit import Unit
 
 
 class Category(models.Model):
@@ -21,9 +22,12 @@ class Category(models.Model):
         blank=True
     )
 
-    unit = models.CharField(
-        max_length=32,
-        blank=True
+    unit_object = models.ForeignKey(
+        Unit,
+        verbose_name='Unit',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
     )
 
     domain = JSONField(
