@@ -8,10 +8,16 @@ from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
 from .models.cca_preference import CCAPreferences
+from .models.unit import Unit
 
 
 class MapSlugMappingAdmin(admin.ModelAdmin):
     list_display = ('map', 'slug')
+
+
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ('name', 'description')
+    search_fields = ['name', ]
 
 
 class GeographyAdmin(admin.ModelAdmin):
@@ -42,6 +48,8 @@ class DatasetFileAdmin(admin.ModelAdmin):
 class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('order', 'name_long', 'sidebar_main_menu', 'sidebar_sub_menu', 'dataset', 'online')
 
+    autocomplete_fields = ['unit_object', ]
+
     list_display_links = ('name_long', )
 
     list_filter = (
@@ -50,7 +58,7 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('geography', 'name_long', 'unit', 'online', 'sidebar_main_menu', 'sidebar_sub_menu', 'legend_range_steps')
+            'fields': ('geography', 'name_long', 'unit_object', 'online', 'sidebar_main_menu', 'sidebar_sub_menu', 'legend_range_steps')
         }),
         ('Advanced configurations', {
             'classes': ('grp-collapse grp-closed',),
@@ -90,3 +98,4 @@ admin.site.register(Geography, GeographyAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(DatasetFile, DatasetFileAdmin)
 admin.site.register(CCAPreferences, PreferencesAdmin)
+admin.site.register(Unit, UnitAdmin)
