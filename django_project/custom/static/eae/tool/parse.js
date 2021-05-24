@@ -242,6 +242,27 @@ export function points() {
 		});
 };
 
+
+const compareValue = (value, parameters) => {
+	const operator = parameters[0];
+	const operand = parseFloat(parameters[2]);
+	value = parseFloat(value);
+	switch (operator) {
+		case '<':
+			return value < operand;
+		case '=':
+			return value === operand;
+		case '<=':
+			return value <= operand;
+		case '>':
+			return value > operand;
+		case '>=':
+			return value >= operand;
+		default:
+			return false
+	}
+}
+
 export function lines() {
 	return geojson.call(this)
 		.then(_ => {
@@ -273,13 +294,25 @@ export function lines() {
 						let m;
 
 						const r = new RegExp(s.match);
-						const v = fs[i].properties[s.key];
+						let key = s.key;
+						if (Array.isArray(key)) {
+							if (key.length === 3)
+								key = key[1];
+						}
+						const v = fs[i].properties[key];
 
 						if (!v) continue;
 
 						const vs = v + "";
+						let valueMatched = false;
 
-						if (vs === s.match || (m = vs.match(r))) {
+						if (Array.isArray(s.key) && s.key.length === 3) {
+							valueMatched = compareValue(vs, s.key);
+						} else {
+							valueMatched = (vs === s.match || (m = vs.match(r)));
+						}
+
+						if (valueMatched) {
 							c[s.key] = vs ? vs : m[1];
 							if (c.params.indexOf(s.key) < 0) c.params.push(s.key);
 
@@ -324,7 +357,6 @@ export function lines() {
 					"line-dasharray": da,
 				},
 			});
-
 			if (criteria.length)
 				this.card.line_legends(criteria.map(x => JSON.parse(x)));
 		});
