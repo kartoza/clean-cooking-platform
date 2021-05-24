@@ -394,6 +394,13 @@ async function dsinit(id, inputs, pack, callback) {
 								let vectorConfObj = JSON.parse(vectorConf);
 								vectorConfObj['shape_type'] = 'lines';
 								item.file.configuration = vectorConfObj
+								if (!e.category.vectors) {
+									e.category.vectors = {
+										specs: null,
+										shape_type: vectorConfObj['shape_type'],
+										opacity: 1
+									}
+								}
 								e.category.vectors.specs = vectorConfObj.layers;
 								if (!e.configuration) {
 									let customVectorConfiguration = {
