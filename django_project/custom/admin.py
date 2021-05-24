@@ -36,6 +36,7 @@ class DatasetFileInline(admin.StackedInline):
     formfield_overrides = {
         fields.JSONField: {'widget': JSONEditorWidget},
     }
+    extra = 0
 
     class Media:
         js = ('/static/admin/js/show_geonode_layer.js', )
