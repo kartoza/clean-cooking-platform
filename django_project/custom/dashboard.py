@@ -26,11 +26,13 @@ class CustomIndexDashboard(Dashboard):
             column=1,
             collapsible=False,
             children = [
-                modules.AppList(
+                modules.ModelList(
                     _(''),
                     column=1,
                     collapsible=False,
-                    models=('custom.*', )
+                    models=(
+                        'custom.models.geography.Geography',
+                        'custom.models.category.Category')
                 )
             ]
         ))
