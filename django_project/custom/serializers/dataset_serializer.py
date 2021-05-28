@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Q
 from django.contrib.sites.models import Site
 from rest_framework import serializers
 from slugify import slugify
@@ -61,14 +62,19 @@ class DatasetFileSerializer(serializers.ModelSerializer):
 
 class DatasetSerializer(serializers.ModelSerializer):
 
-    df = DatasetFileSerializer(
-        source='datasetfile_set',
-        many=True
-    )
+    df = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     geonode_metadata = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     unit = serializers.SerializerMethodField()
+
+    def get_df(self, obj):
+        return DatasetFileSerializer(
+            obj.datasetfile_set.filter(
+                ~Q(endpoint='') | Q(geonode_layer__isnull=False)
+            ),
+            many=True
+        ).data
 
     def get_unit(self, obj):
         if obj.unit_object:

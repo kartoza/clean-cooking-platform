@@ -1,5 +1,6 @@
 # coding=utf-8
 from django.http.response import Http404
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from custom.models.category import Category
@@ -12,9 +13,9 @@ class DatasetList(APIView):
         geography_id = self.request.GET.get('geography', None)
         datasets = Category.objects.filter(
             geography_id=geography_id,
-            online=True
+            online=True,
         ).exclude(
-            boundary_layer=True
+            boundary_layer=True,
         )
         return Response(
             DatasetSerializer(datasets, many=True).data

@@ -85,19 +85,25 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
     def dataset(self, obj):
         html = ''
         for dataset_file in obj.datasetfile_set.all():
-            if dataset_file.use_geonode_layer:
+            dataset_found = False
+            if dataset_file.use_geonode_layer and dataset_file.geonode_layer:
                 html += '<a href={} target="_blank"> <span class="badge badge-secondary">Layer</span> '.format(
                     dataset_file.geonode_layer.detail_url
                 )
-            else:
+                dataset_found = True
+            elif dataset_file.endpoint:
                 html += '<a href={}>'.format(
                     dataset_file.endpoint.url
                 )
-            if dataset_file.label:
-                html += dataset_file.label
+                dataset_found = True
+            if dataset_found:
+                if dataset_file.label:
+                    html += dataset_file.label
+                else:
+                    html += '{} file'.format(dataset_file.func)
+                html += '</a>'
             else:
-                html += '{} file'.format(dataset_file.func)
-            html += '</a>'
+                html += '-'
             html += '<br>'
         return format_html(html)
 
