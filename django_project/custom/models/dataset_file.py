@@ -28,8 +28,9 @@ class DatasetFile(models.Model):
 
     label = models.CharField(
         max_length=100,
-        null=True,
-        blank=True
+        null=False,
+        blank=False,
+        default=''
     )
 
     use_geonode_layer = models.BooleanField(
