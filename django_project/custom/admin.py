@@ -37,6 +37,7 @@ class DatasetFileInline(admin.StackedInline):
         fields.JSONField: {'widget': JSONEditorWidget},
     }
     extra = 0
+    max_num = 3
 
     class Media:
         js = ('/static/admin/js/show_geonode_layer.js', )
