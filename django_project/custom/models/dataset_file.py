@@ -90,7 +90,7 @@ class DatasetFile(models.Model):
     )
 
     def __str__(self):
-        return self.label if self.label else '-'
+        return f'{self.label if self.label else "-"} ({self.func.capitalize()})'
 
     class Meta:
         verbose_name_plural = 'Dataset Files'
