@@ -119,7 +119,6 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 admin.site.register(Geography, GeographyAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(DatasetFile, DatasetFileAdmin)
 admin.site.register(CCAPreferences, PreferencesAdmin)
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(MainMenu, MainMenuAdmin)
