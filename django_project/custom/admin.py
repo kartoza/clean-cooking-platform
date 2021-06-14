@@ -3,7 +3,7 @@ from django.contrib.postgres import fields
 from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
 from preferences.admin import PreferencesAdmin
-from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
+from adminsortable2.admin import SortableAdminMixin
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
@@ -75,11 +75,11 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('geography', 'name_long', 'unit_object', 'online', 'sidebar_sub_menu_obj', 'legend_range_steps')
+            'fields': ('geography', 'name_long', 'unit_object', 'online', 'sidebar_sub_menu_obj')
         }),
         ('Advanced configurations', {
             'classes': ('grp-collapse grp-closed',),
-            'fields': ('boundary_layer', 'analysis', 'controls', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
+            'fields': ('boundary_layer', 'legend_range_steps', 'analysis', 'controls', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
         }),
     )
 
