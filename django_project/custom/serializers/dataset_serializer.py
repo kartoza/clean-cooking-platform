@@ -115,6 +115,35 @@ class DatasetSerializer(serializers.ModelSerializer):
             )
         return '-'
 
+    def _get_analysis(self, obj):
+        _analysis = obj.analysis
+        _analysis['indexes'] = []
+        if obj.eap_use:
+            _analysis['indexes'].append({
+                'index': 'eai',
+                'scale': obj.eap_scale,
+                'invert': obj.eap_invert
+            })
+        if obj.demand_index:
+            _analysis['indexes'].append({
+                'index': 'demand',
+                'scale': obj.demand_scale,
+                'invert': obj.demand_invert
+            })
+        if obj.supply_index:
+            _analysis['indexes'].append({
+                'index': 'supply',
+                'scale': obj.supply_scale,
+                'invert': obj.supply_invert
+            })
+        if obj.ani_index:
+            _analysis['indexes'].append({
+                'index': 'ani',
+                'scale': obj.ani_scale,
+                'invert': obj.ani_invert
+            })
+        return _analysis
+
     def get_category(self, obj):
         return {
             'domain': obj.domain,
@@ -123,7 +152,7 @@ class DatasetSerializer(serializers.ModelSerializer):
             'raster': obj.raster,
             'vectors': obj.vectors,
             'csv': obj.csv,
-            'analysis': obj.analysis,
+            'analysis': self._get_analysis(obj),
             'timeline': obj.timeline,
             'controls': self.get_custom_controls(obj)
         }

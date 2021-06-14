@@ -7,8 +7,21 @@ from django.contrib.postgres.fields import JSONField
 from custom.models.unit import Unit
 
 
+LINEAR = 'linear'
+INTERVALS = 'intervals'
+KEY_DELTA = 'key-delta'
+INCLUSION_BUFFER = 'inclusion-buffer'
+
+
 class Category(models.Model):
     """Category model"""
+
+    INDEX_SCALES = (
+        (LINEAR, 'Linear'),
+        (INTERVALS, 'Intervals'),
+        (KEY_DELTA, 'Key Delta'),
+        (INCLUSION_BUFFER, 'Inclusion Buffer')
+    )
 
     geography = models.ForeignKey(
         'custom.Geography',
@@ -183,6 +196,97 @@ class Category(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
         related_name='category_updated_by'
+    )
+
+    # Index
+    eap_use = models.BooleanField(
+        default=False,
+        verbose_name='Use Energy Access Potential',
+        help_text=(
+            'The Energy Access Potential Index identifies areas with higher '
+            'energy demand and supply which are characterized with higher '
+            'index values. It is an aggregated measure of all selected data '
+            'sets under both Demand and Supply categories.'
+        )
+    )
+    eap_scale = models.CharField(
+        verbose_name='EAP Scale',
+        max_length=50,
+        choices=INDEX_SCALES,
+        default='',
+        blank=True,
+    )
+    eap_invert = models.BooleanField(
+        verbose_name='Invert',
+        default=False
+    )
+
+    demand_index = models.BooleanField(
+        default=False,
+        verbose_name='Use Demand',
+        help_text=(
+            'The Demand Index identifies areas with higher energy demand '
+            'which are characterized with higher index values. '
+            'It is an aggregated and weighted measure of all selected data '
+            'sets under Demographics and Socio-economic activities.'
+        )
+    )
+    demand_scale = models.CharField(
+        verbose_name='Demand Scale',
+        max_length=50,
+        choices=INDEX_SCALES,
+        default='',
+        blank=True,
+    )
+    demand_invert = models.BooleanField(
+        verbose_name='Invert',
+        default=False
+    )
+
+    supply_index = models.BooleanField(
+        default=False,
+        verbose_name='Use Supply',
+        help_text=(
+            'The Supply Index identifies areas with higher energy '
+            'supply which are characterized with higher index values. '
+            'It is an aggregated and weighted measure of all selected data '
+            'sets under Resource Availability and Infrastructure.'
+        )
+    )
+    supply_scale = models.CharField(
+        verbose_name='Supply Scale',
+        max_length=50,
+        choices=INDEX_SCALES,
+        default='',
+        blank=True,
+    )
+    supply_invert = models.BooleanField(
+        verbose_name='Invert',
+        default=False
+    )
+
+    ani_index = models.BooleanField(
+        default=False,
+        verbose_name='Use Assistance Need Index',
+        help_text=(
+            'The Assistance Need Index identifies areas where market '
+            'assistance is needed the most which are characterized '
+            'with higher index values. It is an aggregated and weighted '
+            'measure of selected data sets under both Demand and Supply '
+            'categories indicating high energy demand, low economic activity, '
+            'and low access to infrastructure and resources.'
+        )
+    )
+    ani_scale = models.CharField(
+        verbose_name='ANI Scale',
+        max_length=50,
+        choices=INDEX_SCALES,
+        default='',
+        blank=True,
+    )
+    ani_invert = models.BooleanField(
+        verbose_name='Invert',
+        default=False
     )
 
     class Meta:
