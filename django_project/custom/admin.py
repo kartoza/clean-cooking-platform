@@ -4,6 +4,7 @@ from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
 from preferences.admin import PreferencesAdmin
 from adminsortable2.admin import SortableAdminMixin
+from geonode.layers.models import Layer
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
@@ -22,12 +23,32 @@ class UnitAdmin(admin.ModelAdmin):
 
 
 class GeographyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'cca3', 'created_at', 'updated')
-    exclude = ('configuration', 'circle', 'pack', 'parent', 'adm')
+    change_form_template = 'admin/custom/geography/change_form.html'
+
+    list_display = ('name', 'cca3', 'created_at', 'vector_boundary_layer')
+    exclude = ('configuration', 'circle', 'pack', 'parent', 'adm',
+               'boundary_dimension_x', 'boundary_dimension_y',
+               'created_by', 'updated_by', 'boundary_file')
     search_fields = ('name', )
     formfield_overrides = {
         fields.JSONField: {'widget': JSONEditorWidget},
     }
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(GeographyAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['vector_boundary_layer'].queryset = (
+            Layer.objects.filter(
+                storeType__contains='dataStore')
+        )
+        form.base_fields['raster_mask_layer'].queryset = Layer.objects.filter(
+            storeType__contains='coverageStore')
+        return form
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user
+        if not obj.created_by:
+            obj.created_by = request.user
+        obj.save()
 
 
 class DatasetFileInline(admin.StackedInline):
