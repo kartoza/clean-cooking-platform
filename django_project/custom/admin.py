@@ -97,7 +97,7 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
         ('Advanced configurations', {
             'classes': ('grp-collapse grp-closed advanced-module',),
             'fields': ('boundary_layer', 'legend_range_steps', 'range_type', 'weight',
-                       'analysis', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
+                       'analysis', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
         }),
     )
 

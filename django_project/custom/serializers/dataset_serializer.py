@@ -166,7 +166,6 @@ class DatasetSerializer(serializers.ModelSerializer):
             'pack',
             'circle',
             'online',
-            'configuration',
             'metadata',
             'geonode_metadata',
             'category',
