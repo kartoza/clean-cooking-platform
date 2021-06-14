@@ -97,6 +97,7 @@ class DatasetSerializer(serializers.ModelSerializer):
                 ]
         controls['range_label'] = self.get_unit(obj)
         controls['path'] = path
+        controls['weight'] = obj.weight
         return controls
 
     def get_geonode_metadata(self, obj):
