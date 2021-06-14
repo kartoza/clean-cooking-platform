@@ -64,6 +64,10 @@ class Category(models.Model):
         default=False
     )
 
+    weight = models.BooleanField(
+        default=True
+    )
+
     order = models.PositiveIntegerField(
         default=0,
         blank=False,
