@@ -42,7 +42,7 @@ h1, h2, h3, strong {
 }
 
 h2.grp-collapse-handler {
-    color: #ffff;
+    color: #144172;
     text-shadow: none !important;
     background-color: var(--primary-blue-3) !important;
 }
@@ -78,4 +78,8 @@ h2.grp-collapse-handler {
 
 p.grp-help {
     max-width: 100% !important;
+}
+
+.hidden-fieldset {
+    display: none;
 }

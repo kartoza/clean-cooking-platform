@@ -75,10 +75,27 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     fieldsets = (
         (None, {
+            'classes': ('main-module', ),
             'fields': ('geography', 'name_long', 'unit_object', 'online', 'sidebar_sub_menu_obj')
         }),
+        ('EAP', {
+            'classes': ('grp-collapse hidden-fieldset eap-fieldset',),
+            'fields': ('eap_use', 'eap_scale', 'eap_invert'),
+        }),
+        ('Demand', {
+            'classes': ('grp-collapse hidden-fieldset demand-fieldset',),
+            'fields': ('demand_index', 'demand_scale', 'demand_invert'),
+        }),
+        ('Supply', {
+            'classes': ('grp-collapse hidden-fieldset supply-fieldset',),
+            'fields': ('supply_index', 'supply_scale', 'supply_invert'),
+        }),
+        ('ANI', {
+            'classes': ('grp-collapse hidden-fieldset supply-fieldset',),
+            'fields': ('ani_index', 'ani_scale', 'ani_invert'),
+        }),
         ('Advanced configurations', {
-            'classes': ('grp-collapse grp-closed',),
+            'classes': ('grp-collapse grp-closed advanced-module',),
             'fields': ('boundary_layer', 'legend_range_steps', 'range_type', 'weight',
                        'analysis', 'configuration', 'domain', 'domain_init', 'timeline', 'vectors', 'metadata'),
         }),
@@ -116,6 +133,9 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
     inlines = [
         DatasetFileInline
     ]
+
+    class Media:
+        js = ('/static/admin/js/category.js', )
 
 
 admin.site.register(Geography, GeographyAdmin)
