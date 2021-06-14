@@ -31,8 +31,8 @@ class DatasetFileSerializer(serializers.ModelSerializer):
                 name__iexact= file_type
             )
             if links.exists():
-                x = preferences.CCAPreferences.boundary_dimension_x
-                y = preferences.CCAPreferences.boundary_dimension_y
+                x = obj.category.geography.boundary_dimension_x
+                y = obj.category.geography.boundary_dimension_y
                 geonode_layer = '/proxy_cca/{url}&SCALESIZE=i({x}),j({y})'.format(
                     url=links[0].url,
                     x=x,

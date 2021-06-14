@@ -82,6 +82,15 @@ class Geography(models.Model):
         related_name='geography_updated_by'
     )
 
+    boundary_dimension_x = models.FloatField(
+        default=100,
+        help_text='Raster resolution (x)'
+    )
+    boundary_dimension_y = models.FloatField(
+        default=100,
+        help_text='Raster resolution (y)'
+    )
+
     class Meta:
         verbose_name_plural = 'Geographies'
 
