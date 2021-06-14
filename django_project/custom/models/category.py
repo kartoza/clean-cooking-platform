@@ -140,19 +140,15 @@ class Category(models.Model):
     )
 
     legend_range_steps = models.IntegerField(
+        verbose_name='Range steps',
         null=True,
         blank=True
     )
 
-    controls = JSONField(
-        default={
-            'range': 'double',
-            'range_steps': '',
-            'range_label': '',
-            'path': [],
-            'weight': False
-        },
-        null=True,
+    range_type = models.CharField(
+        max_length=128,
+        default='',
+        help_text='Range data type, e.g. double',
         blank=True
     )
 

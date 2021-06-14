@@ -87,7 +87,7 @@ class DatasetSerializer(serializers.ModelSerializer):
         return slugify(obj.name_long)
 
     def get_custom_controls(self, obj):
-        controls = obj.controls
+        controls = {}
         path = ['', '']
         if not obj.boundary_layer:
             if obj.sidebar_sub_menu_obj:
@@ -98,6 +98,8 @@ class DatasetSerializer(serializers.ModelSerializer):
         controls['range_label'] = self.get_unit(obj)
         controls['path'] = path
         controls['weight'] = obj.weight
+        controls['range_steps'] = obj.legend_range_steps
+        controls['range'] = obj.range_type
         return controls
 
     def get_geonode_metadata(self, obj):
