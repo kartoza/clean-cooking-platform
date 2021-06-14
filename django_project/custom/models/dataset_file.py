@@ -1,8 +1,11 @@
 # coding=utf-8
 """Datasets files model definition.
 """
+import re
+import requests
 from django.contrib.gis.db import models
 from django.conf import settings
+from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 from geonode.layers.models import Layer
 
@@ -95,3 +98,32 @@ class DatasetFile(models.Model):
 
     class Meta:
         verbose_name_plural = 'Dataset Files'
+
+
+@receiver(models.signals.post_save, sender=DatasetFile)
+def post_save_dataset_file(sender, instance, **kwargs):
+    if not instance.category:
+        return
+
+    if (
+            instance.geonode_layer and
+            instance.category.boundary_layer and
+            instance.func == RASTER
+    ):
+        geoserver = settings.GEOSERVER_LOCATION
+        url = (
+            f'{geoserver}wcs?service=WCS&version=2.0.1&request='
+            f'describecoverage&coverageid={instance.geonode_layer.typename}'
+        )
+        r = requests.get(url = url)
+
+        data = r.text
+        grid_envelope = (
+            re.findall('<gml:high>(.*?)</gml:high>', data, re.DOTALL)
+        )
+        if len(grid_envelope) > 0:
+            x, y = grid_envelope[0].split(' ')
+            geography = instance.category.geography
+            geography.boundary_dimension_x = int(x)
+            geography.boundary_dimension_y = int(y)
+            geography.save()
