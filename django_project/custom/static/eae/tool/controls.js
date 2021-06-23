@@ -38,8 +38,10 @@ export default class dscontrols extends HTMLElement {
 		const cat = this.ds.category;
 		const c = cat.controls;
 
-		if (c.weight)
-			this.weight_group = weight.call(this.ds);
+		if (c) {
+			if (c.weight)
+				this.weight_group = weight.call(this.ds);
+		}
 
 		if (this.ds.items)
 			this.collection_list = collection_list.call(this.ds);
@@ -54,7 +56,7 @@ export default class dscontrols extends HTMLElement {
 		const cat = this.ds.category;
 
 		let steps;
-		if (cat.controls.range_steps) {
+		if (cat.controls.range_steps && this.ds.domain.max && this.ds.domain.min) {
 			steps = [];
 			const s = (this.ds.domain.max - this.ds.domain.min) / (cat.controls.range_steps - 1);
 
@@ -151,6 +153,8 @@ export default class dscontrols extends HTMLElement {
 
 		const ds = this.ds;
 		const path = maybe(ds.category, 'controls', 'path');
+
+		if (!path) return;
 
 		if (!path.length) return;
 
@@ -665,11 +669,13 @@ function sort_datasets(config) {
 function options() {
 	const dropdownlist = [];
 
-	if (!Object.keys(this.ds.metadata).every(k => !this.ds.metadata[k])) {
-		dropdownlist.push({
-			"content": "Dataset info",
-			"action": _ => this.ds.info_modal()
-		});
+	if (this.ds.metadata) {
+		if (!Object.keys(this.ds.metadata).every(k => !this.ds.metadata[k])) {
+			dropdownlist.push({
+				"content": "Dataset info",
+				"action": _ => this.ds.info_modal()
+			});
+		}
 	}
 
 	if (this.weight_group) {

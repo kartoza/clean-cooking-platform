@@ -105,7 +105,6 @@ This is not fatal but the dataset is now disabled.`
 				this.vectors.key = maybe(f, 'configuration', 'key') || f.key || 'OBJECTID';
 				this.vectors.fileid = f.id;
 				this.vectors.features = f.features;
-
 				let p; switch (this.vectors.shape_type) {
 				case 'points': {
 					p = x => parse.points.call(x || this);
@@ -447,11 +446,13 @@ This is not fatal but the dataset is now disabled.`
 
 		switch (this.datatype) {
 		case 'raster': {
-			this.colorscale = ea_colorscale({
-				stops: this.category.colorstops,
-				domain: this.domain,
-				intervals: this.raster.configuration.intervals
-			});
+			if (this.raster.configuration) {
+				this.colorscale = ea_colorscale({
+					stops: this.category.colorstops,
+					domain: this.domain,
+					intervals: this.raster.configuration.intervals
+				});
+			}
 			break;
 		}
 
