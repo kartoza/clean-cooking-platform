@@ -3,10 +3,107 @@ from django.db.models import Q
 from django.contrib.sites.models import Site
 from rest_framework import serializers
 from slugify import slugify
-from preferences import preferences
 from custom.models.category import Category
+from custom.models.geography import Geography
 from custom.models.dataset_file import DatasetFile
 from geonode.base.models import Link
+
+
+def geonode_layer_links(geonode_layer, geography):
+    """
+    Return links for layer and the style
+    """
+    if geonode_layer.is_vector():
+        file_type = 'geojson'
+    else:
+        file_type = 'geotiff'
+    links = Link.objects.filter(
+        resource=geonode_layer,
+        name__iexact=file_type
+    )
+    layer_url = None
+    if links.exists():
+        x = geography.boundary_dimension_x
+        y = geography.boundary_dimension_y
+        layer_url = '/proxy_cca/{url}&SCALESIZE=i({x}),j({y})'.format(
+            url=links[0].url,
+            x=x,
+            y=y
+        )
+    style_url = geonode_layer.default_style.sld_url
+    current_site = Site.objects.get_current()
+    if 'example' not in current_site.domain:
+        style_url = style_url.replace(
+            settings.GEOSERVER_LOCATION,
+            'http://{}/geoserver/'.format(current_site.domain)
+        )
+    style_url = '/proxy_cca/' + style_url
+    return layer_url, style_url
+
+
+class BoundaryGeographySerializer(serializers.ModelSerializer):
+    name_long = serializers.SerializerMethodField()
+    df = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        return 'boundaries'
+
+    def get_category(self, obj):
+        return {
+            'vectors': {
+                "opacity": 1,
+                "shape_type": "polygons",
+            },
+            'raster': {
+                "init": None,
+                "scale": None,
+                "domain": None,
+                "intervals": None,
+                "precision": 0
+            }
+        }
+
+    def get_df(self, obj):
+        dataset_files = []
+        if obj.raster_mask_layer:
+            layer_url, style_url = geonode_layer_links(
+                obj.raster_mask_layer,
+                obj
+            )
+            dataset_files.append({
+                'func': 'raster',
+                'active': True,
+                'file': {
+                    'endpoint': '-',
+                    'geonode_layer': layer_url if layer_url else '-',
+                    'style': style_url if style_url else '-'
+                },
+            })
+        if obj.vector_boundary_layer:
+            layer_url, style_url = geonode_layer_links(
+                obj.vector_boundary_layer,
+                obj
+            )
+            dataset_files.append({
+                'func': 'vectors',
+                'active': True,
+                'file': {
+                    'endpoint': '-',
+                    'geonode_layer': layer_url if layer_url else '-',
+                    'style': style_url if style_url else '-'
+                },
+            })
+        return dataset_files
+
+    def get_name_long(self, obj):
+        return 'Administrative Boundaries'
+
+    class Meta:
+        model = Geography
+        fields = ['name', 'name_long', 'online', 'category', 'df']
+
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -22,30 +119,10 @@ class DatasetFileSerializer(serializers.ModelSerializer):
         geonode_layer = None
         style = None
         if obj.use_geonode_layer and obj.geonode_layer:
-            if obj.func == 'raster':
-                file_type = 'geotiff'
-            else:
-                file_type = 'geojson'
-            links = Link.objects.filter(
-                resource = obj.geonode_layer,
-                name__iexact= file_type
+            geonode_layer, style = geonode_layer_links(
+                obj.geonode_layer,
+                obj.category.geography
             )
-            if links.exists():
-                x = obj.category.geography.boundary_dimension_x
-                y = obj.category.geography.boundary_dimension_y
-                geonode_layer = '/proxy_cca/{url}&SCALESIZE=i({x}),j({y})'.format(
-                    url=links[0].url,
-                    x=x,
-                    y=y
-                )
-            style_url = obj.geonode_layer.default_style.sld_url
-            current_site = Site.objects.get_current()
-            if 'example' not in current_site.domain:
-                style_url = style_url.replace(
-                    settings.GEOSERVER_LOCATION,
-                    'http://{}/geoserver/'.format(current_site.domain)
-                )
-            style = '/proxy_cca/' + style_url
         return {
             'id': obj.id,
             'endpoint': obj.endpoint.url if obj.endpoint else '-',

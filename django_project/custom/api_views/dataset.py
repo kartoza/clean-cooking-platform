@@ -1,10 +1,29 @@
 # coding=utf-8
 from django.http.response import Http404
-from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from custom.models.category import Category
-from custom.serializers.dataset_serializer import DatasetSerializer
+from custom.models.geography import Geography
+from custom.serializers.dataset_serializer import (
+    BoundaryGeographySerializer,
+    DatasetSerializer
+)
+
+
+class BoundariesDataset(APIView):
+
+    def get(self, request, *args):
+        geography_id = self.request.GET.get('geography', None)
+        try:
+            geography = Geography.objects.get(
+                id=geography_id
+            )
+        except Geography.DoesNotExist:
+            raise Http404
+
+        return Response(
+            BoundaryGeographySerializer(geography).data
+        )
 
 
 class DatasetList(APIView):

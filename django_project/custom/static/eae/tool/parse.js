@@ -400,16 +400,22 @@ export function polygons() {
 				"data": this.vectors.features
 			});
 
+			let paint = {}
+
+			if (this.vectors.stroke) {
+				paint = {
+					"fill-color": this.datatype.match("polygons-") ? ['get', '__color'] : this.vectors.fill,
+					"fill-outline-color": this.vectors.stroke,
+					"fill-opacity": [ "case", [ "boolean", [ "get", "__hidden" ], false ], 0, 1 * this.vectors.opacity ]
+				}
+			}
+
 			this.add_layer({
 				"type": "fill",
 				"layout": {
 					"visibility": "none",
 				},
-				"paint": {
-					"fill-color": this.datatype.match("polygons-") ? ['get', '__color'] : this.vectors.fill,
-					"fill-outline-color": this.vectors.stroke,
-					"fill-opacity": [ "case", [ "boolean", [ "get", "__hidden" ], false ], 0, 1 * this.vectors.opacity ]
-				},
+				"paint": paint,
 			});
 
 			mapbox_dblclick(this.id);

@@ -305,9 +305,9 @@ async function dsinit(id, inputs, pack, callback) {
 
 	let bounds;
 
-	const datasetBoundaries = await api_get(`/api/dataset/?layer=boundaries&geography=${id}`)
+	const datasetBoundaries = await api_get(`/api/boundaries-dataset/?geography=${id}`)
 	let ds = new DS(datasetBoundaries, false);
-	await ds.load('csv');
+	// await ds.load('csv');
 	await ds.load('vectors');
 	await ds.load('raster');
 	if (!(bounds = ds.vectors.bounds)) throw `'boundaries' dataset has no vectors.bounds`;
