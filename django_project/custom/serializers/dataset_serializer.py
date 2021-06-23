@@ -23,10 +23,12 @@ def geonode_layer_links(geonode_layer, geography):
     )
     layer_url = None
     if links.exists():
+        url = links[0].url
+        url = url.replace('3857', '4326')
         x = geography.boundary_dimension_x
         y = geography.boundary_dimension_y
         layer_url = '/proxy_cca/{url}&SCALESIZE=i({x}),j({y})'.format(
-            url=links[0].url,
+            url=url,
             x=x,
             y=y
         )
