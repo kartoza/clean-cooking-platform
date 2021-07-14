@@ -1,3 +1,4 @@
+import urllib.parse
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.sites.models import Site
@@ -24,7 +25,8 @@ def geonode_layer_links(geonode_layer, geography):
     layer_url = None
     if links.exists():
         url = links[0].url
-        url = url.replace('3857', '4326')
+        url = urllib.parse.unquote(url)
+        url = url.replace('EPSG:3857', 'EPSG:4326')
         x = geography.boundary_dimension_x
         y = geography.boundary_dimension_y
         layer_url = '/proxy_cca/{url}&SCALESIZE=i({x}),j({y})'.format(
