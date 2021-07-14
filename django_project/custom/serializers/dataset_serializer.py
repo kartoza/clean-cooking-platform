@@ -42,7 +42,6 @@ def geonode_layer_links(geonode_layer, geography):
                 settings.GEOSERVER_LOCATION,
                 'http://{}/geoserver/'.format(current_site.domain)
             )
-        style_url = ''
     except AttributeError:
         style_url = ''
     return layer_url, style_url
