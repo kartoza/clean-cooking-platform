@@ -262,10 +262,14 @@ export async function init() {
 
 	MAPBOX = mapbox_init(O, U);
 
-	await dsinit(GEOGRAPHY.id, U.inputs, U.pack, bounds => {
-		MAPBOX.coords = mapbox_fit(bounds);
-		mapbox_change_theme(ea_settings.mapbox_theme);
-	});
+	try {
+		await dsinit(GEOGRAPHY.id, U.inputs, U.pack, bounds => {
+			MAPBOX.coords = mapbox_fit(bounds);
+			mapbox_change_theme(ea_settings.mapbox_theme);
+		});
+	} catch (err) {
+		console.log(err)
+	}
 
 	O.index = U.output;
 
