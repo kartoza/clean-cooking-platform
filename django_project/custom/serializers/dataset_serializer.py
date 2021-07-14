@@ -34,14 +34,17 @@ def geonode_layer_links(geonode_layer, geography):
             x=x,
             y=y
         )
-    style_url = geonode_layer.default_style.sld_url
-    current_site = Site.objects.get_current()
-    if 'example' not in current_site.domain:
-        style_url = style_url.replace(
-            settings.GEOSERVER_LOCATION,
-            'http://{}/geoserver/'.format(current_site.domain)
-        )
-    style_url = '/proxy_cca/' + style_url
+    try:
+        style_url = geonode_layer.default_style.sld_url
+        current_site = Site.objects.get_current()
+        if 'example' not in current_site.domain:
+            style_url = style_url.replace(
+                settings.GEOSERVER_LOCATION,
+                'http://{}/geoserver/'.format(current_site.domain)
+            )
+        style_url = ''
+    except AttributeError:
+        style_url = ''
     return layer_url, style_url
 
 
@@ -82,7 +85,7 @@ class BoundaryGeographySerializer(serializers.ModelSerializer):
                 'file': {
                     'endpoint': '-',
                     'geonode_layer': layer_url if layer_url else '-',
-                    'style': style_url if style_url else '-'
+                    'style': style_url or ''
                 },
             })
         if obj.vector_boundary_layer:
@@ -96,7 +99,7 @@ class BoundaryGeographySerializer(serializers.ModelSerializer):
                 'file': {
                     'endpoint': '-',
                     'geonode_layer': layer_url if layer_url else '-',
-                    'style': style_url if style_url else '-'
+                    'style': style_url or ''
                 },
             })
         return dataset_files
@@ -132,7 +135,7 @@ class DatasetFileSerializer(serializers.ModelSerializer):
             'endpoint': obj.endpoint.url if obj.endpoint else '-',
             'configuration': obj.configuration,
             'geonode_layer': geonode_layer if geonode_layer else '-',
-            'style': style if style else '-',
+            'style': style or '',
             'comment': obj.comment
         }
 
