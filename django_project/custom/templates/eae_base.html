@@ -38,7 +38,7 @@
        href="/">
         <span class="notranslate">Clean Cooking Explorer</span>
     </a>
-    {% if not is_restricted %}
+    {% if not is_restricted or user.is_authenticated %}
     <div id="navigation-links">
         <a href="/tool/"
            class="toggleable">
