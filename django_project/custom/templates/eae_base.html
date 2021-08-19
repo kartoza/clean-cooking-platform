@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load access_extras %}
+{% is_restricted as is_restricted %}
 <!DOCTYPE html>
 
 <html>
@@ -36,7 +38,7 @@
        href="/">
         <span class="notranslate">Clean Cooking Explorer</span>
     </a>
-
+    {% if not is_restricted %}
     <div id="navigation-links">
         <a href="/tool/"
            class="toggleable">
@@ -71,6 +73,17 @@
         </a>
         -->
     </div>
+    {% else %}
+
+        <div id="navigation-links" style="float: right">
+            <a></a><a></a>
+            <a href="/account/login"
+               class="toggleable">
+                Login
+            </a>
+
+        </div>
+    {% endif %}
 </nav>
 
 <script>

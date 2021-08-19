@@ -1,4 +1,4 @@
-psycopg2-binary
+psycopg2-binary==2.8.6
 django-admin-sortable==2.1.8
 django-braces==1.14.0
 django-model-utils==1.4.0
