@@ -1,5 +1,6 @@
 # coding=utf-8
 from django.http.response import Http404
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from custom.models.category import Category
@@ -31,8 +32,10 @@ class DatasetList(APIView):
     def get(self, request, *args):
         geography_id = self.request.GET.get('geography', None)
         datasets = Category.objects.filter(
+            ~Q(datasetfile__endpoint='') |
+            Q(datasetfile__geonode_layer__isnull=False),
             geography_id=geography_id,
-            online=True,
+            online=True
         ).exclude(
             boundary_layer=True,
         )
