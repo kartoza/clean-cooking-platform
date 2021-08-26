@@ -38,7 +38,7 @@ class DatasetList(APIView):
             online=True
         ).exclude(
             boundary_layer=True,
-        )
+        ).distinct()
         return Response(
             DatasetSerializer(datasets, many=True).data
         )
