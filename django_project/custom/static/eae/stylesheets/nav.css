@@ -43,7 +43,8 @@ nav a {
 
   margin: 0;
   flex: 1;
-
+  font-weight: 500;
+  text-transform: uppercase;
   color: var(--the-white);
   fill: var(--the-white);
 }
