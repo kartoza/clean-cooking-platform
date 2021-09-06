@@ -9,8 +9,9 @@
   --the-darker-white: #f4f4f4;
   --the-darkest-white: #f1f1f1;
   --the-green: #144172;
+  --the-real-green: #578C43;
   --the-light-green: #98BC40;
-  --the-color: #393f44;
+  --the-color: #000000;
   --primary-blue-1: #042549;
   --primary-blue-2: #144172;
   --primary-blue-3: #6fb7d1;
@@ -53,9 +54,8 @@
 }
 
 h1, h2, h3, strong {
-  font-weight: normal;
-  color: var(--the-green);
-  font-family: 'Bree Serif',serif;
+  color: var(--the-real-green);
+  font-family:  'Aktiv Grotesk Corp', sans-serif;
 }
 
 a {
@@ -264,4 +264,14 @@ button a {
 .banner h1 {
   color: #f65b2a !important;
   text-shadow: 1px 1px 1px #000000 !important;
+}
+
+section .section-title h2 strong {
+  font-weight: 700;
+}
+
+section .section-title h2 {
+  font-size: 34px;
+  line-height: 44px;
+  color: #578C43;
 }

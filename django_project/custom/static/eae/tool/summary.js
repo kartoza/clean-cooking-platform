@@ -137,6 +137,7 @@ async function summary() {
 
 export default async function analyse(raster) {
 	let ds = DST.get('population-density');
+	debugger;
 
 	if (!ds) {
 		console.warn("No 'population-density' dataset present... Will use boundaries");

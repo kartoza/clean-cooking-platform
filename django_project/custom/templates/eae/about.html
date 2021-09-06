@@ -3,37 +3,55 @@
 
 {% block content %}
     <!-- CONTENT-STARTS -->
-    <section class="banner"
-             style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/51bee9f9903c0a2f51bea0e9415c88ad.jpg);">
-        <h1>About</h1>
+    <section class="hero-large size-large color-green alignment-center">
+        <div class="content">
+            <svg class="bg-flair-1 desktop-only" width="1154" height="540"
+                 viewBox="0 0 1154 540" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M1154 0L963.688 464.874C944.402 511.985 897.489 541.801 846.646 539.26L274.153 510.655C235.583 508.728 201.57 484.764 186.774 449.093L0.5 0H1154Z"
+                      fill="#578C43"></path>
+            </svg>
+            <div class="text-content readability-normalize">
+                <svg class="bg-flair-2 mobile-only" viewBox="0 0 377 61"
+                     fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0.00488281H377V6.00006L96.4894 59.0697C74.8002 63.1731 52.3794 58.1323 34.5336 45.1406L0 20.0001V0.00488281Z"
+                          fill="#578C43"></path>
+                </svg>
+                <h1 class="h2"><strong style="color: white !important;">About</strong></h1>
+                <p class="the-excerpt">
+                    “Many countries are at a critical juncture in determining what a sustainable, equitable, and appropriate energy transition looks like,” said Donee Alexander,
+                    Senior Director of Evidence and Impact at CCA. “Nepal’s commitment to clean cooking makes it a natural starting point for this kind of data-driven planning,
+                    but we anticipate that variations of the CCE could be useful to many other governments and private sector players as they consider countries’ unique energy needs.”
+                </p>
+            </div>
+        </div>
+        <div class="bg-image lazy on-load lazy-ready"
+             data-img-src="{% static "img/about_bg.png" %}"
+             style="background-image: url({% static "img/about_bg.png" %});">
+        </div>
     </section>
+{#    <section class="banner"#}
+{#             style="background-image: url({% static "img/about_bg.png" %});">#}
+{#        <h1>About</h1>#}
+{#    </section>#}
 
-    <section>
+    <section class="flexible archive-body">
+        <svg class="flair-left" width="251" height="865" viewBox="0 0 251 865" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.08" d="M-107 0.000305176V864.896L220.767 567.073C255.291 535.704 260.125 483.155 231.903 446.013L-107 0.000305176Z" fill="#578C43"></path>
+        </svg>
+        <svg class="flair-right" width="131" height="459" viewBox="0 0 131 459" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M227 458.762V0L48.6742 180.587C21.7104 207.893 21.758 251.817 48.7809 279.064L227 458.762Z" fill="#0280BF" fill-opacity="0.08"></path>
+        </svg>
+        <div class="section-title align-left">
+            <div class="content">
+                <h2 class="h4">
+                    <strong>A Clean Cooking Platform for Nepal</strong>
+                </h2>
+            </div>
+        </div>
         <p>
-            This web site is under development.
-        </p>
-
-        <p>
-            The Clean Cooking Alliance (CCA), in partnership with the World Resources Institute (WRI), is building an online, open-source, and interactive geospatial data platform, the first of its kind focused on clean cooking.
-            Called the Clean Cooking Explorer (CCE), this integrated energy planning platform aims to provide stakeholders across public and private sectors with the data and tools needed to inform their strategies for a robust clean cooking transition, especially those related to electric cooking.
-        </p>
-
-        <p>
-            The CCE will leverage WRI’s experience in the development of the Energy Access Explorer (EAE), while building on CCA’s deep engagement in developing clean cooking markets in Nepal and around the world.
-        </p>
-
-        <p>
-            The Clean Cooking Explorer will enable users to visualize, interpret, and analyze geospatial datasets, such as location-specific data on demographics, access to cooking fuels, supply infrastructure and more.
-            The tool will empower users to leverage optimal technology mixes for specific regions based on existing and potential demand and supply trends.
-        </p>
-
-        <p>
-            “The Clean Cooking Explorer will leverage the power of Geographic Information System (GIS) data and technology combined with stakeholder engagement to provide data-driven insights towards the adoption of clean cooking solutions,” said Dimitrios Mentis, Senior Energy Geographer at WRI and EAE Project Lead.
-            “The CCE will also provide a valuable public good through up-to-date, open-source spatial data repository relevant for policymakers and other stakeholders.”
-        </p>
-
-        <p>
-            Once development is completed in 2021, the CCE will improve data-driven planning, coordination, and implementation for a large-scale transition to cleaner cooking solutions. The CCE will launch with data for Nepal, where CCA, WRI, and a wide range of partners have been engaged with the Alternative Energy Promotion Center (AEPC), the lead government agency promoting clean cooking in Nepal.
+            Once development is completed in 2021, the CCE will improve data-driven planning, coordination, and implementation for a large-scale transition to cleaner cooking solutions.
+            The CCE will launch with data for Nepal, where CCA, WRI, and a wide range of partners have been engaged with the Alternative Energy Promotion Center (AEPC), the lead government agency promoting clean cooking in Nepal.
             AEPC will ensure that the CCE meets the priorities of the Government of Nepal (GoN), providing development support (including assistance with data access and support coordination with key stakeholders) and facilitating with testing and disseminating the CCE among users.
         </p>
 
@@ -44,73 +62,90 @@
         </p>
 
         <p>
-            As requested by the GoN, CCA is also developing a Country Action Plan for Transforming the Cookstoves and Fuels Market in Nepal.
-            The CCE will be an important tool in implementing this plan.
+            As requested by the GoN, CCA is also developing a Country Action Plan for Transforming the Cookstoves and Fuels Market in Nepal. The CCE will be an important tool in implementing this plan.
         </p>
-
-        <p>
-            The CCE has a modular, easily adaptable design, so that in the future, CCA and its partners may replicate similar efforts elsewhere.
-        </p>
-
-        <p>
-            “Many countries are at a critical juncture in determining what a sustainable, equitable, and appropriate energy transition looks like,” said Donee Alexander,
-            Senior Director of Evidence and Impact at CCA. “Nepal’s commitment to clean cooking makes it a natural starting point for this kind of data-driven planning, but we anticipate that variations of the CCE could be useful to many other governments and private sector players as they consider countries’ unique energy needs.”
-        </p>
-
-        <p>
-            The development of the CCE will be supported by the consulting firm Kartoza, the Energy Systems division of KTH Royal Institute of Technology in Sweden (KTH-dES)
-            and the Nepal Open Univsersity who together with KTH and Kartoza will also provide training for users.
-        </p>
-
-        <p>
-            Kartoza has previously developed several high-profile, open-source geospatial projects, while KTH-dES has developed leading integrated systems analysis frameworks, open-source optimization energy models,
-            innovative metrics to compare cooking energy access solutions, and the Open-Source Spatial Electrification Tool.
-        </p>
-    </section>
-
-    <section id="partners">
-        <div id="partners-title">Partners</div>
-
-        <div id="partners-container">
-            <div class="logo">
-                <a title="Clean Cooking Alliance"
-                   href="https://www.cleancookingalliance.org/"
-                   target="_blank">
-                    <img src="{% static "img/cca.png" %}">
-                </a>
+        <figure class="gallery-item">
+            <div class="gallery-icon landscape">
+				<a href="https://www.cleancookingalliance.org/" class="custom-link no-lightbox" title="Clean Cooking Alliance" aria-label="" onclick="event.stopPropagation()" target="_blank" rel="">
+                    <img width="300" src="{% static "img/cca.png" %}"
+                         class="attachment-medium size-medium" alt="" loading="lazy"
+                         srcset="{% static "img/cca.png" %} 300w" sizes="(max-width: 300px) 100vw, 300px"></a>
+			</div>
+            <div>
+                <h3 class="h4" style="font-size: 24px">
+                    <strong>Clean Cooking Alliance</strong>
+                </h3>
+                <p>
+                The Clean Cooking Alliance (CCA), in partnership with the World Resources Institute (WRI), is building an online, open-source, and interactive geospatial data platform, the first of its kind focused on clean cooking.
+                Called the Clean Cooking Explorer (CCE), this integrated energy planning platform aims to provide stakeholders across public and private sectors with the data and tools needed to inform their strategies for a robust clean cooking transition,
+                especially those related to electric cooking.
+                </p>
             </div>
-
-            <div class="logo">
-                <a title="World Resources Insitute"
-                   href="https://www.wri.org/"
-                   target="_blank">
-                    <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/wri.png">
-                </a>
+        </figure>
+        <br/>
+        <figure class="gallery-item">
+            <div class="gallery-icon landscape">
+				<a href="https://www.wri.org/" class="custom-link no-lightbox" title="World Resources Insitute" aria-label="" onclick="event.stopPropagation()" target="_blank" rel="">
+                    <img width="250" src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/wri.png"
+                         class="attachment-medium size-medium" alt="" loading="lazy"
+                         srcset="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/wri.png 250w" sizes="(max-width: 250px) 100vw, 250px"></a>
+			</div>
+            <div>
+                <h3 class="h4" style="font-size: 24px">
+                    <strong>World Resources Institute</strong>
+                </h3>
+                <p>
+                    “The Clean Cooking Explorer will leverage the power of Geographic Information System (GIS) data and technology combined with stakeholder engagement to provide data-driven insights towards the adoption of clean cooking solutions,”
+                    said Dimitrios Mentis, Senior Energy Geographer at WRI and EAE Project Lead. “The CCE will also provide a valuable public good through up-to-date, open-source spatial data repository relevant for policymakers and other stakeholders.”
+                    <br/><br/>
+                    The CCE will leverage WRI’s experience in the development of the Energy Access Explorer (EAE), while building on CCA’s deep engagement in developing clean cooking markets in Nepal and around the world.
+                </p>
             </div>
+        </figure>
 
-            <div class="logo">
-                <a title="KTH"
-                   href="https://www.energy.kth.se/department-of-energy-technology-1.891555"
-                   target="_blank">
-                    <img src="{% static "img/kth.png" %}">
-                </a>
+        <div style="max-width: 42em">
+            <h3 class="h4" style="font-size: 24px">
+                <strong>Implementing Partners</strong>
+            </h3>
+            <div class="gallery">
+                <div class="gallery-icon-small">
+                    <figure class="gallery-item-small">
+                            <a href="https://www.cleancookingalliance.org/" class="custom-link no-lightbox" title="KTH" aria-label="" onclick="event.stopPropagation()" target="_blank" rel="">
+                                <img width="150" src="{% static "img/kth-240.png" %}"
+                                     class="attachment-medium size-medium" alt="" loading="lazy"
+                                     srcset="{% static "img/kth-240.png" %} 300w" sizes="(max-width: 150px) 100vw, 120px"></a>
+                    </figure>
+                </div>
+                <div class="gallery-icon-small">
+                    <figure class="gallery-item-small">
+                            <a href="https://www.cleancookingalliance.org/" class="custom-link no-lightbox" title="Kartoza" aria-label="" onclick="event.stopPropagation()" target="_blank" rel="">
+                                <img width="150" src="{% static "img/kartoza-logo.png" %}"
+                                     class="attachment-medium size-medium" alt="" loading="lazy"
+                                     srcset="{% static "img/kartoza-logo.png" %} 300w" sizes="(max-width: 150px) 100vw, 120px"></a>
+                    </figure>
+                </div>
+                <div class="gallery-icon-small">
+                    <figure class="gallery-item-small">
+                        <a href="https://www.cleancookingalliance.org/" class="custom-link no-lightbox" title="NOU" aria-label="" onclick="event.stopPropagation()" target="_blank" rel="">
+                            <img width="150" src={% static "img/nou.png" %}"
+                                 class="attachment-medium size-medium" alt="" loading="lazy"
+                                 srcset="{% static "img/nou.png" %} 300w" sizes="(max-width: 250px) 100vw, 150px"></a>
+                    </figure>
+                </div>
             </div>
+            <p style="margin-top: 25px;">
+                The development of the CCE will be supported by the consulting firm Kartoza,
+                the Energy Systems division of KTH Royal Institute of Technology in Sweden (KTH-dES) and the Nepal Open Univsersity who together with KTH and Kartoza will also provide training for users.
+            </p>
 
-            <div class="logo">
-                <a title="Kartoza"
-                   href="https://kartoza.com/"
-                   target="_blank">
-                    <img src="{% static "img/kartoza-logo.png" %}">
-                </a>
-            </div>
+            <p>
+                Kartoza has previously developed several high-profile, open-source geospatial projects, while KTH-dES has developed leading integrated systems analysis frameworks,
+                open-source optimization energy models, innovative metrics to compare cooking energy access solutions, and the Open-Source Spatial Electrification Tool.
+            </p>
 
-            <div class="logo">
-                <a title="NOU - Nepal University"
-                   href="https://nou.edu.np/"
-                   target="_blank">
-                    <img src="{% static "img/nou.png" %}">
-                </a>
-            </div>
+            <p>
+                The CCE has a modular, easily adaptable design, so that in the future, CCA and its partners may replicate similar efforts elsewhere.
+            </p>
         </div>
     </section>
 {% endblock %}
