@@ -10,7 +10,7 @@ section {
   margin: auto;
 }
 
-section .gallery-item, section .section-title {
+section .gallery-item, section .section-title, section .h4 {
   max-width: 1080px;
 }
 
@@ -210,6 +210,8 @@ section .details {
     border-radius: 8px;
     margin-right: 10px;
     min-height: 100px;
+    display: flex;
+    align-items: center;
 }
 
 .gallery {
@@ -377,3 +379,17 @@ section.hero-large .bg-image {
         padding-top: 0;
     }
 }
+
+.btn.btn-blue {
+    display: inline-block;
+    font-weight: 900;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    background-color: #0280BF;
+    color: #FFFFFF;
+}
+
+

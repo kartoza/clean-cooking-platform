@@ -10,101 +10,150 @@
         <link href="{% static "eae/stylesheets/thumbnails.css" %}"
               rel="stylesheet"/>
 
-        <section class="banner"
-                 style="background-image: url(https://www.cleancookingalliance.org/images/data/IMAGE/photo/000/001/1154-2.JPG);">
-            <h1><span class="notranslate">Clean Cooking Explorer</span></h1>
-
-            <h3>
-                Clean Cooking Explorer provides the data and tools necessary to
-                create a future where all people have access to affordable,
-                reliable and modern clean cooking technology.
-            </h3>
-
-            <button class="pop-hover" style="font-size: 1em;"><a href="/tool">Explore
-                Data</a></button>
-
-            <h3>Coming in December 2021</h3>
-        </section>
-
-        <section>
-{#            <h2>Sample Analysis</h2>#}
-{##}
-{#            <div class="thumbnails">#}
-{#                <div class="thumbnail thumbnail-med pop-hover"#}
-{#                     style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/ce5fb292c6279dc7d9372bb1ddea107b.png);"#}
-{#                     onclick="window.location = '/sample-analysis#services';">#}
-{#                    <h3>Better Quality Services</h3>#}
-{##}
-{#                    <p>Expanding clean energy can improve healthcare and#}
-{#                        education in East Africa.</p>#}
-{#                </div>#}
-{##}
-{#                <div class="thumbnail thumbnail-med pop-hover"#}
-{#                     style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/90f1f98c41132a8a997c1f8523359693.png);"#}
-{#                     onclick="window.location = '/sample-analysis#livelihood';">#}
-{#                    <h3>Better Livelihoods</h3>#}
-{##}
-{#                    <p>Renewable energy potential is high for many East African#}
-{#                        households without reliable electricity.</p>#}
-{#                </div>#}
-{##}
-{#                <div class="thumbnail thumbnail-med pop-hover"#}
-{#                     style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/4271331728_f1486cc127_b.jpg);"#}
-{#                     onclick="window.location = '/sample-analysis#productivity';">#}
-{#                    <h3>Higher Productivity</h3>#}
-{##}
-{#                    <p>Renewable energy can boost East African economies and#}
-{#                        businesses.</p>#}
-{#                </div>#}
-{#            </div>#}
-{#        </section>#}
-
-        <section id="partners">
-            <div id="partners-title">Partners</div>
-
-            <div id="partners-container">
-
-                <div class="logo">
-                    <a title="Clean Cooking Alliance"
-                       href="https://www.cleancookingalliance.org/"
-                       target="_blank">
-                        <img src="{% static "img/cca.png" %}">
-                    </a>
-                </div>
-
-                <div class="logo">
-                    <a title="World Resources Insitute"
-                       href="https://www.wri.org/"
-                       target="_blank">
-                        <img src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/wri.png">
-                    </a>
-                </div>
-
-                <div class="logo">
-                    <a title="KTH"
-                       href="https://www.energy.kth.se/department-of-energy-technology-1.891555"
-                       target="_blank">
-                        <img src="{% static "img/kth.png" %}">
-                    </a>
-                </div>
-
-                <div class="logo">
-                    <a title="Kartoza"
-                       href="https://kartoza.com/"
-                       target="_blank">
-                        <img src="{% static "img/kartoza-logo.png" %}">
-                    </a>
-                </div>
-
-                <div class="logo">
-                    <a title="NOU - Nepal University"
-                       href="https://nou.edu.np/"
-                       target="_blank">
-                        <img src="{% static "img/nou.png" %}">
-                    </a>
+        <!-- BANNER -->
+        <section class="hero-medium vcenter">
+            <svg class="flair-right desktop-only" width="166" height="586"
+                 viewBox="0 0 166 586" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M259.181 0L259.18 586L28.504 368.659C-8.0612 334.208 -9.34204 276.492 25.6588 240.452L259.181 0Z"
+                      fill="#578C43"></path>
+            </svg>
+            <svg class="flair-right mobile-only" width="91" height="262"
+                 viewBox="0 0 91 262" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M133 0L133 262L22.2001 157.708C9.99766 146.223 9.57035 126.968 21.2513 114.952L133 0Z"
+                      fill="#578C43"></path>
+            </svg>
+            <div class="content">
+                <svg class="bg-flair-1" width="1571" height="577"
+                     viewBox="0 0 1571 577" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M598.5 0.5H1569.27L1013.57 541.976C973.693 580.831 912.268 587.001 865.462 556.853L1.69964 0.5H598.5Z"
+                          fill="#042549" stroke="#042549"></path>
+                </svg>
+                <div class="text-content">
+                    <h1 class="h2">CLEAN COOKING <br> <strong>EXPLORER</strong></h1>
                 </div>
             </div>
+            <div class="bg-image desktop-only lazy on-load lazy-ready"
+                 data-img-src="{% static "img/index.jpeg" %}"
+                 style="background-image: url({% static "img/index.jpeg" %})"></div>
+            <div class="bg-image mobile-only lazy lazy-ready"
+                 data-img-src="{% static "img/index.jpeg" %}"
+                 style="background-image: url({% static "img/index.jpeg" %});">
+            </div>
         </section>
+        <!-- END BANNER -->
+
+        <section class="flexible archive-body">
+            <svg class="flair-left desktop-only" width="173" height="610"
+                 viewBox="0 0 273 610" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 610L0.000526755 0L222.559 281.592C251.203 317.834 247.758 369.877 214.586 402.026L0 610Z"
+                      fill="#0280BF"></path>
+            </svg>
+
+            <svg class="flair-left mobile-only" width="61" height="216"
+                 viewBox="0 0 61 216" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M-36 216L-35.9998 0L44.0938 100.992C53.686 113.088 52.5336 130.487 41.4303 141.212L-36 216Z"
+                      fill="#0280BF"></path>
+            </svg>
+            <div class="section-title align-left">
+                <div class="content">
+                    <h2 class="h4" style="color: #0280BF !important;">Coming in <strong style="color: #0280BF !important;"> December 2021 </strong></h2>
+                </div>
+            </div>
+            <p style="margin-top: 0px; font-size: 18px; max-width: 37em;">
+                Clean Cooking Explorer provides the data and tools necessary to create a future where all people have access to affordable, reliable and modern clean cooking technology.
+            </p>
+            <p>
+                <a href="/tool" target="" class="btn btn-blue">Explore Data</a>
+            </p>
+            <br/>
+            <div style="max-width: 42em">
+                <h2 class="h4" style="font-weight: 400">
+                    Partners
+                </h2>
+                <div class="gallery">
+                    <div class="gallery-icon-small">
+                        <figure class="gallery-item-small">
+                            <a href="https://www.cleancookingalliance.org/"
+                               class="custom-link no-lightbox" title="Clean Cooking Alliance"
+                               aria-label="" onclick="event.stopPropagation()"
+                               target="_blank" rel="">
+                                <img width="150"
+                                     style="align-items: center"
+                                     src="{% static "img/cca.png" %}"
+                                     class="attachment-medium size-medium"
+                                     alt="" loading="lazy"
+                                     srcset="{% static "img/cca.png" %} 300w"
+                                     sizes="(max-width: 150px) 100vw, 120px"></a>
+                        </figure>
+                    </div>
+                    <div class="gallery-icon-small">
+                        <figure class="gallery-item-small">
+                            <a href="https://www.wri.org/"
+                               class="custom-link no-lightbox" title="World Resources Institute"
+                               aria-label="" onclick="event.stopPropagation()"
+                               target="_blank" rel="">
+                                <img width="150"
+                                     src="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/wri.png"
+                                     class="attachment-medium size-medium"
+                                     alt="" loading="lazy"
+                                     srcset="https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/logos/wri.png 300w"
+                                     sizes="(max-width: 150px) 100vw, 120px"></a>
+                        </figure>
+                    </div>
+                    <div class="gallery-icon-small">
+                        <figure class="gallery-item-small">
+                            <a href="https://www.energy.kth.se/department-of-energy-technology-1.891555"
+                               class="custom-link no-lightbox" title="KTH"
+                               aria-label="" onclick="event.stopPropagation()"
+                               target="_blank" rel="">
+                                <img width="150"
+                                     src="{% static "img/kth-240.png" %}"
+                                     class="attachment-medium size-medium"
+                                     alt="" loading="lazy"
+                                     srcset="{% static "img/kth-240.png" %} 300w"
+                                     sizes="(max-width: 150px) 100vw, 120px"></a>
+                        </figure>
+                    </div>
+                </div>
+                <br/>
+                <div class="gallery">
+                    <div class="gallery-icon-small">
+                        <figure class="gallery-item-small">
+                            <a href="https://kartoza.com/"
+                               class="custom-link no-lightbox" title="Kartoza"
+                               aria-label="" onclick="event.stopPropagation()"
+                               target="_blank" rel="">
+                                <img width="150"
+                                     src="{% static "img/kartoza-logo.png" %}"
+                                     class="attachment-medium size-medium"
+                                     alt="" loading="lazy"
+                                     srcset="{% static "img/kartoza-logo.png" %} 300w"
+                                     sizes="(max-width: 150px) 100vw, 120px"></a>
+                        </figure>
+                    </div>
+                    <div class="gallery-icon-small">
+                        <figure class="gallery-item-small">
+                            <a href="https://nou.edu.np/"
+                               class="custom-link no-lightbox"
+                               title="NOU - Nepal University" aria-label=""
+                               onclick="event.stopPropagation()"
+                               target="_blank" rel="">
+                                <img width="150"
+                                     src={% static "img/nou.png" %}"
+                                 class=" attachment-medium size-medium" alt=""
+                                loading="lazy"
+                                srcset="{% static "img/nou.png" %} 300w"
+                                sizes="(max-width: 250px) 100vw, 150px"></a>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 10em"></div>
 
         <!-- CONTENT-ENDS -->
     </main>
