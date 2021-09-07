@@ -40,19 +40,29 @@
     </a>
     {% if not is_restricted or user.is_authenticated %}
     <div id="navigation-links">
+        <a href="/"
+           class="toggleable">
+            Home
+        </a>
+
         <a href="/tool/"
            class="toggleable">
             Tool
         </a>
 
-        <a href="/layers/"
+        <a href="/maps/"
            class="toggleable">
-            Geonode
+            Maps
         </a>
 
         <a href="/methodology"
            class="toggleable">
             Methodology
+        </a>
+
+        <a href="/layers"
+           class="toggleable">
+            GIS Data
         </a>
 
         <a href="/about-us"
@@ -75,7 +85,7 @@
     </div>
     {% else %}
 
-        <div id="navigation-links" style="float: right">
+        <div id="navigation-links" class="login-menu-link">
             <a></a><a></a>
             <a href="/account/login"
                class="toggleable">
@@ -92,7 +102,14 @@
         if (!links) return;
 
         for (var l of links) {
-            if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
+            let locationPathName = location.pathname;
+            if(locationPathName.substr(-1) === '/') {
+                locationPathName = locationPathName.substr(0, locationPathName.length - 1);
+            }
+            if (l.getAttribute('href') === '/' && locationPathName !== '') {
+              continue;
+            }
+            if (locationPathName.match(new RegExp(l.getAttribute('href').split('/')[1])))
                 l.classList.add("active");
         }
     })();

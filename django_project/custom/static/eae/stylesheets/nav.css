@@ -1,9 +1,9 @@
 
 @import url('https://fonts.googleapis.com/css?family=Bree+Serif|Roboto&display=swap');
-nav {
+nav:not(.filter) {
   display: flex;
   font-size: 1.3em;
-  background-color: var(--the-green);
+  background-color: #042549;
   font-family: 'Aktiv Grotesk Corp', sans-serif;
   clear: both;
   line-height: 3.6em;
@@ -14,7 +14,7 @@ nav {
   z-index: 10;
 }
 
-nav:before {
+nav:not(.filter):before {
   position: absolute;
   top: 0;
   left: 0;
@@ -33,7 +33,7 @@ nav:before {
   background-repeat: no-repeat;
 }
 
-nav a {
+nav:not(.filter) a {
   display: block;
 
   position: relative;
@@ -45,12 +45,12 @@ nav a {
   flex: 1;
   font-weight: 500;
   text-transform: uppercase;
-  color: var(--the-white);
-  fill: var(--the-white);
+  color: #ffffff;
+  fill: #ffffff;
 }
 
 nav a.active {
-  color: var(--the-yellow);
+  color: #f65b2a;
 }
 
 nav a:hover {
@@ -95,7 +95,7 @@ nav #navigation-links a {
 
 /* mobile specifics */
 @media (max-width: 1080px) {
-  nav {
+  nav:not(.filter)  {
     padding: 0 1em;
     display: block;
   }
@@ -127,7 +127,7 @@ nav #navigation-links a {
     color: black;
     cursor: pointer;
 
-    fill: var(--the-white);
+    fill: #ffffff;
     line-height: 1.5em;
 
     height: 100%;
@@ -161,5 +161,58 @@ nav #navigation-links a {
     top: -1000px !important;
     display: none;
     clear: both;
+  }
+}
+
+/* desktop specifics */
+@media (min-width: 1080px) {
+  .no-desktop {
+    display: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar:vertical {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar:horizontal {
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background: rgba(0,0,0,0.3);
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  }
+}
+
+/* mobile specifics */
+@media (max-width: 1080px) {
+  .no-mobile {
+    display: none !important;
+  }
+
+  main {
+    width: 100% !important;
+  }
+
+  #gapps-ask {
+    position: fixed;
+    font-size: auto;
+    height: unset;
+    line-height: 1.8em;
+    padding: 1em 0;
+  }
+
+  #gapps-ask #gapps-buttons {
+    display: block;
+    margin: 1em;
   }
 }

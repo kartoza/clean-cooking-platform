@@ -99,3 +99,4 @@ FILEBROWSER_DIRECTORY = ''
 DIRECTORY = ''
 
 RESTRICT_ACCESS = ast.literal_eval(os.getenv('RESTRICT_ACCESS', 'False'))
+ACCOUNT_ADAPTER = 'custom.adapters.CustomLocalAccountAdapter'

@@ -208,58 +208,6 @@ button a {
   font-family: monospace;
 }
 
-/* desktop specifics */
-@media (min-width: 1080px) {
-  .no-desktop {
-    display: none;
-  }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar:vertical {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar:horizontal {
-    height: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border-radius: 12px;
-    background: rgba(0,0,0,0.3);
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-  }
-}
-
-/* mobile specifics */
-@media (max-width: 1080px) {
-  .no-mobile {
-    display: none !important;
-  }
-
-  main {
-    width: 100% !important;
-  }
-
-  #gapps-ask {
-    position: fixed;
-    font-size: auto;
-    height: unset;
-    line-height: 1.8em;
-    padding: 1em 0;
-  }
-
-  #gapps-ask #gapps-buttons {
-    display: block;
-    margin: 1em;
-  }
-}
 
 .banner h1 {
   color: #f65b2a !important;
