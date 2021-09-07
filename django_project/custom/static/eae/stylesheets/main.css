@@ -340,7 +340,14 @@ section.hero-large .bg-image {
     border-radius: 0px;
 }
 
+.login-menu-link {
+    float: right;
+}
+
 @media screen and (max-width: 768px) {
+    main {
+        overflow-x: hidden;
+    }
     section.hero-large .text-content {
         background-color: #578C43;
         margin-left: -30px;
@@ -361,6 +368,9 @@ section.hero-large .bg-image {
     }
     .desktop-only {
         display: none;
+    }
+    .login-menu-link {
+        float: none;
     }
     section.hero-large.size-large .bg-image,
     section.hero-large.size-medium .bg-image,
