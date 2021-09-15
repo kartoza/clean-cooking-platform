@@ -69,58 +69,67 @@
       </label>
     
       <a id="energy-access-link"
-         href="/">
-        Clean Cooking Explorer
+       href="/">
+        <span class="notranslate">Clean Cooking Explorer</span>
       </a>
 
-      <div id="navigation-links">
-        <a href="/tool/"
-           class="toggleable">
-          Tool
-        </a>
-
-        <a href="/layers/"
-           class="toggleable">
-          Geonode
-        </a>
-
-        <a href="/methodology"
-           class="toggleable">
-          Methodology
-        </a>
-
-        <a href="/about-us"
-           class="toggleable">
-          About
-        </a>
-
-        {% if user.is_superuser %}
-            <a href="/admin"
+      {% if not is_restricted or user.is_authenticated %}
+        <div id="navigation-links">
+            <a href="/"
                class="toggleable">
-              Admin
+                Home
             </a>
-        {% endif %}
-        <!--
-        <a href="/faq"
-           class="toggleable">
-          FAQ
-        </a>
-        -->
-      </div>
-    </nav>
-    
-    <script>
-      (function() {
-        const links = document.querySelectorAll('nav #navigation-links a');
-    	if (!links) return;
-    
-        for (var l of links) {
-          if (location.pathname.match(new RegExp(l.getAttribute('href').split('/')[1])))
-            l.classList.add("active");
-        }
-      })();
-    </script>
 
+            <a href="/tool/"
+               class="toggleable active">
+                Tool
+            </a>
+
+            <a href="/maps/"
+               class="toggleable">
+                Maps
+            </a>
+
+            <a href="/methodology"
+               class="toggleable">
+                Methodology
+            </a>
+
+            <a href="/layers"
+               class="toggleable">
+                GIS Data
+            </a>
+
+            <a href="/about-us"
+               class="toggleable">
+                About
+            </a>
+
+            {% if user.is_superuser %}
+                <a href="/admin"
+                   class="toggleable">
+                  Admin
+                </a>
+            {% endif %}
+            <!--
+            <a href="/faq"
+               class="toggleable">
+              FAQ
+            </a>
+            -->
+        </div>
+    {% else %}
+
+        <div id="navigation-links" class="login-menu-link">
+            <a></a><a></a>
+            <a href="/account/login"
+               class="toggleable">
+                Login
+            </a>
+
+        </div>
+    {% endif %}
+    </nav>
     <div id="mobile-switcher"></div>
 
     <div id="playground">
