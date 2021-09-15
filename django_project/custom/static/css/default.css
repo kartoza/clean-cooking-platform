@@ -234,10 +234,6 @@ body {
     line-height: 47px;
 }
 
-#ms-container {
-    top: 52px !important;
-}
-
 .navbar-nav .search input {
     border-color: lightgrey !important;
 }
@@ -256,4 +252,12 @@ body {
 }
 .navbar-nav .dropdown-menu {
     background-color: #f65b2a !important;
+}
+
+.abstract p {
+    line-height: 1.5;
+}
+
+nav.filter h4 {
+    background-color: #042549;
 }
