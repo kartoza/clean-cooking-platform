@@ -100,3 +100,4 @@ DIRECTORY = ''
 
 RESTRICT_ACCESS = ast.literal_eval(os.getenv('RESTRICT_ACCESS', 'False'))
 ACCOUNT_ADAPTER = 'custom.adapters.CustomLocalAccountAdapter'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'

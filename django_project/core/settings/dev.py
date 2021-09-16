@@ -1,5 +1,7 @@
 from .base import *  # noqa
 
+DEBUG = TEMPLATE_DEBUG = True
+
 ALLOWED_HOSTS = ["*"]
 
 DATABASES = {
