@@ -10,6 +10,9 @@ export function drawcanvas(opts) {
 
 	let i, p;
 	for (i = p = 0; i < data.length; i += 1, p += 4) {
+		if (isNaN(data[i])) {
+			continue;
+		}
 		if (data[i] === nodata) continue;
 
 		const c = colorscale.fn(data[i]);
