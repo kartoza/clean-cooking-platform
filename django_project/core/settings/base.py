@@ -15,6 +15,7 @@ INSTALLED_APPS = (
 ) + INSTALLED_APPS
 
 MIDDLEWARE = (
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -27,7 +28,7 @@ MIDDLEWARE = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'geonode.base.middleware.MaintenanceMiddleware',
     'geonode.base.middleware.ReadOnlyMiddleware',  # a Middleware enabling Read Only mode of Geonode
@@ -100,4 +101,4 @@ DIRECTORY = ''
 
 RESTRICT_ACCESS = ast.literal_eval(os.getenv('RESTRICT_ACCESS', 'False'))
 ACCOUNT_ADAPTER = 'custom.adapters.CustomLocalAccountAdapter'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'core.storage.WhiteNoiseStaticFilesStorage'
