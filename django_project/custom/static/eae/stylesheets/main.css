@@ -111,7 +111,6 @@ section .section-title {
 }
 
 section .section-title h2 {
-    color: #578C43 !important;
     font-size: 34px;
     line-height: 44px;
     font-weight: 400;
@@ -402,4 +401,7 @@ section.hero-large .bg-image {
     color: #FFFFFF;
 }
 
+.blue-text {
+    color: #0280BF;
+}
 

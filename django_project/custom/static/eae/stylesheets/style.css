@@ -54,7 +54,7 @@
 }
 
 h1, h2, h3, strong {
-  color: var(--the-real-green);
+  color: #578C43;
   font-family:  'Aktiv Grotesk Corp', sans-serif;
 }
 
@@ -221,5 +221,11 @@ section .section-title h2 strong {
 section .section-title h2 {
   font-size: 34px;
   line-height: 44px;
-  color: #578C43;
+}
+
+.content-description {
+  margin-top: 0px;
+  font-size: 18px;
+  max-width: 37em;
+  line-height: 2;
 }
