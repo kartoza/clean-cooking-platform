@@ -285,7 +285,7 @@ section .details {
     padding: 15px;
     border-radius: 8px;
     margin-right: 10px;
-    min-height: 100px;
+    min-height: 150px;
     display: flex;
     align-items: center;
 }
