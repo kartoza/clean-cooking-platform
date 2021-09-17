@@ -29,6 +29,11 @@ section#blogs-publications .thumbnails {
     padding: 2em;
   }
 
+  .first-section, .how-section, .blue-section {
+    margin-left: -2em;
+    margin-right: -2em;
+  }
+
   section.banner {
     padding: 1em 0 2em 0;
   }

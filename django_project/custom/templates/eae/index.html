@@ -9,6 +9,8 @@
               rel="stylesheet"/>
         <link href="{% static "eae/stylesheets/thumbnails.css" %}"
               rel="stylesheet"/>
+        <link href="{% static "splide-2.4.21/dist/css/themes/splide-sea-green.min.css" %}" rel="stylesheet"/>
+        <link href="{% static "fontawesome/css/all.min.css" %}" rel="stylesheet"/>
 
         <!-- BANNER -->
         <section class="hero-medium vcenter">
@@ -59,23 +61,148 @@
                 <path d="M-36 216L-35.9998 0L44.0938 100.992C53.686 113.088 52.5336 130.487 41.4303 141.212L-36 216Z"
                       fill="#0280BF"></path>
             </svg>
-            <div class="section-title align-left">
-                <div class="content">
-                    <h2 class="h4" style="color: #0280BF !important;">Coming in <strong style="color: #0280BF !important;"> December 2021 </strong></h2>
+            <div class="first-section">
+                <div class="section-title align-left">
+                    <div class="content">
+                        <h2 class="h4 blue-text">Welcome to the <strong class="blue-text"> Clean Cooking Explorer </strong></h2>
+                    </div>
+                </div>
+                <p class="content-description">
+                    This platform will help you to plan for Clean Cooking Outcomes.
+                    <br/>
+                    We support your work through reports and analysis tools.
+                </p>
+                <p>
+                    <a href="/tool" target="" class="btn btn-blue">Explore Data</a>
+                </p>
+            </div>
+            <div class="section-title">
+                <div class="content flex-center">
+                    <h2 class="h4 blue-text">Why <strong class="blue-text"> Clean Cooking Explorer? </strong> </h2>
                 </div>
             </div>
-            <p style="margin-top: 0px; font-size: 18px; max-width: 37em;">
-                Clean Cooking Explorer provides the data and tools necessary to create a future where all people have access to affordable, reliable and modern clean cooking technology.
+
+            <p class="content-description">
+                Access to clean cooking technology (such as gas or electric stoves) can greatly improve health outcomes.
+                Approximately 3 million people depend on biomass fuels such as wood, coal, and dung for cooking to cook with (source: WHO article on household air pollution).
+                The indoor air pollution generated whilst cooking indoors has serious, negative health impacts, with women and children in particular being affected.
             </p>
-            <p>
-                <a href="/tool" target="" class="btn btn-blue">Explore Data</a>
+
+            <p class="content-description">
+                The CCE is an online, open-source, and interactive spatial platform for promoting clean cooking throughout a country.
+                The spatial platform integrates and supports analysis of geospatial datasets related to both the potential demand and supply of clean cooking services, allow data-driven planning, coordination, and decision-making to support the uptake and adoption of clean cooking throughout the country.
+                This platform will empower users to visualize, interpret, and analyze geospatial datasets to accelerate access to clean cooking.
             </p>
             <br/>
-            <div style="max-width: 42em">
-                <h2 class="h4" style="font-weight: 400">
-                    Partners
-                </h2>
-                <div class="gallery">
+
+            <div class="how-section">
+                <div class="how-text">
+                    <div class="section-title">
+                        <div class="content">
+                            <h2 class="h4 green-text">How </h2>
+                        </div>
+                    </div>
+
+                    <p class="content-description" style="line-height: 1.7">
+                        To understand where access to clean cooking technology is needed we can combine spatial data, economic factors and sophisticated analysis tools.
+                        These tools provided on this site will help planners to answer these <strong class="green-text">key questions</strong>:
+                    </p>
+                </div>
+                <div class="how-carousel">
+                    <div class="splide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide">
+                                     <p>
+                                         Where is the demand for Clean Cooking Technology?
+                                    </p>
+                                    <img src="/static/img/how1.png" width="100%" >
+                                </li>
+                                <li class="splide__slide">
+                                    <p>
+                                        What Clean Cooking Technology is cost-optimal in each location?
+                                    </p>
+                                    <img src="/static/img/how1.png" width="100%">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; flex-direction: column; align-items: center">
+                <div class="section-title align-left">
+                    <div class="content flex-center">
+                        <h2 class="h4 blue-text">Understand the <strong
+                                class="blue-text"> reports </strong></h2>
+                    </div>
+                </div>
+                <p class="content-description">
+                    The CCE synthesizes location-specific data, enables online geospatial analysis for assessing demand and supply in the clean cooking sector,
+                    and allows to share relevant information for a holistic approach in the clean cooking sector.
+                </p>
+                <p class="content-description">
+                    The use of the CCE platform will enable decision making, planning, assessing and visualizing, and data driven coordination.
+                </p>
+                <br/>
+                <div class="content-description github-box">
+                    The Clean Cooking Explorer is Open Source and can be freely downloaded and deployed on your own server. Visit our GitHub page for the source.
+                    <br/>
+                    <br/>
+                    <a href="https://github.com/kartoza/clean-cooking-platform" class="btn btn-dark">
+                        <div style="margin-right: 30px;">See the source </div>
+                        <img src="{% static "img/github_icon.png" %}"/>
+                    </a>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <div class="blue-section">
+                <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; padding-bottom: 2em; padding-left: 2em; padding-right: 2em;">
+                    <div class="section-title align-left">
+                        <div class="content flex-center">
+                             <h2 class="h4 blue-text" style="font-weight: 400">
+                                 Who is this <strong class="blue-text">platform</strong> aimed at?
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="target-category">
+                        <div class="target-member" style="padding-left: 30px;padding-right: 30px;">
+                            <i class="fas fa-hard-hat"></i>
+                            <p>Energy Policy Makers</p>
+                        </div>
+                        <div class="target-member" style="padding-left: 30px;padding-right: 30px;">
+                            <i class="fas fa-charging-station"></i>
+                            <p>Provincial Energy Provision</p>
+                        </div>
+                    </div>
+                    <div class="target-category">
+                        <div class="target-member" style="padding-left: 30px;padding-right: 30px;">
+                            <i class="fas fa-hotel"></i>
+                            <p>Municipal</p>
+                        </div>
+                        <div class="target-member" style="padding-left: 30px;padding-right: 30px;">
+                            <i class="fas fa-industry"></i>
+                            <p>Energy Supply Companies</p>
+                        </div>
+                         <div class="target-member" style="padding-left: 30px;padding-right: 30px;">
+                            <i class="fas fa-users"></i>
+                            <p>Other stakeholders</p>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            </div>
+            <br/>
+            <div style="display: flex; justify-content: center; flex-direction: column; align-items: center">
+                <div class="section-title align-left">
+                    <div class="content flex-center">
+                         <h2 class="h4" style="font-weight: 400">
+                            Who developed this <strong>platform?</strong>
+                        </h2>
+                    </div>
+                </div>
+                <div class="gallery" style="justify-content: center">
                     <div class="gallery-icon-small">
                         <figure class="gallery-item-small">
                             <a href="https://www.cleancookingalliance.org/"
@@ -105,6 +232,9 @@
                                      sizes="(max-width: 150px) 100vw, 120px"></a>
                         </figure>
                     </div>
+                </div>
+                <br/>
+                <div class="gallery" style="justify-content: center">
                     <div class="gallery-icon-small">
                         <figure class="gallery-item-small">
                             <a href="https://www.energy.kth.se/department-of-energy-technology-1.891555"
@@ -119,9 +249,6 @@
                                      sizes="(max-width: 150px) 100vw, 120px"></a>
                         </figure>
                     </div>
-                </div>
-                <br/>
-                <div class="gallery">
                     <div class="gallery-icon-small">
                         <figure class="gallery-item-small">
                             <a href="https://kartoza.com/"
@@ -153,8 +280,18 @@
                     </div>
                 </div>
             </div>
+
             <div style="height: 10em"></div>
 
         <!-- CONTENT-ENDS -->
     </main>
+{% endblock %}
+
+{% block footer_js %}
+    <script src="{% static "splide-2.4.21/dist/js/splide.min.js" %}"></script>
+    <script>
+        document.addEventListener( 'DOMContentLoaded', function () {
+            new Splide( '.splide' ).mount();
+        });
+    </script>
 {% endblock %}
