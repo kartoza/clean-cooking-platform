@@ -101,6 +101,41 @@ section > svg.flair-right {
     padding-left: 1em;
 }
 
+.how-text {
+    flex-basis: 20%;
+}
+
+.how-carousel {
+    flex-basis: 30%;
+}
+
+.how-section {
+    background-color: rgba(128,173,75,.3);
+    padding-bottom: 3em;
+    padding-top: 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.green-text {
+    color: rgb(72 124 51);
+}
+
+.splide__slide p {
+    font-size: 20px;
+    font-weight: 400;
+    color: rgb(72 124 51);
+}
+
+.splide__arrow svg {
+    fill: #578c43 !important;
+}
+
+.splide__pagination__page.is-active {
+    background: #578c43 !important;
+}
 
 @media screen and (max-width: 888px) {
     .gallery-item-child .h4 {
@@ -131,6 +166,15 @@ section > svg.flair-right {
 
     .gallery-item-child .gallery-icon {
         margin-left: 8%;
+    }
+
+    .how-text {
+        flex-basis: 80%;
+    }
+
+    .how-carousel {
+        flex-basis: 80%;
+        max-width: 100%;
     }
 }
 

@@ -9,6 +9,7 @@
               rel="stylesheet"/>
         <link href="{% static "eae/stylesheets/thumbnails.css" %}"
               rel="stylesheet"/>
+        <link href="{% static "splide-2.4.21/dist/css/themes/splide-sea-green.min.css" %}" rel="stylesheet"/>
 
         <!-- BANNER -->
         <section class="hero-medium vcenter">
@@ -91,25 +92,42 @@
                 The spatial platform integrates and supports analysis of geospatial datasets related to both the potential demand and supply of clean cooking services, allow data-driven planning, coordination, and decision-making to support the uptake and adoption of clean cooking throughout the country.
                 This platform will empower users to visualize, interpret, and analyze geospatial datasets to accelerate access to clean cooking.
             </p>
+            <br/>
 
-            <div class="section-title">
-                <div class="content">
-                    <h2 class="h4 blue-text">How </h2>
+            <div class="how-section">
+                <div class="how-text">
+                    <div class="section-title">
+                        <div class="content">
+                            <h2 class="h4 green-text">How </h2>
+                        </div>
+                    </div>
+
+                    <p class="content-description" style="line-height: 1.7">
+                        To understand where access to clean cooking technology is needed we can combine spatial data, economic factors and sophisticated analysis tools.
+                        These tools provided on this site will help planners to answer these <strong class="green-text">key questions</strong>:
+                    </p>
+                </div>
+                <div class="how-carousel">
+                    <div class="splide">
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                                <li class="splide__slide">
+                                     <p>
+                                         Where is the demand for Clean Cooking Technology?
+                                    </p>
+                                    <img src="/static/img/how1.png" width="100%" >
+                                </li>
+                                <li class="splide__slide">
+                                    <p>
+                                        What Clean Cooking Technology is cost-optimal in each location?
+                                    </p>
+                                    <img src="/static/img/how1.png" width="100%">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <p class="content-description">
-                To understand where access to clean cooking technology is needed we can combine spatial data, economic factors and sophisticated analysis tools.
-                These tools provided on this site will help planners to answer these <strong class="blue-text">key questions</strong>:
-            </p>
-
-            <p>
-                Where is the demand for Clean Cooking Technology?
-            </p>
-
-            <p>
-                What Clean Cooking Technology is cost-optimal in each location?
-            </p>
 
 
             <div style="max-width: 42em">
@@ -198,4 +216,13 @@
 
         <!-- CONTENT-ENDS -->
     </main>
+{% endblock %}
+
+{% block footer_js %}
+    <script src="{% static "splide-2.4.21/dist/js/splide.min.js" %}"></script>
+    <script>
+        document.addEventListener( 'DOMContentLoaded', function () {
+            new Splide( '.splide' ).mount();
+        });
+    </script>
 {% endblock %}
