@@ -82,17 +82,58 @@ section > svg.flair-right {
     right: 0px;
 }
 
+.gallery-item {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    flex-wrap: wrap;
+}
+
+.gallery-item-child .gallery-icon {
+    margin-left: 6%;
+}
+
+.gallery-item-child .h4 {
+    font-size: 24px;
+    padding-left: 1em;
+}
+
+
+@media screen and (max-width: 888px) {
+    .gallery-item-child .h4 {
+        font-size: 18px;
+    }
+}
+
 @media screen and (max-width: 450px) {
-  svg.flair-left, svg.flair-right {
-      display: none;
-  }
+    svg.flair-left, svg.flair-right {
+        display: none;
+    }
 
     .gallery-item {
         flex-direction: column;
         padding-left: 20px;
         padding-right: 20px;
+        align-items: start;
+    }
+
+    .team-container .col-lg-3 {
+        padding-left: 1em;
+        flex-basis: 100% !important;
+    }
+
+    .team-member {
+        margin-bottom: 1em;
+    }
+
+    .gallery-item-child .gallery-icon {
+        margin-left: 8%;
     }
 }
+
 
 section .section-title {
     margin-bottom: 20px;
@@ -129,14 +170,6 @@ section.flexible:not(.flexible-full-image) .content {
     margin-right: auto;
 }
 
-.gallery-item {
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 10px;
-    padding-bottom: 1em;
-    padding-top: 1em;
-}
 
 
 section .details .detail.active {
@@ -343,6 +376,25 @@ section.hero-large .bg-image {
     float: right;
 }
 
+.team-container .col-lg-3 {
+    padding-left: 1em;
+    flex-basis: 26%
+}
+
+.team-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    justify-content: space-evenly;
+    margin-top: 1em;
+}
+
+@media (min-width: 1080px) {
+    .gallery-item-child {
+        width: 1080px;
+    }
+}
+
 @media screen and (max-width: 768px) {
     main {
         overflow-x: hidden;
@@ -387,6 +439,15 @@ section.hero-large .bg-image {
     section.hero-large .content {
         padding-top: 0;
     }
+    .team-container .col-lg-3 {
+        padding-left: 2em;
+        flex-basis: 40%;
+    }
+
+    .team-container {
+        justify-content: left;
+
+    }
 }
 
 .btn.btn-blue {
@@ -405,3 +466,26 @@ section.hero-large .bg-image {
     color: #0280BF;
 }
 
+.headshot {
+    width: 100%;
+}
+
+.headshot img {
+    border-radius: 0.5em;
+    width: 80%;
+}
+
+.team-container h3.name {
+    font-size: 22px;
+    line-height: 29px;
+    color: #183b72;
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
+.team-desc {
+    font-size: 0.9em;
+    width: 85%;
+    margin-left: 0;
+}
