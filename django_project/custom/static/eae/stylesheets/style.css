@@ -248,6 +248,7 @@ section .flex-center{
   border-bottom-left-radius: 2em;
   border-top-right-radius: 2em;
   display: flex;
+  padding-bottom: 3.5em;
 }
 
 .github-box a {
