@@ -4,42 +4,79 @@
 {% block content %}
     <!-- CONTENT-STARTS -->
     <link href="/static/eae/stylesheets/methodology.css" rel="stylesheet"/>
-
-    <section class="banner"
-             style="background-image: url(https://wri-public-data.s3.amazonaws.com/EnergyAccess/website/photos/e2fbd60c4493fc5d9b55376c8282c092.jpg);">
-        <h1>Methodology</h1>
+    <section class="hero-large size-large color-green alignment-center">
+        <div class="content">
+            <svg class="bg-flair-1 desktop-only" width="1154" height="540"
+                 viewBox="0 0 1154 540" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M1154 0L963.688 464.874C944.402 511.985 897.489 541.801 846.646 539.26L274.153 510.655C235.583 508.728 201.57 484.764 186.774 449.093L0.5 0H1154Z"
+                      fill="#578C43"></path>
+            </svg>
+            <div class="text-content readability-normalize">
+                <svg class="bg-flair-2 mobile-only" viewBox="0 0 377 61"
+                     fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 0.00488281H377V6.00006L96.4894 59.0697C74.8002 63.1731 52.3794 58.1323 34.5336 45.1406L0 20.0001V0.00488281Z"
+                          fill="#578C43"></path>
+                </svg>
+                <h1 class="h2"><strong style="color: white !important;">The Science Behind Clean Cooking Explorer</strong></h1>
+            </div>
+        </div>
+        <div class="bg-image lazy on-load lazy-ready"
+             data-img-src="{% static "img/methodology_banner.jpg" %}"
+             style="background-image: url({% static "img/methodology_banner.jpg" %});">
+        </div>
     </section>
+    <section class="flexible archive-body" style="padding-bottom: 0; padding-top: 0">
+        <svg class="flair-left" width="251" height="865" viewBox="0 0 251 865" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.08" d="M-107 0.000305176V864.896L220.767 567.073C255.291 535.704 260.125 483.155 231.903 446.013L-107 0.000305176Z" fill="#578C43"></path>
+        </svg>
+        <svg class="flair-right" width="131" height="459" viewBox="0 0 131 459" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M227 458.762V0L48.6742 180.587C21.7104 207.893 21.758 251.817 48.7809 279.064L227 458.762Z" fill="#0280BF" fill-opacity="0.08"></path>
+        </svg>
 
-    <section>
-        <p>
-            The Clean Cooking Explorer is an online, open-source, interactive platform that synthesizes and analyzes geographic datasets on both clean cooking supply and demand for Nepal.
-            It is a multi-criteria analysis tool that uses location-specific resource availability and infrastructure data to represent the potential of different cooking fuels.
-            It also incorporates demographic data and data on social uses to visualize cooking demand in different sectors.
-            Together, these supply and demand indicators enable more comprehensive planning to achieve clean cooking for all of Nepal.
-            Spatial analysis tools, including multi-criteria analysis, overlays, filters and buffer zones, help users identify and prioritize areas where clean cooking access can be expanded and should be prioritized.
-        </p>
+        <section class="methodology-first-section">
+            <div style="display: flex; align-items: center; flex-direction: column">
+                <div class="section-title">
+                    <div class="content flex-center" style="text-align: center">
+                        <h2 class="h4 blue-text">Multi-Criteria Analysis Using the <strong class="blue-text">Clean Cooking Explorer Tool</strong> </h2>
+                    </div>
+                </div>
+                <div class="methodology-desc-left">
+                    <p class="content-description" style="line-height: 1.8">
+                        CCE includes a multi-criteria analysis tool that uses location-specific resource availability and infrastructure data to represent clean cooking energy supply.
+                        It also incorporates demographic data and data on social and productive uses to visualize demand for clean cooking solutions.
+                        Together, these supply and demand indicators enable more comprehensive energy planning.
+                        Spatial analysis tools, including multi-criteria analysis, overlays, filters, and buffer zones, help users identify and prioritize areas to enable the adoption of clean cooking solutions.
+                    </p>
+                </div>
+                <div style="height: 20px;"></div>
+                <div class="methodology-desc-right">
+                    <p class="content-description" style="line-height: 1.8">
+                        The tool incorporates remote sensing data as well as data from global, national, sub-national and census databases that are either publicly available or provided by international partners and local stakeholders.
+                        It can host data available in various resolutions, scales and formats allowing for better or new datasets to be incorporated once available.
+                        The selection of data is based on a literature review, international and local stakeholder engagement,
+                        and surveys conducted on the importance of certain datasets, relevant actors, tools and analyses in geospatial clean cooking planning.
+                        The list of essential data is reviewed by local stakeholders to ensure the platform is relevant and applicable in the local context.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-        <p>
-            The tool incorporates remote sensing data as well as data from global, national, sub-national and census databases that are either publicly available or provided by partners and local stakeholders.
-            It can host data available in various resolutions, scales and formats allowing for better or new datasets to be incorporated once available.
-            The selection of data is based on a literature review and a survey WRI conducts on the importance of certain datasets in geospatial clean cooking planning.
-        </p>
-
-        <p>
-            <a href="https://www.wri.org/publication/energy-access-explorer-data-and-methods">
-                See technical note for more detailed methodology
-            </a>
-        </p>
-
-        <br>
-
-        <figure style="flex: unset; width: 100%;">
-            <img src="/static/eae/images/eae-framework.png"
-                 style="width: 100%;">
-            <figcaption>Methodological Flowchart of Clean Cooking Explorer
-            </figcaption>
-        </figure>
+        <section class="methodology-section" style="background-color: #ebf5fa;">
+            <div class="methodology-content">
+                <img src="{% static "img/methodology1.png" %}" width="100%"/>
+            </div>
+        </section>
+        <section class="methodology-section">
+            <div class="methodology-content">
+                <img src="{% static "img/methodology2.png" %}" width="100%"/>
+            </div>
+        </section>
+        <section class="methodology-section" style="background-color: rgba(128,173,75,.1); ">
+            <div class="methodology-content">
+                <img src="{% static "img/methodology3.png" %}" width="100%"/>
+            </div>
+        </section>
     </section>
-
     <!-- CONTENT-ENDS -->
 {% endblock %}

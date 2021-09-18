@@ -143,6 +143,41 @@ section > svg.flair-right {
     }
 }
 
+
+.hero-large {
+    padding: 0;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.methodology-section {
+    padding: 6em 0;
+    display: flex;
+    width: 100%;
+}
+
+.methodology-content {
+    max-width: 1280px;
+}
+
+.methodology-desc-left {
+    background-color: #0280bf;
+    color: white;
+    padding: 1.8em 3em;
+    border-top-right-radius: 2em;
+    border-bottom-left-radius: 2em;
+    margin-left: -10em
+}
+
+.methodology-desc-right {
+    background-color: #578C43;
+    color: white;
+    padding: 1.8em 3em;
+    border-top-left-radius: 2em;
+    border-bottom-right-radius: 2em;
+    margin-right: -10em
+}
+
 @media screen and (max-width: 450px) {
     svg.flair-left, svg.flair-right {
         display: none;
@@ -175,6 +210,27 @@ section > svg.flair-right {
     .how-carousel {
         flex-basis: 80%;
         max-width: 100%;
+    }
+
+    .methodology-section {
+        margin-left: -1em;
+        margin-right: 2em;
+        padding-left: 2em;
+    }
+
+    .methodology-first-section {
+        margin-left: -1em;
+        margin-right: -1em;
+    }
+
+    .methodology-content {
+        padding-right: 30px;
+        width: 100%;
+    }
+
+    .methodology-desc-right, .methodology-desc-left {
+        margin-right: 0;
+        margin-left: 0;
     }
 }
 
@@ -436,6 +492,14 @@ section.hero-large .bg-image {
 @media (min-width: 1080px) {
     .gallery-item-child {
         width: 1080px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+
+    .methodology-desc-right, .methodology-desc-left {
+        margin-right: 0;
+        margin-left: 0;
     }
 }
 
