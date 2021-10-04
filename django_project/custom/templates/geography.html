@@ -1,0 +1,118 @@
+{% extends 'eae_base.html' %}
+{% load staticfiles %}
+
+{% block extra_head %}
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon.min.css" %}" rel="stylesheet">
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon-variables.min.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div style="height: 20px;"></div>
+        <h3>Select your geography</h3>
+        <p>
+            Analysis results are generated per geography (country, district, municipality).
+        </p>
+        <form>
+            <div class="form-group">
+                <label for="countrySelect">Country</label>
+                <select class="form-control" id="countrySelect">
+                    <option value="-">Choose a country</option>
+                    {% for geo in geography %}
+                        <option value="{{ geo.id }}"
+                                data-province="{{ geo.province_selector }}"
+                                data-district="{{ geo.district_selector }}"
+                                data-municipal="{{ geo.municipal_selector }}"
+                        >
+                            {{ geo.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subregionSelect">Subregion</label>
+                <select class="form-control" id="subregionSelect">
+                    <option value="-">All</option>
+                    <option value="province" disabled>Province</option>
+                    <option value="district" disabled>District</option>
+                    <option value="municipal" disabled>Municipal</option>
+                </select>
+                <div style="height: 20px;"></div>
+                <select class="form-control" id="subregionPropertySelect">
+                </select>
+            </div>
+            <button class="btn btn-success" id="btn-discover" disabled>
+                Discover use cases
+            </button>
+        </form>
+        <div class="spacer" style="height: 150px"></div>
+    </div>
+{% endblock %}
+
+{% block footer_js %}
+     <script src="{% static "halfmoon-1.1.1/js/halfmoon.min.js" %}"
+            type="text/javascript"></script>
+    <script>
+
+        let selectedGeo = null;
+
+        const getSubregionPropertyList = (geoId, selector) => {
+          let url = `/api/subregion-list/${geoId}/${selector}/`;
+          return new Promise((resolve, reject) => fetch(url).then(response => response.json()).then(
+              data => resolve(data)
+          ).catch((error) => reject(error)))
+        }
+
+        (function () {
+          document.getElementById('countrySelect').onchange = (e) => {
+            const subregionSelect = document.getElementById('subregionSelect');
+            const discoverBtn = document.getElementById('btn-discover');
+            if (e.target.value !== '-') {
+              selectedGeo = e.target.options[e.target.selectedIndex];
+              discoverBtn.disabled = false;
+            } else {
+              selectedGeo = null;
+              discoverBtn.disabled = true;
+              subregionSelect.value = '-';
+              document.getElementById('subregionPropertySelect').innerHTML = "";
+            }
+            const subregion = subregionSelect.options;
+            for (let index = 1; index < subregion.length + 1; index++) {
+              try {
+                  if (selectedGeo) {
+                    subregion[index].disabled = selectedGeo.dataset[subregion[index].value] == '';
+                  } else {
+                    subregion[index].disabled = true;
+                  }
+              } catch (e) {
+              }
+            }
+          }
+
+          document.getElementById('subregionSelect').onchange = (e) => {
+            const selectedSubRegion = e.target.options[e.target.selectedIndex];
+            if (!selectedGeo) return false;
+
+            const subRegionSelector = selectedGeo.dataset[selectedSubRegion.value];
+            const subregionPropertySelect = document.getElementById('subregionPropertySelect');
+
+            getSubregionPropertyList(selectedGeo.value, subRegionSelector).then(
+                data => {
+                  const subregionListData = data.subregion_list;
+                  subregionPropertySelect.innerHTML = "";
+                  if (subregionListData) {
+                    for (let i = 0; i < subregionListData.length; i++) {
+                      let opt = document.createElement('option');
+                      opt.value = subregionListData[i];
+                      opt.innerHTML = subregionListData[i];
+                      subregionPropertySelect.appendChild(opt);
+                    }
+                  }
+                }
+            ).catch(
+                error => console.error(error)
+            )
+          }
+        })();
+
+    </script>
+{% endblock %}

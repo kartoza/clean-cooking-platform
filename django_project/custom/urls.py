@@ -5,7 +5,7 @@ from django.conf.urls import url
 from django.urls import include
 from django.views.generic import TemplateView
 from custom.proxy import proxy_request
-from custom.views import HomeView, map_view_with_slug, ToolView
+from custom.views import HomeView, map_view_with_slug, ToolView, GeographyView
 
 urlpatterns = [
     url(r'^$',
@@ -35,4 +35,7 @@ urlpatterns = [
     url(r'^view/(?P<slug>[^/]+)$',
         view=map_view_with_slug,
         name='map_view_slug'),
+    url(r'^geography/$',
+        view=GeographyView.as_view(),
+        name='geography-selection')
 ]

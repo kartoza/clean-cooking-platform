@@ -20,6 +20,7 @@
           rel="stylesheet"/>
     <link href="{% static "eae/stylesheets/footer.css" %}" rel="stylesheet"/>
     <title>Clean Cooking Explorer</title>
+    {% block extra_head %}{% endblock %}
 </head>
 
 <body>
@@ -115,7 +116,7 @@
     })();
 </script>
 
-<main>
+<main style="min-height: 60%;">
     {% block content %}
 
     {% endblock %}
