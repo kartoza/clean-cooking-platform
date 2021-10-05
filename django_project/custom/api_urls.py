@@ -4,7 +4,8 @@ from custom.api_views import (
     GeographyDetail,
     GeographyList,
     DatasetDetail,
-    DatasetList
+    DatasetList,
+    GeographyRasterMask
 )
 from custom.api_views.subregion import SubregionListAPI
 
@@ -20,5 +21,7 @@ urlpatterns = [
     url(r'^boundaries-dataset/$',
         BoundariesDataset.as_view()),
     url(r'^subregion-list/(?P<geo_id>\d+)/(?P<subregion_selector>.*)/$',
-        SubregionListAPI.as_view())
+        SubregionListAPI.as_view()),
+    url(r'^geography-raster-mask/$',
+        GeographyRasterMask.as_view())
 ]
