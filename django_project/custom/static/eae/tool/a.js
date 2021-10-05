@@ -396,7 +396,11 @@ async function dsinit(id, inputs, pack, callback) {
 							} else {
 								let vectorConf = await mapboxParser.writeStyle(styleObject).then(mObj => mObj)
 								let vectorConfObj = JSON.parse(vectorConf);
-								vectorConfObj['shape_type'] = 'lines';
+								if (JSON.stringify(styleObject).includes('"kind":"Fill"')) {
+									vectorConfObj['shape_type'] = 'polygons';
+								} else {
+									vectorConfObj['shape_type'] = 'lines';
+								}
 								item.file.configuration = vectorConfObj
 								if (!e.category.vectors) {
 									e.category.vectors = {
@@ -421,12 +425,23 @@ async function dsinit(id, inputs, pack, callback) {
 												'dataset': filters[1]
 											})
 										}
-										customVectorConfiguration.features_specs.push({
+										const styleSpec = {
 											"key": filters[1],
 											"match": filters[2],
-											"stroke": layer.paint['line-color'],
-											"stroke-width": layer.paint['line-width']
-										})
+										}
+										if ('line-color' in layer.paint) {
+											styleSpec['stroke'] = layer.paint['line-color']
+										}
+										if ('line-width' in layer.paint) {
+											styleSpec['stroke-width'] = layer.paint['line-width']
+										}
+										if ('fill-color' in layer.paint) {
+											styleSpec['fill'] = layer.paint['fill-color']
+										}
+										if ('fill-outline-color' in layer.paint) {
+											styleSpec['stroke'] = layer.paint['fill-outline-color']
+										}
+										customVectorConfiguration.features_specs.push(styleSpec)
 									}
 									e.configuration = customVectorConfiguration;
 								}

@@ -8,9 +8,12 @@ const getSubregionPropertyList = (geoId, selector) => {
 }
 
 (function () {
-  document.getElementById('countrySelect').onchange = (e) => {
-    const subregionSelect = document.getElementById('subregionSelect');
-    const discoverBtn = document.getElementById('btn-discover');
+  const countrySelect = document.getElementById('countrySelect');
+  const subregionSelect = document.getElementById('subregionSelect');
+  const discoverBtn = document.getElementById('btn-discover');
+  const subregionPropertySelect = document.getElementById('subregionPropertySelect');
+
+  countrySelect.onchange = (e) => {
     if (e.target.value !== '-') {
       selectedGeo = e.target.options[e.target.selectedIndex];
       discoverBtn.disabled = false;
@@ -18,7 +21,7 @@ const getSubregionPropertyList = (geoId, selector) => {
       selectedGeo = null;
       discoverBtn.disabled = true;
       subregionSelect.value = '-';
-      document.getElementById('subregionPropertySelect').innerHTML = "";
+      subregionPropertySelect.innerHTML = "";
     }
     const subregion = subregionSelect.options;
     for (let index = 1; index < subregion.length + 1; index++) {
@@ -33,12 +36,11 @@ const getSubregionPropertyList = (geoId, selector) => {
     }
   }
 
-  document.getElementById('subregionSelect').onchange = (e) => {
+  subregionSelect.onchange = (e) => {
     const selectedSubRegion = e.target.options[e.target.selectedIndex];
     if (!selectedGeo) return false;
 
     const subRegionSelector = selectedGeo.dataset[selectedSubRegion.value];
-    const subregionPropertySelect = document.getElementById('subregionPropertySelect');
 
     getSubregionPropertyList(selectedGeo.value, subRegionSelector).then(
         data => {
@@ -56,5 +58,33 @@ const getSubregionPropertyList = (geoId, selector) => {
     ).catch(
         error => console.error(error)
     )
+  }
+
+  discoverBtn.onclick = (e) => {
+    e.preventDefault();
+    const geoId = selectedGeo.value;
+    const subRegionSelector = selectedGeo.dataset[subregionSelect.value];
+    const subRegionValue = subregionPropertySelect.value;
+    const loading = document.getElementById('loading-spinner');
+    loading.style.display = "block";
+    discoverBtn.querySelector('.text').innerHTML = 'Generating raster';
+    discoverBtn.disabled = true;
+    fetch('/api/geography-raster-mask/', {
+      method: 'POST',
+      credentials: "same-origin",
+      headers: {
+        'X-CSRFToken': getCookie("csrftoken"),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        geo_id: parseInt(geoId),
+        subregion_selector: subRegionSelector,
+        subregion_value: subRegionValue
+      })
+    }).then((response) => response.json()).then(data => {
+      const boundaryUUID = data.File;
+      window.location.href = '/tool/?boundary=' + boundaryUUID;
+    });
   }
 })();
