@@ -12,6 +12,7 @@ from .models.cca_preference import CCAPreferences
 from .models.unit import Unit
 from .models.menu import *
 from custom.models.preset import Preset
+from custom.models.use_case import UseCase
 
 
 class MapSlugMappingAdmin(admin.ModelAdmin):
@@ -84,6 +85,11 @@ class SubMenuAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 
 class PresetAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('name', 'description')
+    search_fields = ('name', )
+
+
+class UseCaseAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('name', 'description')
     search_fields = ('name', )
 
@@ -172,3 +178,4 @@ admin.site.register(Unit, UnitAdmin)
 admin.site.register(MainMenu, MainMenuAdmin)
 admin.site.register(SubMenu, SubMenuAdmin)
 admin.site.register(Preset, PresetAdmin)
+admin.site.register(UseCase, UseCaseAdmin)
