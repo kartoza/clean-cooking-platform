@@ -56,9 +56,9 @@ class GeographyList(APIView):
 class GeographyRasterMask(APIView):
 
     def post(self, request, *args):
-        geo_id = self.request.POST.get('geo_id', None)
-        subregion_selector = self.request.POST.get('subregion_selector', None)
-        subregion_value = self.request.POST.get('subregion_value', None)
+        geo_id = self.request.data.get('geo_id', None)
+        subregion_selector = self.request.data.get('subregion_selector', None)
+        subregion_value = self.request.data.get('subregion_value', None)
         try:
             geo = Geography.objects.get(id=geo_id)
         except Geography.DoesNotExist:
@@ -84,7 +84,10 @@ class GeographyRasterMask(APIView):
         )
         where_condition = f"{subregion_selector}='{subregion_value}'"
 
-        if os.path.exists(shp_layer_file.path):
+        if (
+            os.path.exists(shp_layer_file.path) and
+            not os.path.exists(destination_path)
+        ):
             try:
                 rasterize_layer(
                     shp_layer_file.path,
@@ -98,5 +101,6 @@ class GeographyRasterMask(APIView):
         return Response({
             'Success': True,
             'Geo': geo.name,
-            'Raster': f'{settings.MEDIA_URL}rasterized/{uuid_string}'
+            'RasterPath': f'{settings.MEDIA_URL}rasterized/{uuid_string}',
+            'File': uuid_string
         })
