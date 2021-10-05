@@ -1,0 +1,109 @@
+{% extends 'eae_base.html' %}
+{% load staticfiles %}
+
+{% block extra_head %}
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon.min.css" %}"
+          rel="stylesheet">
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon-variables.min.css" %}"
+          rel="stylesheet">
+    <link href="{% static "css/loading.css" %}" rel="stylesheet"/>
+    <link href="{% static "fontawesome/css/all.min.css" %}" rel="stylesheet">
+    <style>
+        .sub-title {
+            background: #579d44;
+            padding: 1em;
+            border-radius: 0.8em;
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .card {
+            margin: 0;
+            margin-top: 3rem;
+        }
+
+        .btn-scene {
+            width: 800px;
+            padding-bottom: 2em;
+            padding-top: 0.5em;
+            height: 65px;
+        }
+
+        .dropdown-menu-center {
+            font-size: 15px
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div style="height: 20px;"></div>
+        <div class="sub-title">
+            Geography : {{ subRegion.1 }}, {{ geo.name }}
+        </div>
+        <div style="height: 10px;"></div>
+        <div class="sub-title">
+            Use Case : {{ use_case.name }}
+        </div>
+
+
+        <div class="card" style="text-align: center">
+            <h4 class="h4 blue-text title-text card-title">
+                Clean Cooking Explorer Tool
+            </h4>
+            <p>
+                CCE is a dimensional analysis, ranking areas where demand or
+                potential is high. <a href="/methodology"
+                                      class="btn btn-secondary" type="button">Find
+                out more</a>
+            </p>
+
+            <!-- Dropdown menu aligned to the center -->
+            <select class="form-control" id="scenarioSelect"" style="width:
+            800px; height: 60px; margin-left: auto; margin-right: auto">
+            <option value="" selected="selected" disabled="disabled">Choose a
+                scenario
+            </option>
+            {% for preset in presets %}
+                <option value="1"
+                        data-url="{{ preset.permalink }}">{{ preset.name }}</option>
+            {% endfor %}
+            </select>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-scene" disabled>Clean Cooking Access
+                    Report
+                </button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="btn btn-scene" id="cca-tool-btn" disabled>Clean
+                    Cooking Explorer Tool
+                </button>
+            </div>
+            <div class="spacer" style="height: 50px"></div>
+        </div>
+
+        <div class="spacer" style="height: 150px"></div>
+    </div>
+{% endblock %}
+
+{% block footer_js %}
+    <script src="{% static "halfmoon-1.1.1/js/halfmoon.min.js" %}"
+            type="text/javascript"></script>
+    <script>
+      let selectedScenario = null;
+      (function () {
+        const scenarioSelect = document.getElementById('scenarioSelect');
+        const ccaToolBtn = document.getElementById('cca-tool-btn');
+
+        scenarioSelect.onchange = (e) => {
+          ccaToolBtn.disabled = false;
+          selectedScenario = e.target.options[e.target.selectedIndex];
+        }
+
+        ccaToolBtn.onclick = (e) => {
+          window.location.href = selectedScenario.dataset.url;
+        }
+      })()
+    </script>
+{% endblock %}

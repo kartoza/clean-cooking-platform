@@ -6,7 +6,8 @@ from django.urls import include
 from django.views.generic import TemplateView
 from custom.proxy import proxy_request
 from custom.views import HomeView, map_view_with_slug, ToolView, GeographyView
-from custom.views.preset import PresetView
+from custom.views.preset import UseCaseView
+from custom.views.report import ReportView
 
 urlpatterns = [
     url(r'^$',
@@ -39,7 +40,10 @@ urlpatterns = [
     url(r'^geography/$',
         view=GeographyView.as_view(),
         name='geography-selection'),
-    url(r'^presets/$',
-        view=PresetView.as_view(),
-        name='preset-selection')
+    url(r'^use-case/$',
+        view=UseCaseView.as_view(),
+        name='use-case-selection'),
+    url(r'^scenario/$',
+        view=ReportView.as_view(),
+        name='scenario')
 ]

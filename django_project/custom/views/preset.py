@@ -1,12 +1,12 @@
 from django.views.generic import TemplateView
 
-from custom.models.preset import Preset
+from custom.models import UseCase
 
 
-class PresetView(TemplateView):
-    template_name = 'preset.html'
+class UseCaseView(TemplateView):
+    template_name = 'use_case.html'
 
     def get_context_data(self, **kwargs):
-        context = super(PresetView, self).get_context_data(**kwargs)
-        context['presets'] = Preset.objects.all()
+        context = super(UseCaseView, self).get_context_data(**kwargs)
+        context['use_cases'] = UseCase.objects.all()
         return context

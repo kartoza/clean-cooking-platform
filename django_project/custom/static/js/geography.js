@@ -84,7 +84,7 @@ const getSubregionPropertyList = (geoId, selector) => {
       })
     }).then((response) => response.json()).then(data => {
       const boundaryUUID = data.File;
-      window.location.href = '/presets/?boundary=' + boundaryUUID;
+      window.location.href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
     });
   }
 })();
