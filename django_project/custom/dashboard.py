@@ -33,6 +33,8 @@ class CustomIndexDashboard(Dashboard):
                     models=(
                         'custom.models.geography.Geography',
                         'custom.models.category.Category',
+                        'custom.models.use_case.UseCase',
+                        'custom.models.preset.Preset',
                         'custom.models.unit.Unit',
                         'custom.models.menu.MainMenu',
                         'custom.models.menu.SubMenu',)

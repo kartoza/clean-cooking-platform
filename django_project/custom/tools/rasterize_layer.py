@@ -44,13 +44,14 @@ def rasterize_layer(
         # Source has no projection (needs GDAL >= 1.7.0 to work)
         target_ds.SetProjection('LOCAL_CS["arbitrary"]')
 
-    nodata_value = -1
+    nodata_value = -999999
     band = target_ds.GetRasterBand(1)
     band.SetNoDataValue(nodata_value)
     band.FlushCache()
 
     # Rasterize
-    err = gdal.RasterizeLayer(target_ds, [1], source_layer,
+    err = gdal.RasterizeLayer(target_ds, (3, 2, 1), source_layer,
+                              burn_values=(0, 0, 0),
                               options=["ATTRIBUTE=%s" % RASTERIZE_COLOR_FIELD])
     if err != 0:
         raise Exception("error rasterizing layer: %s" % err)

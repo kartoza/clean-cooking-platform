@@ -20,7 +20,7 @@
 {% block content %}
     <div class="container">
         <div style="height: 20px;"></div>
-        <h3>Select your geography</h3>
+        <h4 class="h4 blue-text title-text">Select your geography</h4>
         <p>
             Analysis results are generated per geography (country, district, municipality).
         </p>
@@ -52,6 +52,10 @@
                 </select>
             </div>
 
+            <button class="btn btn-success" id="btn-discover" style="display: flex" disabled>
+                <div id="loading-spinner" class="loading-spinner-container" style="display: none"><div class="loading-spinner"><div></div></div></div>
+                <span class="text">Discover use cases</span>
+            </button>
         </form>
         <div id="map" class="map"></div>
         <div class="spacer" style="height: 20px"></div>
@@ -68,6 +72,6 @@
             type="text/javascript"></script>
     <script src="{% static "geotiff.js" %}" type="text/javascript"></script>
     <script src="{% static "plotty.min.js" %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static "js/geography_map.js" %}"></script>
     <script src="{% static "js/geography.js" %}" type="text/javascript"></script>
-    <script type="module" src="{% static "js/geography_map.js" %}"></script>
 {% endblock %}

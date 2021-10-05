@@ -396,11 +396,7 @@ async function dsinit(id, inputs, pack, callback) {
 							} else {
 								let vectorConf = await mapboxParser.writeStyle(styleObject).then(mObj => mObj)
 								let vectorConfObj = JSON.parse(vectorConf);
-								if (JSON.stringify(styleObject).includes('"kind":"Fill"')) {
-									vectorConfObj['shape_type'] = 'polygons';
-								} else {
-									vectorConfObj['shape_type'] = 'lines';
-								}
+								vectorConfObj['shape_type'] = 'lines';
 								item.file.configuration = vectorConfObj
 								if (!e.category.vectors) {
 									e.category.vectors = {
