@@ -34,6 +34,7 @@
                                 data-province="{{ geo.province_selector }}"
                                 data-district="{{ geo.district_selector }}"
                                 data-municipal="{{ geo.municipal_selector }}"
+                                data-geojson="{{ geo.download_link }}"
                         >
                             {{ geo.name }}</option>
                     {% endfor %}
@@ -52,10 +53,11 @@
                 </select>
             </div>
 
-            <button class="btn btn-success" id="btn-discover" style="display: flex" disabled>
-                <div id="loading-spinner" class="loading-spinner-container" style="display: none"><div class="loading-spinner"><div></div></div></div>
-                <span class="text">Discover use cases</span>
+            <button class="btn btn-info" id="btn-status" style="display: flex" disabled>
+                <div id="loading-spinner-1" class="loading-spinner-container" style="display: none"><div class="loading-spinner"><div></div></div></div>
+                <span class="text">Please Choose a Country</span>
             </button>
+            <div style="height: 20px"></div>
         </form>
         <div id="map" class="map"></div>
         <div class="spacer" style="height: 20px"></div>

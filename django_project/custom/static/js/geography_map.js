@@ -16,6 +16,9 @@ const map = new ol.Map({
 
 let width, height, extent;
 
+const statusBtn = document.getElementById('btn-status');
+const loadingSpinner1 = document.getElementById('loading-spinner-1');
+
 const onGeoTiffLoaded = (data) => {
   const tiff = GeoTIFF.parse(data);
   const image = tiff.getImage();
@@ -41,7 +44,6 @@ const onGeoTiffLoaded = (data) => {
     projection: 'EPSG:4326'
   })
   geotiffLayer.setSource(imgSource);
-  map.getView().fit(imgSource.getExtent());
 }
 
 const showGeoTiffLayer = (url) => {
@@ -50,4 +52,23 @@ const showGeoTiffLayer = (url) => {
   ).then(onGeoTiffLoaded)
 }
 
-showGeoTiffLayer("/uploaded/rasterized/9f1a148a-c683-3934-b06b-027c07bc5388.tif")
+const showGeoJSONLayer = (url) => {
+  const geojsonSource = new ol.source.Vector({
+      url: url,
+      format: new ol.format.GeoJSON(),
+  });
+  const vectorLayer = new ol.layer.Vector({
+    source: geojsonSource,
+  });
+  map.addLayer(vectorLayer);
+  const intervalID = setInterval(() => {
+    try {
+      if (typeof vectorLayer.getFeatures() !== 'undefined') {
+        map.getView().fit(vectorLayer.getSource().getExtent());
+        loadingSpinner1.style.display = "none";
+        statusBtn.querySelector('.text').innerHTML = 'Please Choose a Sub Region';
+        clearInterval(intervalID);
+      }
+    } catch (e) {}
+  });
+}
