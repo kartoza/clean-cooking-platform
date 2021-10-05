@@ -1,0 +1,55 @@
+{% extends 'eae_base.html' %}
+{% load staticfiles %}
+
+{% block extra_head %}
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon.min.css" %}" rel="stylesheet">
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon-variables.min.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div style="height: 20px;"></div>
+        <h3>Select your geography</h3>
+        <p>
+            Analysis results are generated per geography (country, district, municipality).
+        </p>
+        <form>
+            <div class="form-group">
+                <label for="countrySelect">Country</label>
+                <select class="form-control" id="countrySelect">
+                    <option value="-">Choose a country</option>
+                    {% for geo in geography %}
+                        <option value="{{ geo.id }}"
+                                data-province="{{ geo.province_selector }}"
+                                data-district="{{ geo.district_selector }}"
+                                data-municipal="{{ geo.municipal_selector }}"
+                        >
+                            {{ geo.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subregionSelect">Subregion</label>
+                <select class="form-control" id="subregionSelect">
+                    <option value="-">All</option>
+                    <option value="province" disabled>Province</option>
+                    <option value="district" disabled>District</option>
+                    <option value="municipal" disabled>Municipal</option>
+                </select>
+                <div style="height: 20px;"></div>
+                <select class="form-control" id="subregionPropertySelect">
+                </select>
+            </div>
+            <button class="btn btn-success" id="btn-discover" disabled>
+                Discover use cases
+            </button>
+        </form>
+        <div class="spacer" style="height: 150px"></div>
+    </div>
+{% endblock %}
+
+{% block footer_js %}
+    <script src="{% static "halfmoon-1.1.1/js/halfmoon.min.js" %}"
+            type="text/javascript"></script>
+    <script src="{% static "js/geography_script.js" %}" type="text/javascript"></script>
+{% endblock %}

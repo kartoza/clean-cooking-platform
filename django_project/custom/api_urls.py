@@ -6,6 +6,7 @@ from custom.api_views import (
     DatasetDetail,
     DatasetList
 )
+from custom.api_views.subregion import SubregionListAPI
 
 urlpatterns = [
     url(r'^geography/$',
@@ -18,4 +19,6 @@ urlpatterns = [
         DatasetList.as_view()),
     url(r'^boundaries-dataset/$',
         BoundariesDataset.as_view()),
+    url(r'^subregion-list/(?P<geo_id>\d+)/(?P<subregion_selector>.*)/$',
+        SubregionListAPI.as_view())
 ]

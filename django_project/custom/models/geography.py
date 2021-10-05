@@ -114,6 +114,24 @@ class Geography(models.Model):
         help_text='Raster resolution (y)'
     )
 
+    province_selector = models.TextField(
+        max_length=255,
+        blank=True,
+        default=''
+    )
+
+    district_selector = models.TextField(
+        max_length=255,
+        blank=True,
+        default=''
+    )
+
+    municipal_selector = models.TextField(
+        max_length=255,
+        blank=True,
+        default=''
+    )
+
     class Meta:
         verbose_name_plural = 'Geographies'
 
