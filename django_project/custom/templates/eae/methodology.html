@@ -1,6 +1,13 @@
 {% extends 'eae_base.html' %}
 {% load staticfiles %}
 
+{% block extra_head %}
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon.min.css" %}"
+          rel="stylesheet">
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon-variables.min.css" %}"
+          rel="stylesheet">
+{% endblock %}
+
 {% block content %}
     <!-- CONTENT-STARTS -->
     <link href="/static/eae/stylesheets/methodology.css" rel="stylesheet"/>
@@ -41,24 +48,43 @@
                         <h2 class="h4 blue-text">Multi-Criteria Analysis Using the <strong class="blue-text">Clean Cooking Explorer Tool</strong> </h2>
                     </div>
                 </div>
-                <div class="methodology-desc-left">
-                    <p class="content-description" style="line-height: 1.8">
-                        CCE includes a multi-criteria analysis tool that uses location-specific resource availability and infrastructure data to represent clean cooking energy supply.
-                        It also incorporates demographic data and data on social and productive uses to visualize demand for clean cooking solutions.
-                        Together, these supply and demand indicators enable more comprehensive energy planning.
-                        Spatial analysis tools, including multi-criteria analysis, overlays, filters, and buffer zones, help users identify and prioritize areas to enable the adoption of clean cooking solutions.
-                    </p>
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-4" style="background-color: #0280bf; color: white;  border-bottom-left-radius: 2em; padding: 1.8em 3em">
+                        <h3 style="color: white; font-weight: 600">Clean Cooking Explorer</h3>
+                        <p class="content-description" style="line-height: 1.8">
+                            The Clean Cooking Explorer utilizes geospatial data in a multi-criteria analysis to identify the state of access to clean cooking.
+                            The tool enables users to identify areas with high expansion potential as well as areas where assistance is needed, making it a useful tool for both policy makers and private investors.
+                        </p>
+                    </div>
+                    <div class="col-4"  style="background-color: #578C43; color: white; border-bottom-right-radius: 2em;  padding: 1.8em 3em">
+                        <h3 style="color: white; font-weight: 600">OnSSTOVE</h3>
+                        <p class="content-description" style="line-height: 1.8">
+                            OnSSTOVE is a geospatial modelling tool that uses techno- and socio-economic data in order to estimate the potential of adopting different improved and clean cooking solutions.
+                            The tool determines the net-benefits of each cooking solution and presents scenarios with the highest net-benefit option for every settlement.
+                        </p>
+                    </div>
+                    <div class="col-2"></div>
                 </div>
-                <div style="height: 20px;"></div>
-                <div class="methodology-desc-right">
-                    <p class="content-description" style="line-height: 1.8">
-                        The tool incorporates remote sensing data as well as data from global, national, sub-national and census databases that are either publicly available or provided by international partners and local stakeholders.
-                        It can host data available in various resolutions, scales and formats allowing for better or new datasets to be incorporated once available.
-                        The selection of data is based on a literature review, international and local stakeholder engagement,
-                        and surveys conducted on the importance of certain datasets, relevant actors, tools and analyses in geospatial clean cooking planning.
-                        The list of essential data is reviewed by local stakeholders to ensure the platform is relevant and applicable in the local context.
-                    </p>
-                </div>
+                <div style="height: 20px"></div>
+{#                <div class="methodology-desc-left">#}
+{#                    <p class="content-description" style="line-height: 1.8">#}
+{#                        CCE includes a multi-criteria analysis tool that uses location-specific resource availability and infrastructure data to represent clean cooking energy supply.#}
+{#                        It also incorporates demographic data and data on social and productive uses to visualize demand for clean cooking solutions.#}
+{#                        Together, these supply and demand indicators enable more comprehensive energy planning.#}
+{#                        Spatial analysis tools, including multi-criteria analysis, overlays, filters, and buffer zones, help users identify and prioritize areas to enable the adoption of clean cooking solutions.#}
+{#                    </p>#}
+{#                </div>#}
+{#                <div style="height: 20px;"></div>#}
+{#                <div class="methodology-desc-right">#}
+{#                    <p class="content-description" style="line-height: 1.8">#}
+{#                        The tool incorporates remote sensing data as well as data from global, national, sub-national and census databases that are either publicly available or provided by international partners and local stakeholders.#}
+{#                        It can host data available in various resolutions, scales and formats allowing for better or new datasets to be incorporated once available.#}
+{#                        The selection of data is based on a literature review, international and local stakeholder engagement,#}
+{#                        and surveys conducted on the importance of certain datasets, relevant actors, tools and analyses in geospatial clean cooking planning.#}
+{#                        The list of essential data is reviewed by local stakeholders to ensure the platform is relevant and applicable in the local context.#}
+{#                    </p>#}
+{#                </div>#}
             </div>
         </section>
 
