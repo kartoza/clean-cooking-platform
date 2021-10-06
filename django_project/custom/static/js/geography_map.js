@@ -14,6 +14,24 @@ const map = new ol.Map({
   })
 });
 
+
+const zoomToBoundingBox = (bboxString = '80.0584517,26.3479682,88.2015273,30.4731565') => {
+  const bbox = bboxString.split(',');
+  let col = new ol.Collection();
+  let bboxLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+      features: col
+    })
+  })
+  col.push(new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.fromLonLat([bbox[0], bbox[1]]))
+  }));
+  col.push(new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.fromLonLat([bbox[2], bbox[3]]))
+  }));
+  map.getView().fit(bboxLayer.getSource().getExtent());
+}
+
 let width, height, extent;
 
 const statusBtn = document.getElementById('btn-status');
@@ -63,8 +81,7 @@ const showGeoJSONLayer = (url) => {
   map.addLayer(vectorLayer);
   const intervalID = setInterval(() => {
     try {
-      if (typeof vectorLayer.getFeatures() !== 'undefined') {
-        map.getView().fit(vectorLayer.getSource().getExtent());
+      if (vectorLayer.getSource().getFeatures().length > 0) {
         loadingSpinner1.style.display = "none";
         statusBtn.querySelector('.text').innerHTML = 'Please Choose a Sub Region';
         clearInterval(intervalID);

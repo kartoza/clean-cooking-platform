@@ -85,8 +85,7 @@ class GeographyRasterMask(APIView):
         where_condition = f"{subregion_selector}='{subregion_value}'"
 
         if (
-            os.path.exists(shp_layer_file.path) and
-            not os.path.exists(destination_path)
+            os.path.exists(shp_layer_file.path)
         ):
             try:
                 rasterize_layer(

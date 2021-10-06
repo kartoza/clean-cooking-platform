@@ -17,7 +17,8 @@ class GeographyView(TemplateView):
                 'name': geo.name,
                 'province_selector': geo.province_selector,
                 'district_selector': geo.district_selector,
-                'municipal_selector': geo.municipal_selector
+                'municipal_selector': geo.municipal_selector,
+                'bbox': geo.vector_boundary_layer.bbox
             }
             for download_link in download_links:
                 if 'GeoJSON' in str(download_link):
