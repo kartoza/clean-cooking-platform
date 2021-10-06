@@ -15,6 +15,9 @@
         height:400px;
       }
     </style>
+    <script>
+        const geoserverUrl = '{{ geoserver_url }}';
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -34,6 +37,7 @@
                                 data-province="{{ geo.province_selector }}"
                                 data-district="{{ geo.district_selector }}"
                                 data-municipal="{{ geo.municipal_selector }}"
+                                data-layer-name="{{ geo.layer_name }}"
                                 data-geojson="{{ geo.download_link }}"
                         >
                             {{ geo.name }}</option>
