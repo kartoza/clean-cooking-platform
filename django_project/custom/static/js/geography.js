@@ -48,7 +48,7 @@ const getSubregionPropertyList = (geoId, selector) => {
       loadingSpinner1.style.display = "block";
       href = `/use-case/?geoId=${selectedGeo.value}&subRegion=Country:All`;
       zoomToBoundingBox(selectedGeo.dataset.bbox);
-      showGeoJSONLayer('/proxy_cca/' + selectedGeo.dataset.geojson);
+      showTileLayer(selectedGeo.dataset.layerName);
     } else {
       selectedGeo = null;
       discoverBtn.disabled = true;

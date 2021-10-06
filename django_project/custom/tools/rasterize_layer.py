@@ -1,19 +1,38 @@
 import random
 from osgeo import gdal
 from osgeo import ogr
+from osgeo import osr
 
 RASTERIZE_COLOR_FIELD = "__color__"
 
 
+# example GDAL error handler function
+def gdal_error_handler(err_class, err_num, err_msg):
+    errtype = {
+            gdal.CE_None:'None',
+            gdal.CE_Debug:'Debug',
+            gdal.CE_Warning:'Warning',
+            gdal.CE_Failure:'Failure',
+            gdal.CE_Fatal:'Fatal'
+    }
+    err_msg = err_msg.replace('\n',' ')
+    err_class = errtype.get(err_class, 'None')
+    print('Error Number: %s' % (err_num))
+    print('Error Type: %s' % (err_class))
+    print('Error Message: %s' % (err_msg))
+
+
 def rasterize_layer(
         source_shp,
-        pixel_size = 0.01,
+        pixel_size = 100,
         destination_path = '',
         where = ''):
     # Open the data source
+    gdal.PushErrorHandler(gdal_error_handler)
     orig_data_source = ogr.Open(source_shp)
     source_ds = ogr.GetDriverByName("Memory").CopyDataSource(
         orig_data_source, "")
+
     source_layer = source_ds.GetLayer(0)
     source_srs = source_layer.GetSpatialRef()
     # Create a field in the source layer to hold the features colors
@@ -27,6 +46,7 @@ def rasterize_layer(
     for feature in source_layer:
         feature.SetField(field_index, random.randint(0, 255))
         source_layer.SetFeature(feature)
+
     # Create the destination data source
     x_res = int((x_max - x_min) / pixel_size)
     y_res = int((y_max - y_min) / pixel_size)

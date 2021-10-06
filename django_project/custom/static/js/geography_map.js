@@ -1,4 +1,6 @@
 const geotiffLayer = new ol.layer.Image();
+const tileLayer = new ol.layer.Tile();
+const geotiffLayerAdded = false;
 
 const map = new ol.Map({
   target: 'map',
@@ -6,6 +8,7 @@ const map = new ol.Map({
     new ol.layer.Tile({
       source: new ol.source.OSM()
     }),
+    tileLayer,
     geotiffLayer
   ],
   view: new ol.View({
@@ -88,4 +91,15 @@ const showGeoJSONLayer = (url) => {
       }
     } catch (e) {}
   });
+}
+
+showTileLayer = (layerName) => {
+  tileLayer.setSource(new ol.source.TileWMS({
+    url: `/proxy_cca/${geoserverUrl}/wms`,
+    params: {'LAYERS': layerName, 'TILED': true},
+    serverType: 'geoserver',
+    transition: 0
+  }));
+  loadingSpinner1.style.display = "none";
+  statusBtn.querySelector('.text').innerHTML = 'Please Choose a Sub Region';
 }

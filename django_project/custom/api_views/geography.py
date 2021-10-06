@@ -1,7 +1,9 @@
 # coding=utf-8
 import os.path
 import uuid
+import zipfile
 
+import requests
 from django.conf import settings
 from django.http.response import Http404
 from rest_framework.response import Response
@@ -64,19 +66,58 @@ class GeographyRasterMask(APIView):
         except Geography.DoesNotExist:
             raise Http404
 
-        shp_layer = (
-            geo.vector_boundary_layer.upload_session.layerfile_set.filter(
-                file__icontains='.shp').first()
-        )
-        shp_layer_file = shp_layer.file
-        uuid_string = str(uuid.uuid3(
-            uuid.NAMESPACE_OID,
-            f'{shp_layer_file.path}{subregion_selector}{subregion_value}'
-        )) + '.tif'
-
         raster_dir = os.path.join(settings.MEDIA_ROOT, 'rasterized')
         if not os.path.exists(raster_dir):
             os.mkdir(raster_dir)
+
+        raster_shp_dir = os.path.join(raster_dir, 'shp')
+        if not os.path.exists(raster_shp_dir):
+            os.mkdir(raster_shp_dir)
+
+        boundary_layer_name = str(geo.vector_boundary_layer)
+        shp_file = None
+        raster_shp_zip_dir = os.path.join(
+            raster_shp_dir, boundary_layer_name)
+        if not os.path.exists(raster_shp_zip_dir):
+            os.mkdir(raster_shp_zip_dir)
+        else:
+            for unzipped_file in os.listdir(raster_shp_zip_dir):
+                if unzipped_file.endswith('.shp'):
+                    shp_file = os.path.join(
+                        raster_shp_zip_dir,
+                        unzipped_file
+                    )
+        shp_zip_file = os.path.join(
+            raster_shp_zip_dir,
+            boundary_layer_name + '.zip')
+
+        if not shp_file:
+            # Download zipped shp file from geoserver
+            url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/ows'
+            params = {
+                'service': 'WFS',
+                'version': '1.0.0',
+                'request': 'GetFeature',
+                'typeNames': str(geo.vector_boundary_layer),
+                'outputFormat': 'SHAPE-ZIP',
+                'srs': 'EPSG:4326'
+            }
+            r = requests.get(url=url, params=params, stream=True)
+            chunk_size = 2000
+            with open(shp_zip_file, 'wb') as fd:
+                for chunk in r.iter_content(chunk_size):
+                    fd.write(chunk)
+            with zipfile.ZipFile(shp_zip_file, 'r') as zip_ref:
+                zip_ref.extractall(raster_shp_zip_dir)
+            for unzipped_file in os.listdir(raster_shp_zip_dir):
+                if unzipped_file.endswith('.shp'):
+                    shp_file = os.path.join(raster_shp_zip_dir, unzipped_file)
+            os.remove(shp_zip_file)
+
+        uuid_string = str(uuid.uuid3(
+            uuid.NAMESPACE_OID,
+            f'{shp_file}{subregion_selector}{subregion_value}'
+        )) + '.tif'
 
         destination_path = os.path.join(
             raster_dir,
@@ -85,11 +126,12 @@ class GeographyRasterMask(APIView):
         where_condition = f"{subregion_selector}='{subregion_value}'"
 
         if (
-            os.path.exists(shp_layer_file.path)
+            os.path.exists(shp_file) and
+            not os.path.exists(destination_path)
         ):
             try:
                 rasterize_layer(
-                    shp_layer_file.path,
+                    shp_file,
                     0.05,
                     destination_path,
                     where_condition
