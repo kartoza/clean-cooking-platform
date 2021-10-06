@@ -16,13 +16,13 @@ def rasterize_layer(
         orig_data_source, "")
     source_layer = source_ds.GetLayer(0)
     source_srs = source_layer.GetSpatialRef()
-    x_min, x_max, y_min, y_max = source_layer.GetExtent()
     # Create a field in the source layer to hold the features colors
     field_def = ogr.FieldDefn(RASTERIZE_COLOR_FIELD, ogr.OFTReal)
     source_layer.CreateField(field_def)
     source_layer_def = source_layer.GetLayerDefn()
     field_index = source_layer_def.GetFieldIndex(RASTERIZE_COLOR_FIELD)
     source_layer.SetAttributeFilter(where)
+    x_min, x_max, y_min, y_max = source_layer.GetExtent()
 
     for feature in source_layer:
         feature.SetField(field_index, random.randint(0, 255))

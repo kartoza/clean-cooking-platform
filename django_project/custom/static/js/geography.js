@@ -47,6 +47,7 @@ const getSubregionPropertyList = (geoId, selector) => {
       statusBtn.querySelector('.text').innerHTML = 'Downloading Country Boundary Layer';
       loadingSpinner1.style.display = "block";
       href = `/use-case/?geoId=${selectedGeo.value}&subRegion=Country:All`;
+      zoomToBoundingBox(selectedGeo.dataset.bbox);
       showGeoJSONLayer('/proxy_cca/' + selectedGeo.dataset.geojson);
     } else {
       selectedGeo = null;
@@ -84,6 +85,7 @@ const getSubregionPropertyList = (geoId, selector) => {
     getSubregionPropertyList(selectedGeo.value, subRegionSelector).then(
         data => {
           const subregionListData = data.subregion_list;
+          subregionPropertySelect.innerHTML = '';
           subregionPropertySelect.disabled = false;
           if (subregionListData) {
             for (let i = 0; i < subregionListData.length; i++) {
