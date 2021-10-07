@@ -1,3 +1,5 @@
+import os.path
+
 import requests
 import xml.etree.ElementTree as ET
 from django.http.response import Http404
@@ -6,6 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from custom.models import Geography
+from custom.tools.clip_layer import clip_vector_layer
+from geonode.layers.models import Layer, LayerFile
 
 
 class SubregionListAPI(APIView):
@@ -49,4 +53,69 @@ class SubregionListAPI(APIView):
             'geography': geography.name,
             'subregion_selector': subregion_selector,
             'subregion_list': subregion_list
+        })
+
+
+class ClipLayerByRegion(APIView):
+    def post(self, request, *args):
+        boundary_uuid = self.request.data.get('boundary', None)
+        if '.tif' in boundary_uuid:
+            boundary_uuid = boundary_uuid.replace('.tif', '')
+        boundary_file = os.path.join(
+            settings.MEDIA_ROOT,
+            'rasterized',
+            boundary_uuid + '.json'
+        )
+        if not os.path.exists(boundary_file):
+            raise Http404
+
+        layer_id = self.request.data.get('layer_id', None)
+        try:
+            layer = Layer.objects.get(id=layer_id)
+        except Layer.DoesNotExist:
+            raise Http404
+
+        output_folder = os.path.join(
+            settings.MEDIA_ROOT,
+            'clipped'
+        )
+
+        vector_layer = None
+        output = ''
+        if 'Vector' in layer.display_type:
+            vector_layer = layer.upload_session.layerfile_set.all().filter(
+                name='shp'
+            ).first()
+
+        if not os.path.exists(output_folder):
+            os.mkdir(output_folder)
+
+        output_path_folder = os.path.join(
+            output_folder,
+            f'{str(layer)}:{boundary_uuid}'
+        )
+
+        if not os.path.exists(output_path_folder):
+            os.mkdir(output_path_folder)
+
+        if vector_layer:
+            output = (
+                os.path.join(
+                    output_path_folder,
+                    os.path.basename(vector_layer.file.name))
+            )
+
+            layer_vector_file = os.path.join(
+                settings.MEDIA_ROOT,
+                vector_layer.file.name
+            )
+
+            clip_vector_layer(
+                layer_vector_file=layer_vector_file,
+                boundary_layer_file=boundary_file,
+                output_path=output)
+
+        return Response({
+            'success': True if output and vector_layer else False,
+            'output': output
         })

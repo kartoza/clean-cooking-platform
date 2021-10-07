@@ -7,7 +7,10 @@ from custom.api_views import (
     DatasetList,
     GeographyRasterMask
 )
-from custom.api_views.subregion import SubregionListAPI
+from custom.api_views.subregion import (
+    SubregionListAPI,
+    ClipLayerByRegion
+)
 
 urlpatterns = [
     url(r'^geography/$',
@@ -23,5 +26,7 @@ urlpatterns = [
     url(r'^subregion-list/(?P<geo_id>\d+)/(?P<subregion_selector>.*)/$',
         SubregionListAPI.as_view()),
     url(r'^geography-raster-mask/$',
-        GeographyRasterMask.as_view())
+        GeographyRasterMask.as_view()),
+    url(r'^clip-layer-by-region/$',
+        ClipLayerByRegion.as_view())
 ]
