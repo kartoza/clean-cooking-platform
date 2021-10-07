@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from custom.models import Geography
-from custom.tools.clip_layer import clip_vector_layer
-from geonode.layers.models import Layer, LayerFile
+from custom.tools.clip_layer import clip_vector_layer, clip_raster_layer
+from geonode.layers.models import Layer
 
 
 class SubregionListAPI(APIView):
@@ -81,10 +81,15 @@ class ClipLayerByRegion(APIView):
         )
 
         vector_layer = None
+        raster_layer = None
         output = ''
         if 'Vector' in layer.display_type:
             vector_layer = layer.upload_session.layerfile_set.all().filter(
                 name='shp'
+            ).first()
+        elif 'Raster' in layer.display_type:
+            raster_layer = layer.upload_session.layerfile_set.all().filter(
+                name='tif'
             ).first()
 
         if not os.path.exists(output_folder):
@@ -104,7 +109,6 @@ class ClipLayerByRegion(APIView):
                     output_path_folder,
                     os.path.basename(vector_layer.file.name))
             )
-
             if not os.path.exists(output):
                 layer_vector_file = os.path.join(
                     settings.MEDIA_ROOT,
@@ -115,9 +119,25 @@ class ClipLayerByRegion(APIView):
                     boundary_layer_file=boundary_file,
                     output_path=output)
 
+        if raster_layer:
+            output = (
+                os.path.join(
+                    output_path_folder,
+                    os.path.basename(raster_layer.file.name))
+            )
+            if not os.path.exists(output):
+                layer_raster_file = os.path.join(
+                    settings.MEDIA_ROOT,
+                    raster_layer.file.name
+                )
+                clip_raster_layer(
+                    layer_raster_file=layer_raster_file,
+                    boundary_layer_file=boundary_file,
+                    output_path=output)
+
         return Response({
             'success': (
-                True if os.path.exists(output) and vector_layer else False
+                True if os.path.exists(output) and ( vector_layer or raster_layer ) else False
             ),
             'output': output
         })
