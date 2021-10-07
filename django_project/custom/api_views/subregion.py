@@ -105,17 +105,19 @@ class ClipLayerByRegion(APIView):
                     os.path.basename(vector_layer.file.name))
             )
 
-            layer_vector_file = os.path.join(
-                settings.MEDIA_ROOT,
-                vector_layer.file.name
-            )
-
-            clip_vector_layer(
-                layer_vector_file=layer_vector_file,
-                boundary_layer_file=boundary_file,
-                output_path=output)
+            if not os.path.exists(output):
+                layer_vector_file = os.path.join(
+                    settings.MEDIA_ROOT,
+                    vector_layer.file.name
+                )
+                clip_vector_layer(
+                    layer_vector_file=layer_vector_file,
+                    boundary_layer_file=boundary_file,
+                    output_path=output)
 
         return Response({
-            'success': True if output and vector_layer else False,
+            'success': (
+                True if os.path.exists(output) and vector_layer else False
+            ),
             'output': output
         })
