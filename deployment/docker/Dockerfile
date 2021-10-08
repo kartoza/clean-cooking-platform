@@ -3,7 +3,7 @@ FROM geonode/spcgeonode:django-3.0
 MAINTAINER Dimas Ciputra<dimas@kartoza.com>
 
 RUN mkdir -p /usr/share/man/man1
-RUN apt-get update -y && apt-get -y --allow-downgrades --allow-remove-essential --allow-unauthenticated install yui-compressor rpl mdbtools git
+RUN apt-get update -y && apt-get -y --allow-downgrades --allow-remove-essential --allow-unauthenticated install yui-compressor rpl mdbtools git gdal-bin
 RUN echo "Activate memcached" && \
     apt-get update && apt-get install -y memcached && \
     pip install pylibmc  && pip install sherlock

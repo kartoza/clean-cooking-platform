@@ -1,7 +1,7 @@
+import os.path
 import random
 from osgeo import gdal
 from osgeo import ogr
-from osgeo import osr
 
 RASTERIZE_COLOR_FIELD = "__color__"
 
@@ -43,9 +43,24 @@ def rasterize_layer(
     source_layer.SetAttributeFilter(where)
     x_min, x_max, y_min, y_max = source_layer.GetExtent()
 
+    multi = ogr.Geometry(ogr.wkbMultiPolygon)
+
     for feature in source_layer:
         feature.SetField(field_index, random.randint(0, 255))
         source_layer.SetFeature(feature)
+        if feature.geometry():
+            feature.geometry().CloseRings()
+            feat = feature.geometry()
+            feat.CloseRings()
+            wkt = feat.ExportToWkt()
+            multi.AddGeometryDirectly(ogr.CreateGeometryFromWkt(wkt))
+    union = multi.UnionCascaded()
+    geojson = union.Simplify(0.001).ExportToJson()
+    geojson_destination = destination_path.replace('.tif', '.json')
+    if os.path.exists(geojson_destination):
+        os.remove(geojson_destination)
+    with open(geojson_destination, 'w') as json_file:
+        json_file.write(geojson)
 
     # Create the destination data source
     x_res = int((x_max - x_min) / pixel_size)
