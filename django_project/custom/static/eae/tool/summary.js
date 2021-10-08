@@ -164,7 +164,7 @@ export default async function analyse(raster) {
 		let v = p[i];
 		let t = 0;
 
-		if (v == nodata) continue;
+		if (v == nodata || isNaN(v)) continue;
 
 		if (x >= 0   && x < 0.2) t = 0;
 		else if (x >= 0.2 && x < 0.4) t = 1;
