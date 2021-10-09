@@ -85,6 +85,7 @@ const showGeoJSONLayer = (url) => {
   const intervalID = setInterval(() => {
     try {
       if (vectorLayer.getSource().getFeatures().length > 0) {
+        map.getView().fit(vectorLayer.getSource().getExtent());
         loadingSpinner1.style.display = "none";
         statusBtn.querySelector('.text').innerHTML = 'Please Choose a Sub Region';
         clearInterval(intervalID);

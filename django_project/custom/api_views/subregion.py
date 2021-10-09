@@ -75,6 +75,7 @@ class ClipLayerByRegion(APIView):
         except Layer.DoesNotExist:
             raise Http404
 
+        style_url = layer.default_style.sld_url
         output_folder = os.path.join(
             settings.MEDIA_ROOT,
             'clipped'
@@ -108,7 +109,7 @@ class ClipLayerByRegion(APIView):
                 os.path.join(
                     output_path_folder,
                     os.path.basename(vector_layer.file.name))
-            )
+            ).replace('shp', 'json')
             if not os.path.exists(output):
                 layer_vector_file = os.path.join(
                     settings.MEDIA_ROOT,
@@ -135,9 +136,12 @@ class ClipLayerByRegion(APIView):
                     boundary_layer_file=boundary_file,
                     output_path=output)
 
+        output = output.replace(settings.MEDIA_ROOT, settings.MEDIA_URL)
+
         return Response({
             'success': (
                 True if os.path.exists(output) and ( vector_layer or raster_layer ) else False
             ),
-            'output': output
+            'output': output,
+            'style_url': style_url
         })

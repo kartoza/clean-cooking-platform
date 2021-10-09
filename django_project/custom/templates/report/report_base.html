@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon.min.css" %}"
+          rel="stylesheet">
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon-variables.min.css" %}"
+          rel="stylesheet">
+
+    <script src="{% static "ol-6.8.1/ol.js" %}"></script>
+    <script src="{% static "chartjs-3.5.1/chart.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "ol-6.8.1/ol.css" %}">
+
+    <meta charset="UTF-8">
+    <title>Report</title>
+
+    {% block head_extras %}{% endblock %}
+</head>
+<body>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

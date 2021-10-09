@@ -99,7 +99,6 @@ const getSubregionPropertyList = (geoId, selector) => {
     ).catch(
         error => {
           console.error(error)
-
           subregionPropertySelect.innerHTML = "";
           subregionPropertySelect.disabled = false;
         }
@@ -117,7 +116,7 @@ const getSubregionPropertyList = (geoId, selector) => {
     discoverBtn.disabled = true;
     if (!rasterGenerated && subRegionValue) {
       generateRasterMask().then(data => {
-         const boundaryUUID = data.File;
+         const boundaryUUID = data.File.replace('.tif', '');
          window.location.href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
       })
     } else {
@@ -134,7 +133,7 @@ const getSubregionPropertyList = (geoId, selector) => {
     statusBtn.querySelector('.text').innerHTML = 'Generating raster';
     statusBtn.disabled = true;
     generateRasterMask().then(data => {
-      const boundaryUUID = data.File;
+      const boundaryUUID = data.File.replace('.tif', '');
       href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
       showGeoTiffLayer(data.RasterPath);
       loadingSpinner1.style.display = "none";

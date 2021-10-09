@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.views.generic import TemplateView
 
 from custom.models import Geography
 from custom.models.use_case import UseCase
+from custom.serializers.preset_serializer import PresetSerializer
 
 
 class ReportView(TemplateView):
@@ -15,7 +17,13 @@ class ReportView(TemplateView):
         context['geo'] = Geography.objects.get(
             id=self.request.GET.get('geoId')
         )
-        context['presets'] = context['use_case'].presets.all()
+        context['presets'] = PresetSerializer(
+            context['use_case'].presets.all(),
+            many=True
+        ).data
+        context['MAPBOX_TOKEN'] = settings.MAPBOX_TOKEN
+        context['MAPBOX_THEME'] = settings.MAPBOX_THEME
+
         if self.request.GET.get('subRegion', None):
             context['subRegion'] = self.request.GET.get('subRegion').split(':')
         return context
