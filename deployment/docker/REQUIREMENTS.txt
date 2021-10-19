@@ -1,3 +1,4 @@
+django-grappelli==2.15.1
 psycopg2-binary==2.8.6
 django-admin-sortable==2.1.8
 django-braces==1.14.0
@@ -20,3 +21,4 @@ django-filebrowser==3.14.1
 python-slugify==4.0.1
 django-admin-sortable2==1.0
 whitenoise==5.3.0
+reportlab==3.6.2

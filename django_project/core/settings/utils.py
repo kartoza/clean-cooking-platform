@@ -14,7 +14,7 @@ def absolute_path(*args):
     """Get an absolute path for a file that is relative to the django root.
 
     :param args: List of path elements.
-    :type args: list
+    :type args: str
 
     :returns: An absolute path.
     :rtype: str
