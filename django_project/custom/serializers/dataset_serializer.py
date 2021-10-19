@@ -1,6 +1,5 @@
 import os
 import urllib.parse
-import rasterio
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.sites.models import Site
