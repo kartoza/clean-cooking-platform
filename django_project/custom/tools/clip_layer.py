@@ -16,15 +16,22 @@ def clip_vector_layer(
         boundary_layer_file = '',
         output_path = ''):
 
+    output_path = output_path.replace('shp', 'json')
+
     if os.path.exists(output_path):
         basename = os.path.basename(output_path)
         basename = basename.replace('.shp', '')
+        basename = basename.replace('.json', '')
         for file_name in os.listdir(os.path.dirname(output_path)):
             if basename in file_name:
                 os.remove(os.path.join(os.path.dirname(output_path), file_name))
 
     subprocess.run([
         'ogr2ogr',
+        '-f',
+        'GeoJSON',
+        '-simplify',
+        '0.01',
         '-clipsrc',
         boundary_layer_file,
         output_path,

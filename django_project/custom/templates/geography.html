@@ -6,13 +6,16 @@
     <link href="{% static "halfmoon-1.1.1/css/halfmoon-variables.min.css" %}" rel="stylesheet">
     <link href="{% static "css/loading.css" %}" rel="stylesheet"/>
 
-    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/build/ol.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.8.1/css/ol.css">
+    <script src="{% static "ol-6.8.1/ol.js" %}"></script>
+    <link rel="stylesheet" href="{% static "ol-6.8.1/ol.css" %}">
 
     <style>
       .map {
         width: 100%;
         height:400px;
+      }
+      .btn {
+          min-height: 50px;
       }
     </style>
     <script>
@@ -57,10 +60,15 @@
                 </select>
             </div>
 
-            <button class="btn btn-info" id="btn-status" style="display: flex" disabled>
-                <div id="loading-spinner-1" class="loading-spinner-container" style="display: none"><div class="loading-spinner"><div></div></div></div>
-                <span class="text">Please Choose a Country</span>
-            </button>
+            <div class="container" style="display: flex">
+                <button class="btn btn-info" id="btn-status" style="display: flex" disabled>
+                    <div id="loading-spinner-1" class="loading-spinner-container" style="display: none"><div class="loading-spinner"><div></div></div></div>
+                    <span class="text">Please Choose a Country</span>
+                </button>
+                <a href="/tool" class="btn btn-success" id="btn-status" style="margin-left: auto;">
+                    Go to Explorer Tool
+                </a>
+            </div>
             <div style="height: 20px"></div>
         </form>
         <div id="map" class="map"></div>

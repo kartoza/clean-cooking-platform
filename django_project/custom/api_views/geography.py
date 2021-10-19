@@ -126,8 +126,7 @@ class GeographyRasterMask(APIView):
         where_condition = f"{subregion_selector}='{subregion_value}'"
 
         if (
-            os.path.exists(shp_file) and
-            not os.path.exists(destination_path)
+            os.path.exists(shp_file)
         ):
             try:
                 rasterize_layer(
@@ -136,7 +135,7 @@ class GeographyRasterMask(APIView):
                     destination_path,
                     where_condition
                 )
-            except: # noqa
+            except Exception as e: # noqa
                 raise Http404
 
         return Response({

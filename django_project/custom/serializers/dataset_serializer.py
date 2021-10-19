@@ -1,3 +1,4 @@
+import os
 import urllib.parse
 from django.conf import settings
 from django.db.models import Q
@@ -74,11 +75,20 @@ class BoundaryGeographySerializer(serializers.ModelSerializer):
 
     def get_df(self, obj):
         dataset_files = []
+        clipped_boundary = self.context.get('clipped_boundary', None)
+        use_clipped_boundary = False
+        if clipped_boundary:
+            clipped_boundary_file = os.path.join(
+                settings.MEDIA_ROOT, 'rasterized', clipped_boundary + '.tif')
+            if os.path.exists(clipped_boundary_file):
+                use_clipped_boundary = True
         if obj.raster_mask_layer:
             layer_url, style_url = geonode_layer_links(
                 obj.raster_mask_layer,
                 obj
             )
+            if use_clipped_boundary:
+                layer_url = f'{settings.MEDIA_URL}rasterized/{clipped_boundary}.tif'
             dataset_files.append({
                 'func': 'raster',
                 'active': True,
@@ -93,6 +103,8 @@ class BoundaryGeographySerializer(serializers.ModelSerializer):
                 obj.vector_boundary_layer,
                 obj
             )
+            if use_clipped_boundary:
+                layer_url = f'{settings.MEDIA_URL}rasterized/{clipped_boundary}.json'
             dataset_files.append({
                 'func': 'vectors',
                 'active': True,
@@ -125,11 +137,35 @@ class DatasetFileSerializer(serializers.ModelSerializer):
     def get_file(self, obj):
         geonode_layer = None
         style = None
+        clipped_boundary = self.context.get('clipped_boundary', None)
+        layer_file = None
+        if clipped_boundary:
+            clipped_layer_directory = os.path.join(
+                settings.MEDIA_ROOT,
+                'clipped',
+                f'{obj.geonode_layer.typename}:{clipped_boundary}'
+            )
+            if os.path.exists(clipped_layer_directory):
+                for clipped_file in os.listdir(clipped_layer_directory):
+                    if '.json' or '.tif' in clipped_file:
+                        layer_file = os.path.join(
+                            clipped_layer_directory,
+                            clipped_file
+                        )
+                        if os.path.exists(layer_file):
+                            layer_file = (
+                                layer_file.replace(
+                                    settings.MEDIA_ROOT, settings.MEDIA_URL)
+                            )
+                        else:
+                            layer_file = None
         if obj.use_geonode_layer and obj.geonode_layer:
             geonode_layer, style = geonode_layer_links(
                 obj.geonode_layer,
                 obj.category.geography
             )
+        if layer_file:
+            geonode_layer = layer_file
         return {
             'id': obj.id,
             'endpoint': obj.endpoint.url if obj.endpoint else '-',
@@ -157,7 +193,10 @@ class DatasetSerializer(serializers.ModelSerializer):
             obj.datasetfile_set.filter(
                 ~Q(endpoint='') | Q(geonode_layer__isnull=False)
             ),
-            many=True
+            many=True,
+            context={
+                'clipped_boundary': self.context.get('clipped_boundary', None)
+            }
         ).data
 
     def get_unit(self, obj):

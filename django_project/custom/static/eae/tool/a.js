@@ -309,7 +309,11 @@ async function dsinit(id, inputs, pack, callback) {
 
 	let bounds;
 
-	const datasetBoundaries = await api_get(`/api/boundaries-dataset/?geography=${id}`)
+	let boundary_url = `/api/boundaries-dataset/?geography=${id}`;
+	if (boundary) {
+		boundary_url += `&boundary=${boundary}`
+	}
+	const datasetBoundaries = await api_get(boundary_url)
 	let ds = new DS(datasetBoundaries, false);
 	// await ds.load('csv');
 	await ds.load('vectors');
@@ -325,7 +329,11 @@ async function dsinit(id, inputs, pack, callback) {
 
 	pack = maybe(pack, 'length') ? pack : 'all';
 
-	await api_get(`/api/datasets/?geography=${id}`)
+	let datasets_url = `/api/datasets/?geography=${id}`;
+	if (boundary) {
+		datasets_url += `&boundary=${boundary}`
+	}
+	await api_get(datasets_url)
 		.then(async r => {
 			return Promise.all(r.map(async e => {
 				const branch_name = e.category.controls.path[0];
