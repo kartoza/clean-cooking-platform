@@ -15,6 +15,7 @@ class BoundariesDataset(APIView):
 
     def get(self, request, *args):
         geography_id = self.request.GET.get('geography', None)
+        clipped_boundary = self.request.GET.get('boundary', None)
         try:
             geography = Geography.objects.get(
                 id=geography_id
@@ -23,7 +24,9 @@ class BoundariesDataset(APIView):
             raise Http404
 
         return Response(
-            BoundaryGeographySerializer(geography).data
+            BoundaryGeographySerializer(geography, context={
+                'clipped_boundary': clipped_boundary
+            }).data
         )
 
 
@@ -31,6 +34,7 @@ class DatasetList(APIView):
 
     def get(self, request, *args):
         geography_id = self.request.GET.get('geography', None)
+        clipped_boundary = self.request.GET.get('boundary', None)
         datasets = Category.objects.filter(
             ~Q(datasetfile__endpoint='') |
             Q(datasetfile__geonode_layer__isnull=False),
@@ -40,7 +44,9 @@ class DatasetList(APIView):
             boundary_layer=True,
         ).distinct()
         return Response(
-            DatasetSerializer(datasets, many=True).data
+            DatasetSerializer(datasets, many=True, context={
+                'clipped_boundary': clipped_boundary
+            }).data
         )
 
 

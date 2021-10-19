@@ -74,6 +74,7 @@ async function summary() {
 		plot.outputcanvas(raster, c);
 	};
 
+	debugger;
 	await Promise.all(Object.keys(ea_indexes).map(i => get_summaries(i)));
 
 	graphs.append(ce('div', scale.cloneNode(true), { class: "index-graphs-scale" }));

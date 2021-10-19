@@ -1,9 +1,13 @@
+let addedLayers = [];
+let boundaries = null;
+const loadingSpinner1 = document.getElementById('loading-spinner-1');
 
 const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: mapboxStyle,
     center: [0, 0], // starting position [lng, lat]
-    zoom: 2 // starting zoom
+    zoom: 2, // starting zoom
+    preserveDrawingBuffer: true
 });
 
 fetch(geojsonBoundary).then(response => response.json()).then(
@@ -30,6 +34,12 @@ fetch(geojsonBoundary).then(response => response.json()).then(
             coords = [[l, u], [r, u], [r, d], [l, d]];
             map.fitBounds(bbox, {padding: 20});
         });
+    }
+)
+
+fetch(rasterBoundary).then(response => response.arrayBuffer()).then(
+    data => {
+        boundaries = data
     }
 )
 
@@ -68,7 +78,8 @@ const loadGeoTiffLayer = (url, styleUrl, layerId) => {
                     intervals: styleData.intervals
                 })
             });
-            map.addSource('boundary' + layerId, {
+            addedLayers.push(layerId);
+            map.addSource('source' + layerId, {
                 "type": "canvas",
                 "canvas": canvas,
                 "animate": false,
@@ -77,7 +88,7 @@ const loadGeoTiffLayer = (url, styleUrl, layerId) => {
             map.addLayer({
                 'id': 'layer' + layerId,
                 "type": 'raster',
-                'source': 'boundary' + layerId,
+                'source': 'source' + layerId,
                 "layout": {
                     "visibility": "visible",
                 },
@@ -98,14 +109,15 @@ const loadGeoJsonLayer = (url, styleUrl, layerId) => {
                     data.features,
                     styleData.features_specs,
                 );
-                map.addSource('boundary' + layerId, {
+                addedLayers.push(layerId);
+                map.addSource('source' + layerId, {
                     type: 'geojson',
                     data: data
                 });
                 map.addLayer({
                     'id': 'layer' + layerId,
                     'type': 'line',
-                    'source': 'boundary' + layerId,
+                    'source': 'source' + layerId,
                     'paint': {
                         "line-color": ['get', '__stroke'],
                         "line-width": ['get', '__stroke-width'],
@@ -115,9 +127,9 @@ const loadGeoJsonLayer = (url, styleUrl, layerId) => {
     });
 }
 
-const clipSelectedLayer = (boundary, layerId) => {
+const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
     const url = '/api/clip-layer-by-region/';
-    fetch(url, {
+    await fetch(url, {
         method: 'POST',
         credentials: "same-origin",
         headers: {
@@ -131,10 +143,12 @@ const clipSelectedLayer = (boundary, layerId) => {
         })
     }).then((response) => response.json()).then(data => {
         const output = data.output;
-        if (output.includes('.json') > 0) {
-            loadGeoJsonLayer(output, data.style_url, layerId);
-        } else if(output.includes('.tif') > 0) {
-            loadGeoTiffLayer(output, data.style_url, layerId);
+        if (drawToMap) {
+            if (output.includes('.json') > 0) {
+                loadGeoJsonLayer(output, data.style_url, layerId);
+            } else if(output.includes('.tif') > 0) {
+                loadGeoTiffLayer(output, data.style_url, layerId);
+            }
         }
     }).catch((error) => console.log(error))
 }
@@ -145,17 +159,36 @@ const clipSelectedLayer = (boundary, layerId) => {
     let selectedScenario = null;
     let selectedLayers = null;
 
-    scenarioSelect.onchange = (e) => {
-        ccaToolBtn.disabled = false;
+    scenarioSelect.onchange = async (e) => {
+        ccaToolBtn.disabled = true;
+        loadingSpinner1.style.display = "block";
         selectedScenario = e.target.options[e.target.selectedIndex];
         selectedLayers = JSON.parse(selectedScenario.dataset.layers);
-        for (let i = 0; i < selectedLayers.length; i++) {
-            clipSelectedLayer(boundary, selectedLayers[i]);
+        if (addedLayers.length > 0) {
+            for (let i = 0; i < addedLayers.length; i++) {
+                const addedLayer = addedLayers[i];
+                map.removeLayer('layer' + addedLayer);
+                map.removeSource('source' + addedLayer);
+            }
+            addedLayers = [];
         }
+        if (selectedLayers.length > 0) {
+            selectedLayers.reverse();
+        }
+        for (let i = 0; i < selectedLayers.length; i++) {
+            await clipSelectedLayer(boundary, selectedLayers[i], true);
+        }
+        for (let j = 0; j < allLayerIds.length; j++) {
+            if (!selectedLayers.includes(allLayerIds[j])) {
+                await clipSelectedLayer(boundary, allLayerIds[j], false);
+            }
+        }
+        loadingSpinner1.style.display = "none";
+        ccaToolBtn.disabled = false;
     }
 
     ccaToolBtn.onclick = (e) => {
         e.preventDefault();
-        window.location.href = selectedScenario.dataset.url + '&boundary=' + boundary;
+        window.location.href = selectedScenario.dataset.url + '&boundary=' + boundary + '&geoId=' + geoId;
     }
 })()

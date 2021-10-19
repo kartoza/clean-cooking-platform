@@ -149,12 +149,14 @@ export function raster() {
 			if (this.id !== 'boundaries') {
 				const b = DST.get('boundaries');
 
-				if (this.raster.width !== b.raster.width) {
-					fail.call(this, `
-Raster resolution does not match the boundaries dataset.
-${this.id}: ${this.raster.width} × ${this.raster.height}
-boundaries: ${b.raster.width} × ${b.raster.height}
-`);
+				if (!boundary) {
+					if (this.raster.width !== b.raster.width) {
+						fail.call(this, `
+	Raster resolution does not match the boundaries dataset.
+	${this.id}: ${this.raster.width} × ${this.raster.height}
+	boundaries: ${b.raster.width} × ${b.raster.height}
+	`);
+					}
 				}
 			}
 		}
@@ -193,7 +195,10 @@ function geojson() {
 export async function geojson_summary() {
 	await until(_ => maybe(this.vectors.features, 'features'));
 
-	const features = this.vectors.features.features;
+	let features = this.vectors.features.features;
+	if (typeof features === 'undefined') {
+		features = this.vectors.features;
+	}
 	const properties = Array.from(new Set(features.map(x => Object.keys(x.properties)).flat()));
 
 	const o = {
@@ -272,9 +277,14 @@ export function points() {
 		.then(_ => {
 			const v = this.vectors;
 
+			let features = this.vectors.features.features;
+			if (typeof features === 'undefined') {
+				features = this.vectors.features;
+			}
+
 			const criteria = specs_set.call(
 				this,
-				this.vectors.features.features,
+				features,
 				this.config.features_specs,
 			);
 
@@ -382,13 +392,16 @@ export function polygons() {
 				polygons_csv.call(this, col);
 			}
 
-			const fs = this.vectors.features.features;
+			let fs = this.vectors.features.features;
+			if (typeof fs === 'undefined') {
+				fs = this.vectors.features;
+			}
 			for (let i = 0; i < fs.length; i += 1)
 				fs[i].id = fs[i].properties[this.vectors.key];
 
 			const criteria = specs_set.call(
 				this,
-				this.vectors.features.features,
+				fs,
 				this.config.features_specs,
 			);
 
@@ -452,7 +465,10 @@ export async function polygons_csv(col) {
 		return;
 	}
 
-	const fs = this.vectors.features.features;
+	let fs = this.vectors.features.features;
+	if (typeof fs === 'undefined') {
+		fs = this.vectors.features;
+	}
 	for (let i = 0; i < fs.length; i += 1) {
 		let row = data.find(r => +r[this.csv.key] === +fs[i].properties[this.vectors.key]);
 		fs[i].properties.__color = (this.colorscale && row) ? s(row[col]) : this.vectors.fill || "white";

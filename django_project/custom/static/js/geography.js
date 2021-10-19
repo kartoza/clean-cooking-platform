@@ -135,11 +135,17 @@ const getSubregionPropertyList = (geoId, selector) => {
     generateRasterMask().then(data => {
       const boundaryUUID = data.File.replace('.tif', '');
       href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
-      showGeoTiffLayer(data.RasterPath);
+      showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'));
       loadingSpinner1.style.display = "none";
       statusBtn.querySelector('.text').innerHTML = 'Generate Sub Region Boundary';
       statusBtn.disabled = false;
       rasterGenerated = true;
+    }).catch(error => {
+      alert("Unable to generate raster, please choose other subregion...")
+      statusBtn.querySelector('.text').innerHTML = 'Generate Sub Region Boundary';
+      loadingSpinner1.style.display = "none";
+      statusBtn.disabled = false;
+      rasterGenerated = false;
     })
   }
 })();

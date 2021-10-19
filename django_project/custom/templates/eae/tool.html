@@ -13,10 +13,13 @@
       <link rel="icon" type="image/png" href="{% static 'eae/images/favicon-16x16.png' %}" sizes="16x16" />
 
       <script>
-      const MAPBOX_TOKEN = "{{ MAPBOX_TOKEN }}";
-      const MAPBOX_THEME = "{{ MAPBOX_THEME }}";
-      const DEFAULT_GEO_ID = "{{ DEFAULT_GEO_ID }}";
-  </script>
+          const MAPBOX_TOKEN = "{{ MAPBOX_TOKEN }}";
+          const MAPBOX_THEME = "{{ MAPBOX_THEME }}";
+          const DEFAULT_GEO_ID = "{{ DEFAULT_GEO_ID }}";
+          let url = new URL(window.location.href);
+          let boundary = url.searchParams.get('boundary');
+          let geoId = url.searchParams.get('geoId');
+      </script>
 
     <script src="{% static "eae/lib/browsers.js" %}"></script>
     <script src="{% static "eae/tool/browser.js" %}"></script>

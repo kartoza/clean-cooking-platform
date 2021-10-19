@@ -31,7 +31,7 @@ def clip_vector_layer(
         '-f',
         'GeoJSON',
         '-simplify',
-        '0.001',
+        '0.01',
         '-clipsrc',
         boundary_layer_file,
         output_path,

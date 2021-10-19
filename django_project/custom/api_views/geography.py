@@ -135,7 +135,7 @@ class GeographyRasterMask(APIView):
                     destination_path,
                     where_condition
                 )
-            except: # noqa
+            except Exception as e: # noqa
                 raise Http404
 
         return Response({

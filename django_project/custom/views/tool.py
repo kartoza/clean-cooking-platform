@@ -16,12 +16,6 @@ class ToolView(TemplateView):
             filters = {
                 'id': geo
             }
-        geo = Geography.objects.filter(
-            online=True,
-            **filters
-        )
-        if geo.count() != 1:
-            return redirect('tool-select')
         return super(ToolView, self).get(request, *args)
 
     def get_context_data(self, **kwargs):
