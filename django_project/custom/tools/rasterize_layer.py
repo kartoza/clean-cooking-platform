@@ -3,6 +3,8 @@ import random
 from osgeo import gdal
 from osgeo import ogr
 
+from custom.tools.clip_layer import clip_vector_layer, clip_raster_layer
+
 RASTERIZE_COLOR_FIELD = "__color__"
 
 
@@ -24,6 +26,7 @@ def gdal_error_handler(err_class, err_num, err_msg):
 
 def rasterize_layer(
         source_shp,
+        raster_source_file,
         pixel_size = 100,
         destination_path = '',
         where = ''):
@@ -62,31 +65,38 @@ def rasterize_layer(
     with open(geojson_destination, 'w') as json_file:
         json_file.write(geojson)
 
-    # Create the destination data source
-    x_res = int((x_max - x_min) / pixel_size)
-    y_res = int((y_max - y_min) / pixel_size)
-    target_ds = gdal.GetDriverByName('GTiff').Create(
-        destination_path, x_res,
-        y_res, 3, gdal.GDT_Float32)
-    target_ds.SetGeoTransform((
-        x_min, pixel_size, 0,
-        y_max, 0, -pixel_size,
-    ))
-    if source_srs:
-        # Make the target raster have the same projection as the source
-        target_ds.SetProjection(source_srs.ExportToWkt())
-    else:
-        # Source has no projection (needs GDAL >= 1.7.0 to work)
-        target_ds.SetProjection('LOCAL_CS["arbitrary"]')
+    err = 0
 
-    nodata_value = -999999
-    band = target_ds.GetRasterBand(1)
-    band.SetNoDataValue(nodata_value)
-    band.FlushCache()
+    clip_raster_layer(
+        layer_raster_file=raster_source_file,
+        boundary_layer_file=json_file.name,
+        output_path=destination_path)
 
-    # Rasterize
-    err = gdal.RasterizeLayer(target_ds, (3, 2, 1), source_layer,
-                              burn_values=(0, 0, 0),
-                              options=["ATTRIBUTE=%s" % RASTERIZE_COLOR_FIELD])
+    # # Create the destination data source
+    # x_res = int((x_max - x_min) / pixel_size)
+    # y_res = int((y_max - y_min) / pixel_size)
+    # target_ds = gdal.GetDriverByName('GTiff').Create(
+    #     destination_path, x_res,
+    #     y_res, 3, gdal.GDT_Float32)
+    # target_ds.SetGeoTransform((
+    #     x_min, pixel_size, 0,
+    #     y_max, 0, -pixel_size,
+    # ))
+    # if source_srs:
+    #     # Make the target raster have the same projection as the source
+    #     target_ds.SetProjection(source_srs.ExportToWkt())
+    # else:
+    #     # Source has no projection (needs GDAL >= 1.7.0 to work)
+    #     target_ds.SetProjection('LOCAL_CS["arbitrary"]')
+    #
+    # nodata_value = -999999
+    # band = target_ds.GetRasterBand(1)
+    # band.SetNoDataValue(nodata_value)
+    # band.FlushCache()
+    #
+    # # Rasterize
+    # err = gdal.RasterizeLayer(target_ds, (3, 2, 1), source_layer,
+    #                           burn_values=(0, 0, 0),
+    #                           options=["ATTRIBUTE=%s" % RASTERIZE_COLOR_FIELD])
     if err != 0:
         raise Exception("error rasterizing layer: %s" % err)
