@@ -137,7 +137,7 @@ class GeographyRasterMask(APIView):
                 'coverageid': geo.raster_mask_layer.typename.replace(':', '__'),
                 'format': 'image/tiff',
                 'srs': 'EPSG:4326',
-                'bbox': '80.0579160,26.3495842,88.1995823,30.4495840'
+                'bbox': geo.raster_mask_layer.bbox_string
             }
             r = requests.get(url=url, params=params, stream=True)
             chunk_size = 2000
@@ -163,7 +163,7 @@ class GeographyRasterMask(APIView):
                 rasterize_layer(
                     shp_file,
                     raster_source_file,
-                    0.05,
+                    1,
                     destination_path,
                     where_condition
                 )

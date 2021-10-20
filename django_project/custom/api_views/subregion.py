@@ -2,6 +2,8 @@ import os.path
 
 import requests
 import xml.etree.ElementTree as ET
+
+import zipfile
 from django.http.response import Http404
 from django.conf import settings
 from rest_framework.response import Response
@@ -115,6 +117,58 @@ class ClipLayerByRegion(APIView):
                     settings.MEDIA_ROOT,
                     vector_layer.file.name
                 )
+                if not os.path.exists(layer_vector_file):
+                    # Download file
+                    layer_temp_folder = os.path.join(
+                        settings.MEDIA_ROOT,
+                        'layers',
+                        'temp'
+                    )
+                    if not os.path.exists(layer_temp_folder):
+                        os.mkdir(layer_temp_folder)
+                    layer_name = os.path.basename(vector_layer.file.name)
+                    layer_vector_dir = os.path.join(
+                        layer_temp_folder,
+                        layer.name
+                    )
+                    if not os.path.exists(layer_vector_dir):
+                        os.mkdir(layer_vector_dir)
+                        layer_vector_file = None
+                    else:
+                        for unzipped_file in os.listdir(layer_vector_dir):
+                            if unzipped_file.endswith('.shp'):
+                                layer_vector_file = os.path.join(
+                                    layer_vector_dir,
+                                    unzipped_file)
+                                break
+
+                    if not layer_vector_file:
+                        shp_zip_file = os.path.join(
+                            layer_vector_dir,
+                            layer_name.replace('.shp', '.zip')
+                        )
+                        url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/ows'
+                        params = {
+                            'service': 'WFS',
+                            'version': '1.0.0',
+                            'request': 'GetFeature',
+                            'typeNames': str(layer),
+                            'outputFormat': 'SHAPE-ZIP',
+                            'srs': 'EPSG:4326'
+                        }
+                        r = requests.get(url=url, params=params, stream=True)
+                        chunk_size = 2000
+                        with open(shp_zip_file, 'wb') as fd:
+                            for chunk in r.iter_content(chunk_size):
+                                fd.write(chunk)
+                        with zipfile.ZipFile(shp_zip_file, 'r') as zip_ref:
+                            zip_ref.extractall(layer_vector_dir)
+                        for unzipped_file in os.listdir(layer_vector_dir):
+                            if unzipped_file.endswith('.shp'):
+                                layer_vector_file = os.path.join(layer_vector_dir,
+                                                        unzipped_file)
+                        os.remove(shp_zip_file)
+
                 clip_vector_layer(
                     layer_vector_file=layer_vector_file,
                     boundary_layer_file=boundary_file,

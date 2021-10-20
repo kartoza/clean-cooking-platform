@@ -135,7 +135,7 @@ const getSubregionPropertyList = (geoId, selector) => {
     generateRasterMask().then(data => {
       const boundaryUUID = data.File.replace('.tif', '');
       href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
-      showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'));
+      showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'), true, 'subregion');
       loadingSpinner1.style.display = "none";
       statusBtn.querySelector('.text').innerHTML = 'Generate Sub Region Boundary';
       statusBtn.disabled = false;
