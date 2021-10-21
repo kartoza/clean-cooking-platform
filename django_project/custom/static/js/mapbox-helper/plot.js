@@ -79,7 +79,6 @@ const ea_default_colorscale = ea_colorscale({
 
 function drawcanvas(opts) {
   const {canvas, data, width, height, nodata, colorscale} = opts;
-
   const ctx = canvas.getContext("2d");
   const imagedata = ctx.createImageData(width, height);
   const imgd = imagedata.data;

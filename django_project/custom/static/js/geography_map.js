@@ -73,7 +73,8 @@ const showGeoTiffLayer = (url) => {
   ).then(onGeoTiffLoaded)
 }
 
-const showGeoJSONLayer = (url, checkLayerLoaded = true) => {
+const addedLayer = {};
+const showGeoJSONLayer = (url, checkLayerLoaded = true, layerId = 'boundary') => {
   const geojsonSource = new ol.source.Vector({
       url: url,
       format: new ol.format.GeoJSON(),
@@ -81,6 +82,10 @@ const showGeoJSONLayer = (url, checkLayerLoaded = true) => {
   const vectorLayer = new ol.layer.Vector({
     source: geojsonSource,
   });
+  if (layerId in addedLayer) {
+    map.removeLayer(addedLayer[layerId]);
+  }
+  addedLayer[layerId] = vectorLayer;
   map.addLayer(vectorLayer);
   if (checkLayerLoaded) {
     const intervalID = setInterval(() => {
@@ -88,7 +93,6 @@ const showGeoJSONLayer = (url, checkLayerLoaded = true) => {
         if (vectorLayer.getSource().getFeatures().length > 0) {
           map.getView().fit(vectorLayer.getSource().getExtent());
           loadingSpinner1.style.display = "none";
-          statusBtn.querySelector('.text').innerHTML = 'Please Choose a Sub Region';
           clearInterval(intervalID);
         }
       } catch (e) {}

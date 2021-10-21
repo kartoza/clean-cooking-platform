@@ -268,6 +268,8 @@ export function zoomend(id) {
 	let _zoom;
 
 	MAPBOX.on('zoomend', id, function(_) {
+		if (typeof _U === 'undefined') return;
+
 		const z = MAPBOX.getZoom();
 
 		if (!MAPBOX.changing_target)

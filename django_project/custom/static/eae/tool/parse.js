@@ -363,8 +363,12 @@ export function lines() {
 				},
 			});
 
-			if (criteria.length)
-				this.card.line_legends(criteria.map(x => JSON.parse(x)));
+			try {
+				if (criteria.length)
+					this.card.line_legends(criteria.map(x => JSON.parse(x)));
+			} catch (e) {
+				console.log(e)
+			}
 		});
 };
 

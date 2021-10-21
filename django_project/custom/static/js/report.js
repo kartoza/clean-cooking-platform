@@ -1,23 +1,34 @@
 let addedLayers = [];
-let boundaries = null;
+let rasterBoundaryLayer = null;
 const loadingSpinner1 = document.getElementById('loading-spinner-1');
 
-const map = new mapboxgl.Map({
+MAPBOX = new mapboxgl.Map({
     container: 'map', // container ID
     style: mapboxStyle,
     center: [0, 0], // starting position [lng, lat]
     zoom: 2, // starting zoom
     preserveDrawingBuffer: true
 });
+MAPBOX.first_symbol = 'poi_label';
+
+let rasterToAnalyse = null;
+
+const fetchRasterBoundary = async () => {
+    await fetch(rasterBoundary).then(response => response.arrayBuffer()).then(
+        data => {
+            rasterBoundaryLayer = data
+        }
+    )
+}
 
 fetch(geojsonBoundary).then(response => response.json()).then(
-    data => {
-        map.on('load', () => {
-            map.addSource('boundary', {
+    async data => {
+        MAPBOX.on('load', async () => {
+            MAPBOX.addSource('boundary', {
                 type: 'geojson',
                 data: data
             });
-            map.addLayer({
+            MAPBOX.addLayer({
                 'id': 'boundary-layer',
                 'type': 'line',
                 'source': 'boundary',
@@ -32,16 +43,14 @@ fetch(geojsonBoundary).then(response => response.json()).then(
             const d = bbox[1];
             const u = bbox[3];
             coords = [[l, u], [r, u], [r, d], [l, d]];
-            map.fitBounds(bbox, {padding: 20});
+            MAPBOX.coords = coords;
+            MAPBOX.fitBounds(bbox, {padding: 20});
+            await fetchRasterBoundary();
         });
     }
 )
 
-fetch(rasterBoundary).then(response => response.arrayBuffer()).then(
-    data => {
-        boundaries = data
-    }
-)
+
 
 const fetchSLD = (url) => {
     return new Promise((resolve, reject) => {
@@ -54,14 +63,14 @@ const fetchSLD = (url) => {
     })
 }
 
-const loadGeoTiffLayer = (url, styleUrl, layerId) => {
-    fetchSLD('/proxy_cca/' + styleUrl).then(styleData => {
-        fetch(url).then(
-            response => response.arrayBuffer()
-        ).then(data => {
-            const tiff = GeoTIFF.parse(data);
-            const image = tiff.getImage();
-            const bands = image.readRasters();
+const loadGeoTiffLayer = async (url, styleUrl, layerId) => {
+    await fetchSLD('/proxy_cca/' + styleUrl).then(async styleData => {
+        await fetch(url).then(
+            response => response.blob()
+        ).then(async blob => {
+            const tiff = await GeoTIFF.fromBlob(blob);
+            const image = await tiff.getImage();
+            const bands = await image.readRasters();
             const band = bands[0];
             const width = image.getWidth();
             const height = image.getHeight();
@@ -79,13 +88,13 @@ const loadGeoTiffLayer = (url, styleUrl, layerId) => {
                 })
             });
             addedLayers.push(layerId);
-            map.addSource('source' + layerId, {
+            MAPBOX.addSource('source' + layerId, {
                 "type": "canvas",
                 "canvas": canvas,
                 "animate": false,
                 "coordinates": coords
             });
-            map.addLayer({
+            MAPBOX.addLayer({
                 'id': 'layer' + layerId,
                 "type": 'raster',
                 'source': 'source' + layerId,
@@ -96,13 +105,14 @@ const loadGeoTiffLayer = (url, styleUrl, layerId) => {
                     "raster-resampling": "nearest"
                 }
             });
+            rasterToAnalyse = MAPBOX.getLayer('layer' + layerId);
         })
     });
 }
 
-const loadGeoJsonLayer = (url, styleUrl, layerId) => {
-    fetchSLD('/proxy_cca/' + styleUrl).then(styleData => {
-        fetch(url).then(response => response.json()).then(
+const loadGeoJsonLayer = async (url, styleUrl, layerId) => {
+    await fetchSLD('/proxy_cca/' + styleUrl).then(async styleData => {
+        await fetch(url).then(response => response.json()).then(
             data => {
                 const criteria = specs_set.call(
                     this,
@@ -110,11 +120,11 @@ const loadGeoJsonLayer = (url, styleUrl, layerId) => {
                     styleData.features_specs,
                 );
                 addedLayers.push(layerId);
-                map.addSource('source' + layerId, {
+                MAPBOX.addSource('source' + layerId, {
                     type: 'geojson',
                     data: data
                 });
-                map.addLayer({
+                MAPBOX.addLayer({
                     'id': 'layer' + layerId,
                     'type': 'line',
                     'source': 'source' + layerId,
@@ -141,13 +151,13 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
             boundary: boundary,
             layer_id: layerId
         })
-    }).then((response) => response.json()).then(data => {
+    }).then((response) => response.json()).then(async data => {
         const output = data.output;
         if (drawToMap) {
             if (output.includes('.json') > 0) {
-                loadGeoJsonLayer(output, data.style_url, layerId);
+                await loadGeoJsonLayer(output, data.style_url, layerId);
             } else if(output.includes('.tif') > 0) {
-                loadGeoTiffLayer(output, data.style_url, layerId);
+                await loadGeoTiffLayer(output, data.style_url, layerId);
             }
         }
     }).catch((error) => console.log(error))
@@ -167,8 +177,8 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         if (addedLayers.length > 0) {
             for (let i = 0; i < addedLayers.length; i++) {
                 const addedLayer = addedLayers[i];
-                map.removeLayer('layer' + addedLayer);
-                map.removeSource('source' + addedLayer);
+                MAPBOX.removeLayer('layer' + addedLayer);
+                MAPBOX.removeSource('source' + addedLayer);
             }
             addedLayers = [];
         }
@@ -192,3 +202,10 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         window.location.href = selectedScenario.dataset.url + '&boundary=' + boundary + '&geoId=' + geoId;
     }
 })()
+
+// d340760a-5be9-3a93-b4f2-077f7ecd3d30 33
+// d340760a-5be9-3a93-b4f2-077f7ecd3d30 32
+// d340760a-5be9-3a93-b4f2-077f7ecd3d30 31
+const loadTestLayers = async () => {
+    // await clipSelectedLayer(boundary, 32, true)
+}

@@ -45,7 +45,7 @@ function ce(str, content, attrs = {}) {
 function shadow_tmpl(el) {
   if (typeof el === 'string') el = qs(el);
 
-  if (!el) throw Error(`shadow_tmpl: Expected 'el' to be a DOM Element.`);
+  if (!el) return;
 
   return el.content.cloneNode(true);
 };
@@ -54,7 +54,7 @@ function tmpl(el, data = null) {
   const _el = el;
   if (typeof el === 'string') el = qs(el);
 
-  if (!el) throw Error(`tmpl: Expected 'el' to be a DOM Element: ${_el}`);
+  if (!el) return;
 
   const r = el.content.cloneNode(true);
 
@@ -216,7 +216,10 @@ function slot_populate(data, extra = {}) {
   for (let k in extra) {
     if (!extra[k]) continue;
     // this.append(slot(k, extra[k]));
-    qs(`[name=${k}]`, this).append(slot(k, extra[k]));
+    const _el = qs(`[name=${k}]`, this);
+    if (_el) {
+      _el.append(slot(k, extra[k]));
+    }
   }
 };
 

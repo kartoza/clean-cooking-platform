@@ -17,6 +17,12 @@ const getSubregionPropertyList = (geoId, selector) => {
   const statusBtn = document.getElementById('btn-status');
   const loadingSpinner1 = document.getElementById('loading-spinner-1');
 
+  setTimeout(() => {
+    countrySelect.selectedIndex = 0;
+    subregionSelect.selectedIndex = 0;
+    subregionPropertySelect.selectedIndex = 0;
+  }, 100)
+
   const generateRasterMask = () => {
     let url = '/api/geography-raster-mask/';
     const geoId = selectedGeo.value;
@@ -135,7 +141,7 @@ const getSubregionPropertyList = (geoId, selector) => {
     generateRasterMask().then(data => {
       const boundaryUUID = data.File.replace('.tif', '');
       href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
-      showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'));
+      showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'), true, 'subregion');
       loadingSpinner1.style.display = "none";
       statusBtn.querySelector('.text').innerHTML = 'Generate Sub Region Boundary';
       statusBtn.disabled = false;

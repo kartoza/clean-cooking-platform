@@ -74,6 +74,10 @@ class GeographyRasterMask(APIView):
         if not os.path.exists(raster_shp_dir):
             os.mkdir(raster_shp_dir)
 
+        raster_tif_dir = os.path.join(raster_dir, 'tif')
+        if not os.path.exists(raster_tif_dir):
+            os.mkdir(raster_tif_dir)
+
         boundary_layer_name = str(geo.vector_boundary_layer)
         shp_file = None
         raster_shp_zip_dir = os.path.join(
@@ -114,6 +118,33 @@ class GeographyRasterMask(APIView):
                     shp_file = os.path.join(raster_shp_zip_dir, unzipped_file)
             os.remove(shp_zip_file)
 
+        raster_source_dir = raster_shp_zip_dir.replace('shp', 'tif')
+
+        if not os.path.exists(raster_source_dir):
+            os.mkdir(raster_source_dir)
+
+        raster_source_file = os.path.join(
+            raster_source_dir,
+            boundary_layer_name + '.tif'
+        )
+
+        if not os.path.exists(raster_source_file):
+            url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/wcs'
+            params = {
+                'service': 'WCS',
+                'version': '2.0.1',
+                'request': 'GetCoverage',
+                'coverageid': geo.raster_mask_layer.typename.replace(':', '__'),
+                'format': 'image/tiff',
+                'srs': 'EPSG:4326',
+                'bbox': geo.raster_mask_layer.bbox_string
+            }
+            r = requests.get(url=url, params=params, stream=True)
+            chunk_size = 2000
+            with open(raster_source_file, 'wb') as fd:
+                for chunk in r.iter_content(chunk_size):
+                    fd.write(chunk)
+
         uuid_string = str(uuid.uuid3(
             uuid.NAMESPACE_OID,
             f'{shp_file}{subregion_selector}{subregion_value}'
@@ -131,7 +162,8 @@ class GeographyRasterMask(APIView):
             try:
                 rasterize_layer(
                     shp_file,
-                    0.05,
+                    raster_source_file,
+                    1000,
                     destination_path,
                     where_condition
                 )
