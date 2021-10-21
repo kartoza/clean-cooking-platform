@@ -88,11 +88,11 @@ class ClipLayerByRegion(APIView):
         output = ''
         if 'Vector' in layer.display_type:
             vector_layer = layer.upload_session.layerfile_set.all().filter(
-                name='shp'
+                file__icontains='shp'
             ).first()
         elif 'Raster' in layer.display_type:
             raster_layer = layer.upload_session.layerfile_set.all().filter(
-                name='tif'
+                file__icontains='tif'
             ).first()
 
         if not os.path.exists(output_folder):
