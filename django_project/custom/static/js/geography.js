@@ -17,6 +17,12 @@ const getSubregionPropertyList = (geoId, selector) => {
   const statusBtn = document.getElementById('btn-status');
   const loadingSpinner1 = document.getElementById('loading-spinner-1');
 
+  setTimeout(() => {
+    countrySelect.selectedIndex = 0;
+    subregionSelect.selectedIndex = 0;
+    subregionPropertySelect.selectedIndex = 0;
+  }, 100)
+
   const generateRasterMask = () => {
     let url = '/api/geography-raster-mask/';
     const geoId = selectedGeo.value;
