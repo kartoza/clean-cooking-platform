@@ -162,14 +162,18 @@ export default class dscard extends HTMLElement {
 
 	info() {
 		const e = tmpl('#svg-info');
-		e.onclick = _ => this.ds.info_modal();
+		if (typeof e !== 'undefined') {
+			e.onclick = _ => this.ds.info_modal();
+		}
 
 		return e;
 	};
 
 	close() {
 		const e = tmpl('#svg-close');
-		e.onclick = _ => O.dataset(this.ds, 'active', false);
+		if (typeof e !== 'undefined') {
+			e.onclick = _ => O.dataset(this.ds, 'active', false);
+		}
 
 		return e;
 	};
@@ -178,6 +182,9 @@ export default class dscard extends HTMLElement {
 		let o = 1;
 		const e = tmpl('#opacity-control');
 		const r = tmpl('#ramp');
+		if (typeof r === 'undefined') {
+			return;
+		}
 		r.append(ce('div', '0%'), ce('div', 'Opacity'), ce('div', '100%'));
 
 		qs('.opacity-box', e).append(r);
@@ -304,7 +311,7 @@ export default class dscard extends HTMLElement {
 		case 'raster': {
 			let r = tmpl("#ramp");
 
-			if (ds.domain) {
+			if (ds.domain && r) {
 				r.append(...ramp_values(ds.domain));
 				d.append(r);
 			}

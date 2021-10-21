@@ -17,6 +17,10 @@
       .btn {
           min-height: 50px;
       }
+      .btn .text {
+          margin-top: auto;
+          margin-bottom: auto;
+      }
     </style>
     <script>
         const geoserverUrl = '{{ geoserver_url }}';
@@ -66,7 +70,7 @@
                     <span class="text">Please Choose a Country</span>
                 </button>
                 <a href="/tool" class="btn btn-success" id="btn-status" style="margin-left: auto;">
-                    Go to Explorer Tool
+                    <span class="text">Go to Explorer Tool </span>
                 </a>
             </div>
             <div style="height: 20px"></div>

@@ -175,6 +175,9 @@ class ClipLayerByRegion(APIView):
                     output_path=output)
 
         if raster_layer:
+            raster_boundary_file = boundary_file.replace('.json', '.tif')
+            if not os.path.exists(raster_boundary_file):
+                raster_boundary_file = None
             output = (
                 os.path.join(
                     output_path_folder,
@@ -188,7 +191,8 @@ class ClipLayerByRegion(APIView):
                 clip_raster_layer(
                     layer_raster_file=layer_raster_file,
                     boundary_layer_file=boundary_file,
-                    output_path=output)
+                    output_path=output,
+                    raster_boundary_file=raster_boundary_file)
 
         output = output.replace(settings.MEDIA_ROOT, settings.MEDIA_URL)
 

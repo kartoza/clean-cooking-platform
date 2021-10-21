@@ -163,7 +163,7 @@ class GeographyRasterMask(APIView):
                 rasterize_layer(
                     shp_file,
                     raster_source_file,
-                    1,
+                    1000,
                     destination_path,
                     where_condition
                 )

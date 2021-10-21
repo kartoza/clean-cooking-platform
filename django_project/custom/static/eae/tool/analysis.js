@@ -18,7 +18,6 @@ import {
 
 export default function run(type) {
 	const t0 = performance.now();
-
 	const boundaries = DST.get('boundaries');
 	let list = datasets(type);
 

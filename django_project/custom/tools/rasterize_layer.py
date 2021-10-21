@@ -49,16 +49,26 @@ def rasterize_layer(
     multi = ogr.Geometry(ogr.wkbMultiPolygon)
 
     for feature in source_layer:
-        feature.SetField(field_index, random.randint(0, 255))
-        source_layer.SetFeature(feature)
-        if feature.geometry():
-            feature.geometry().CloseRings()
-            feat = feature.geometry()
-            feat.CloseRings()
-            wkt = feat.ExportToWkt()
-            multi.AddGeometryDirectly(ogr.CreateGeometryFromWkt(wkt))
+        try:
+            feature.SetField(field_index, random.randint(0, 255))
+            source_layer.SetFeature(feature)
+            if feature.geometry():
+                feature.geometry().CloseRings()
+                feat = feature.geometry()
+                if feat.GetGeometryType() == ogr.wkbMultiPolygon:
+                    for polygon in feat:
+                        polygon.CloseRings()
+                        wkt = polygon.ExportToWkt()
+                        multi.AddGeometryDirectly(
+                            ogr.CreateGeometryFromWkt(wkt))
+                else:
+                    feat.CloseRings()
+                    wkt = feat.ExportToWkt()
+                    multi.AddGeometryDirectly(ogr.CreateGeometryFromWkt(wkt))
+        except Exception as e:
+            continue
     union = multi.UnionCascaded()
-    geojson = union.Simplify(0.001).ExportToJson()
+    geojson = union.ExportToJson()
     geojson_destination = destination_path.replace('.tif', '.json')
     if os.path.exists(geojson_destination):
         os.remove(geojson_destination)
@@ -66,15 +76,14 @@ def rasterize_layer(
         json_file.write(geojson)
 
     err = 0
-
     clip_raster_layer(
         layer_raster_file=raster_source_file,
         boundary_layer_file=json_file.name,
         output_path=destination_path)
 
-    # # Create the destination data source
-    # x_res = int((x_max - x_min) / pixel_size)
-    # y_res = int((y_max - y_min) / pixel_size)
+    # Create the destination data source
+    # x_res = int((x_max - x_min) * 10)
+    # y_res = int((y_max - y_min) * 10)
     # target_ds = gdal.GetDriverByName('GTiff').Create(
     #     destination_path, x_res,
     #     y_res, 3, gdal.GDT_Float32)

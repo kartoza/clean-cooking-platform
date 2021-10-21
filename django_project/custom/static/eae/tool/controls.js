@@ -32,8 +32,12 @@ export default class dscontrols extends HTMLElement {
 	};
 
 	init() {
-		this.checkbox = checkbox.call(this.ds);
-		this.header.onclick = this.checkbox.click;
+		try {
+			this.checkbox = checkbox.call(this.ds);
+			this.header.onclick = this.checkbox.click;
+		} catch (e) {
+			return
+		}
 
 		const cat = this.ds.category;
 		const c = cat.controls;
@@ -56,6 +60,7 @@ export default class dscontrols extends HTMLElement {
 		const cat = this.ds.category;
 
 		let steps;
+		if (!cat.controls) return;
 		if (cat.controls.range_steps && this.ds.domain.max && this.ds.domain.min) {
 			steps = [];
 			const s = (this.ds.domain.max - this.ds.domain.min) / (cat.controls.range_steps - 1);
@@ -136,12 +141,17 @@ export default class dscontrols extends HTMLElement {
 	};
 
 	loading(t) {
-		this.spinner.style.display = t ? 'block' : 'none';
+		if (this.spinner)
+			this.spinner.style.display = t ? 'block' : 'none';
 	};
 
 	turn(t) {
-		this.content.style.display = t ? 'block' : 'none';
-		this.main.classList[this.ds.on ? 'add' : 'remove']('active');
+		if (this.content) {
+			this.content.style.display = t ? 'block' : 'none';
+		}
+		if (this.main) {
+			this.main.classList[this.ds.on ? 'add' : 'remove']('active');
+		}
 
 		if (this.checkbox) this.checkbox.change(t);
 

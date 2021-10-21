@@ -1,4 +1,6 @@
 import os
+import shutil
+
 from osgeo import gdal, ogr, osr
 import subprocess
 import numpy as np
@@ -30,15 +32,13 @@ def clip_vector_layer(
         'ogr2ogr',
         '-f',
         'GeoJSON',
-        '-simplify',
-        '0.01',
         '-clipsrc',
         boundary_layer_file,
         output_path,
         layer_vector_file])
 
 
-def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path):
+def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path, raster_boundary_file = None):
     # Taken and slightly modified from https://gis.stackexchange.com/a/200753
     # Get coords for bounding box
     boundary_source = ogr.Open(boundary_layer_file)
@@ -133,3 +133,26 @@ def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path):
     dataset = None
     out_ds = None
     ogr_dataset = None
+
+    # Resize the layer if it has different width and height with boundary
+    if raster_boundary_file:
+        raster_boundary = gdal.Open(raster_boundary_file, gdal.GA_ReadOnly)
+        output_path_resized = output_path.replace('.tif', '_resized.tif')
+        if os.path.exists(output_path_resized):
+            os.remove(output_path_resized)
+        subprocess.run([
+            'gdalwarp',
+            '-of',
+            'GTiff',
+            '-s_srs',
+            f'{srs.GetAuthorityName(None)}:{srs.GetAuthorityCode(None)}',
+            '-t_srs',
+            'epsg:4326',
+            '-ts',
+            f'{raster_boundary.RasterXSize}',
+            f'{raster_boundary.RasterYSize}',
+            output_path,
+            output_path_resized])
+        if os.path.exists(output_path_resized):
+            shutil.move(output_path_resized, output_path)
+
