@@ -1,0 +1,19 @@
+.btn-cca-primary {
+    color: white;
+    display: flex;
+    background: #0280BF;
+    border-color: #0280BF;
+    border-radius: 3px;
+}
+
+.btn-cca-primary:hover {
+    background: #1191ce;
+    border-color: #1191ce;
+    color: white;
+}
+
+.btn-cca-primary:active, .btn-cca-primary:focus {
+    background: #0479b1 !important;
+    border-color: #0479b1 !important;
+    color: white !important;
+}

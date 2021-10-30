@@ -1,4 +1,6 @@
 import os.path
+import json
+import uuid
 
 import requests
 import xml.etree.ElementTree as ET
@@ -17,6 +19,9 @@ from geonode.layers.models import Layer
 class SubregionListAPI(APIView):
 
     def get_property_list_from_geoserver(self, layer_name, property_name):
+        cache_exist = False
+        subregion_list = None
+
         url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/wfs'
         params = {
             'service': 'wfs',
@@ -25,18 +30,41 @@ class SubregionListAPI(APIView):
             'typeNames': layer_name,
             'valueReference': property_name
         }
-        r = requests.get(url=url, params=params)
-        if r.status_code == 200:
-            root = ET.fromstring(r.content)
-            subregion_list = []
-            for child in root:
-                value = child[0].text
-                if value not in subregion_list:
-                    subregion_list.append(value)
-            subregion_list.sort()
-            return subregion_list
-        else:
-            return None
+
+        file_name = str(uuid.uuid3(
+            uuid.NAMESPACE_DNS,
+            f'{url}{json.dumps(params)}'))
+        property_list_cached_dir = os.path.join(
+            settings.MEDIA_ROOT,
+            'property_list'
+        )
+        property_list_cached_file = os.path.join(
+            property_list_cached_dir,
+            file_name
+        )
+        if not os.path.exists(property_list_cached_dir):
+            os.mkdir(property_list_cached_dir)
+
+        if os.path.exists(property_list_cached_file):
+            cache_exist = True
+            subregion_list_file = open(property_list_cached_file)
+            subregion_list = json.load(subregion_list_file)
+            subregion_list_file.close()
+
+        if not cache_exist:
+            r = requests.get(url=url, params=params)
+            if r.status_code == 200:
+                root = ET.fromstring(r.content)
+                subregion_list = []
+                for child in root:
+                    value = child[0].text
+                    if value not in subregion_list:
+                        subregion_list.append(value)
+                subregion_list.sort()
+            with open(property_list_cached_file, 'w+') as outfile:
+                json.dump(subregion_list, outfile)
+
+        return subregion_list
 
     def get(self, request, geo_id, subregion_selector):
         try:

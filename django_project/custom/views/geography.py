@@ -12,6 +12,8 @@ class GeographyView(TemplateView):
         all_geo = Geography.objects.all()
         context['geography'] = []
         context['geoserver_url'] = settings.GEOSERVER_PUBLIC_LOCATION
+        context['MAPBOX_TOKEN'] = settings.MAPBOX_TOKEN
+        context['MAPBOX_THEME'] = settings.MAPBOX_THEME
         for geo in all_geo:
             download_links = geo.vector_boundary_layer.download_links()
             _geo = {
@@ -21,7 +23,7 @@ class GeographyView(TemplateView):
                 'province_selector': geo.province_selector,
                 'district_selector': geo.district_selector,
                 'municipal_selector': geo.municipal_selector,
-                'bbox': geo.vector_boundary_layer.bbox
+                'bbox': geo.vector_boundary_layer.bbox_string
             }
             for download_link in download_links:
                 if 'GeoJSON' in str(download_link):
