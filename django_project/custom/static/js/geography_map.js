@@ -17,7 +17,6 @@ const zoomToBoundingBox = (bboxString = '80.0584517,26.3479682,88.2015273,30.473
       bbox_1 = [parseFloat(bbox[0]), parseFloat(bbox[1])];
       bbox_2 = [parseFloat(bbox[2]), parseFloat(bbox[3])];
   }
-  console.log(bbox_1)
   MAPBOX.fitBounds([
     [bbox_1[0], bbox_1[1]], // southwestern corner of the bounds
     [bbox_2[0], bbox_2[1]] // northeastern corner of the bounds
