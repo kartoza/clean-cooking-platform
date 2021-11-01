@@ -8,6 +8,7 @@
           rel="stylesheet">
     <link href="{% static "css/loading.css" %}" rel="stylesheet"/>
     <link href="{% static "fontawesome/css/all.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/breadcrumb.css" %}" rel="stylesheet"/>
     <script src="{% static "chartjs-3.5.1/chart.min.js" %}"></script>
 
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css"
@@ -112,18 +113,29 @@
 {% block content %}
     <div class="container">
         <div style="height: 20px;"></div>
-        <div class="row">
-            <div class="col-6">
-                <div class="sub-title sub-title-1">
-                    {{ use_case.name }}
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="sub-title sub-title-2">
-                    {{ subRegion.1 }}, {{ geo.name }}
-                </div>
-            </div>
-        </div>
+
+         <div class="container">
+             <div class="breadcrumb">
+                 <a href="#">
+                <span class="active breadcrumb__inner">
+                    <span class="breadcrumb__title">Geography</span>
+                    <span class="breadcrumb__desc"> {{ subRegion.1 }}, {{ geo.name }}</span>
+                </span>
+                 </a>
+                 <a href="#">
+                <span class="breadcrumb__inner">
+                    <span class="breadcrumb__title">Use Case</span>
+                    <span class="breadcrumb__desc">{{ use_case.name }}</span>
+                </span>
+                 </a>
+                 <a href="#"  class="active">
+                <span class="breadcrumb__inner">
+                    <span class="breadcrumb__title">Tool</span>
+                    <span class="breadcrumb__desc">CCE Tool</span>
+                </span>
+                 </a>
+             </div>
+         </div>
 
 
         <div class="card" style="text-align: center">
