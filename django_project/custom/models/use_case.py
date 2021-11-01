@@ -26,3 +26,7 @@ class UseCase(models.Model):
     class Meta:
         verbose_name_plural = 'Use Cases'
         ordering = ['order']
+
+    def __str__(self):
+        return self.name
+    

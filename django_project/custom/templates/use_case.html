@@ -68,7 +68,7 @@
 
                 <div class="text-right">
                     <!-- text-right = text-align: right -->
-                    <button id="explore-scenario" data-id="{{ preset.id }}" class="btn">Explore Scenarios</button>
+                    <button onclick="exploreScenario(this)" data-id="{{ preset.id }}" class="btn">Explore Scenarios</button>
                 </div>
             </div>
         {% endfor %}
@@ -81,8 +81,8 @@
     <script src="{% static "halfmoon-1.1.1/js/halfmoon.min.js" %}"
             type="text/javascript"></script>
     <script>
-        document.getElementById('explore-scenario').onclick = (e) => {
-          window.location.href = window.location.href.replace('use-case', 'scenario').replace('#', '') + '&useCase=' + e.target.dataset.id;
+        const exploreScenario = (e) => {
+          window.location.href = window.location.href.replace('use-case', 'scenario').replace('#', '') + '&useCase=' + e.dataset.id;
         }
     </script>
 {% endblock %}
