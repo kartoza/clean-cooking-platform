@@ -1,10 +1,12 @@
 let href = '';
+let boundaryUUID = '';
+let allLayerIds = null;
 let rasterGenerated = false;
 const countrySelect = document.getElementById('countrySelect');
 const subregionSelect = document.getElementById('subregionSelect');
 const discoverBtn = document.getElementById('btn-discover');
 const subregionPropertySelect = document.getElementById('subregionPropertySelect');
-const statusBtn = document.getElementById('btn-status');
+const exploreBtn = document.getElementById('btn-explorer');
 const loadingSpinner1 = document.getElementById('loading-spinner-1');
 
 const selectCountry = (countryData) => {
@@ -25,6 +27,36 @@ const selectCountry = (countryData) => {
     } catch (e) {
     }
   }
+}
+
+const clipSelectedLayerPromise = (boundary, layerId) => {
+  return new Promise((resolve, reject) => {
+    const url = '/api/clip-layer-by-region/';
+    fetch(url, {
+      method: 'POST',
+      credentials: "same-origin",
+      headers: {
+        'X-CSRFToken': getCookie("csrftoken"),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        boundary: boundary,
+        layer_id: layerId
+      })
+    }).then((response) => response.json()).then(async data => {
+      if (data['status'] === 'Pending') {
+        setTimeout(async () => {
+          resolve(clipSelectedLayerPromise(boundary, layerId));
+        }, 1000)
+      } else if (data['status'] === 'Success') {
+        const output = data.output;
+        resolve("FINISH")
+      } else {
+        reject('Error clipping layer')
+      }
+    }).catch((error) => reject(error))
+  })
 }
 
 (function () {
@@ -168,7 +200,8 @@ const selectCountry = (countryData) => {
     }
     loadingSpinner1.style.display = "block";
     generateRasterMask().then(data => {
-      const boundaryUUID = data.File.replace('.tif', '');
+      allLayerIds = data.AllLayerIds;
+      boundaryUUID = data.File.replace('.tif', '');
       href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
       showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'), true, 'subregion');
       rasterGenerated = true;
@@ -194,12 +227,31 @@ const selectCountry = (countryData) => {
     }
     if (!rasterGenerated && subRegionValue) {
       generateRasterMask().then(data => {
-         const boundaryUUID = data.File.replace('.tif', '');
+         boundaryUUID = data.File.replace('.tif', '');
          window.location.href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
       })
     } else {
       window.location.href = href;
     }
+  }
+
+  exploreBtn.onclick = (e) => {
+    e.preventDefault();
+    const tasks = [];
+    const geoId = selectedGeo.value;
+    if (!allLayerIds) {
+      window.location.href = '/tool/?geoId=' + geoId;
+    }
+    exploreBtn.querySelector('.text').innerHTML = 'Clipping layers...';
+    exploreBtn.disabled = true;
+    for (let j = 0; j < allLayerIds.length; j++) {
+      tasks.push(clipSelectedLayerPromise(boundaryUUID, allLayerIds[j]));
+    }
+    Promise.all(tasks).then(function(results){
+      exploreBtn.querySelector('.text').innerHTML = 'Go to Explorer Tool';
+      exploreBtn.disabled = false;
+      window.location.href = '/tool/?boundary=' + boundaryUUID + '&geoId=' + geoId;
+    });
   }
 
 })();
