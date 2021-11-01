@@ -144,7 +144,7 @@ const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true) => {
             method: 'POST',
             credentials: "same-origin",
             headers: {
-                'X-CSRFToken': getCookie("csrftoken"),
+                'X-CSRFToken': csrfToken,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
@@ -180,7 +180,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         method: 'POST',
         credentials: "same-origin",
         headers: {
-            'X-CSRFToken': getCookie("csrftoken"),
+            'X-CSRFToken': csrfToken,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
@@ -213,6 +213,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
 (function () {
     const scenarioSelect = document.getElementById('scenarioSelect');
     const ccaToolBtn = document.getElementById('cca-tool-btn');
+    const ccaReportBtn = document.getElementById('report-btn');
     let selectedScenario = null;
     let selectedLayers = null;
 
@@ -245,6 +246,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         Promise.all(tasks).then(function(results){
             loadingSpinner1.style.display = "none";
             ccaToolBtn.disabled = false;
+            ccaReportBtn.disabled = false;
             console.log("DONE");
         });
     }

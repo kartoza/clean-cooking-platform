@@ -9,6 +9,7 @@
     <link href="{% static "css/loading.css" %}" rel="stylesheet"/>
     <link href="{% static "fontawesome/css/all.min.css" %}" rel="stylesheet">
     <link href="{% static "css/breadcrumb.css" %}" rel="stylesheet"/>
+    <link href="{% static "css/cca-buttons.css" %}" rel="stylesheet"/>
     <script src="{% static "chartjs-3.5.1/chart.min.js" %}"></script>
 
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css"
@@ -41,6 +42,7 @@
         mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
         let mapboxStyle = 'mapbox://styles/{{ MAPBOX_THEME }}';
         let allLayerIds = {{ all_layer_ids }};
+        let csrfToken = '{{ csrf_token }}';
         let geojsonBoundary = `/uploaded/rasterized/${boundary}.json`;
         let rasterBoundary = `/uploaded/rasterized/${boundary}.tif`;
         let bbox = null;
@@ -79,10 +81,11 @@
         }
 
         .btn-scene {
-            width: 800px;
+            width: 100%;
             padding-bottom: 2em;
             padding-top: 0.5em;
             height: 65px;
+            justify-content: center;
         }
 
         .dropdown-menu-center {
@@ -91,9 +94,9 @@
 
         .map {
             margin-top: 20px;
-            border-radius: 20px;
+            border-radius: 5px;
             width: 100%;
-            height: 800px;
+            height: 500px;
         }
 
         .ol-viewport {
@@ -151,7 +154,7 @@
 
             <!-- Dropdown menu aligned to the center -->
             <select class="form-control" id="scenarioSelect"
-                    style="width: 800px; height: 60px; margin-left: auto; margin-right: auto">
+                    style="width: 100%; height: 60px; margin-left: auto; margin-right: auto">
                 <option value="" selected="selected" disabled="disabled">Choose
                     a
                     scenario
@@ -162,8 +165,7 @@
                 {% endfor %}
             </select>
             <div style="margin-top: 20px;">
-                <button class="btn btn-scene" disabled>Clean Cooking Access
-                    Report
+                <button class="btn btn-scene btn-cca-primary" id="report-btn" disabled>Clean Cooking Access Report
                 </button>
             </div>
             <div style="margin-top: 20px;">
