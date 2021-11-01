@@ -137,6 +137,43 @@ const loadGeoJsonLayer = async (url, styleUrl, layerId) => {
     });
 }
 
+const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true) => {
+    return new Promise((resolve, reject) => {
+        const url = '/api/clip-layer-by-region/';
+        fetch(url, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: {
+                'X-CSRFToken': getCookie("csrftoken"),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                boundary: boundary,
+                layer_id: layerId
+            })
+        }).then((response) => response.json()).then(async data => {
+            if (data['status'] === 'Pending') {
+                setTimeout(async () => {
+                    resolve(clipSelectedLayer(boundary, layerId, drawToMap));
+                }, 1000)
+            } else if (data['status'] === 'Success') {
+                const output = data.output;
+                if (drawToMap) {
+                    if (output.includes('.json') > 0) {
+                        await loadGeoJsonLayer(output, data.style_url, layerId);
+                    } else if (output.includes('.tif') > 0) {
+                        await loadGeoTiffLayer(output, data.style_url, layerId);
+                    }
+                }
+                resolve("FINISH")
+            } else {
+                reject('Error clipping layer')
+            }
+        }).catch((error) => reject(error))
+    })
+}
+
 const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
     const url = '/api/clip-layer-by-region/';
     await fetch(url, {
@@ -166,6 +203,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
                     await loadGeoTiffLayer(output, data.style_url, layerId);
                 }
             }
+            console.log("FINISH")
         } else {
             console.error('Error clipping layer')
         }
@@ -194,16 +232,21 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         if (selectedLayers.length > 0) {
             selectedLayers.reverse();
         }
+        const tasks = []
         for (let i = 0; i < selectedLayers.length; i++) {
-            await clipSelectedLayer(boundary, selectedLayers[i], true);
+            tasks.push(clipSelectedLayerPromise(boundary, selectedLayers[i], true));
         }
         for (let j = 0; j < allLayerIds.length; j++) {
             if (!selectedLayers.includes(allLayerIds[j])) {
-                await clipSelectedLayer(boundary, allLayerIds[j], false);
+                tasks.push(clipSelectedLayerPromise(boundary, allLayerIds[j], false));
             }
         }
-        loadingSpinner1.style.display = "none";
-        ccaToolBtn.disabled = false;
+
+        Promise.all(tasks).then(function(results){
+            loadingSpinner1.style.display = "none";
+            ccaToolBtn.disabled = false;
+            console.log("DONE");
+        });
     }
 
     ccaToolBtn.onclick = (e) => {

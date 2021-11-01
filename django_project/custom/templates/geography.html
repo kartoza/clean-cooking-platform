@@ -7,6 +7,7 @@
     <link href="{% static "css/loading.css" %}" rel="stylesheet"/>
     <link href="{% static "css/cca-buttons.css" %}" rel="stylesheet"/>
     <link href="/static/fontawesome/css/all.min.css" rel="stylesheet"/>
+    <link href="{% static "css/breadcrumb.css" %}" rel="stylesheet"/>
 
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css"
           rel="stylesheet">
@@ -75,7 +76,28 @@
 {% block content %}
     <div class="container">
         <div style="height: 20px;"></div>
-        <h4 class="h4 blue-text title-text">Select your geography</h4>
+         <div class="container">
+            <div class="breadcrumb">
+                <a href="#"  class="active">
+			<span class="active breadcrumb__inner">
+				<span class="breadcrumb__title">Geography</span>
+				<span class="breadcrumb__desc">Select your geography</span>
+			</span>
+                </a>
+                <a href="#">
+			<span class="breadcrumb__inner">
+				<span class="breadcrumb__title">Use Case</span>
+				<span class="breadcrumb__desc">Select your use case</span>
+			</span>
+                </a>
+                <a href="#">
+			<span class="breadcrumb__inner">
+				<span class="breadcrumb__title">Tool</span>
+				<span class="breadcrumb__desc">CCE Tool</span>
+			</span>
+                </a>
+            </div>
+        </div>
         <p>
             Analysis results are generated per geography (country, district, municipality).
         </p>

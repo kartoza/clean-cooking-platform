@@ -186,8 +186,12 @@ const selectCountry = (countryData) => {
     const geoId = selectedGeo.value;
     const subRegionSelector = selectedGeo.dataset[subregionSelect.value];
     const subRegionValue = subregionPropertySelect.value;
-    discoverBtn.querySelector('.text').innerHTML = 'Generating raster';
-    discoverBtn.disabled = true;
+    if (subRegionSelector && subRegionValue) {
+      discoverBtn.querySelector('.text').innerHTML = 'Generating raster';
+      discoverBtn.disabled = true;
+    } else {
+      rasterGenerated = true;
+    }
     if (!rasterGenerated && subRegionValue) {
       generateRasterMask().then(data => {
          const boundaryUUID = data.File.replace('.tif', '');
