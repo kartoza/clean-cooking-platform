@@ -47,7 +47,6 @@ const showGeoJSONLayer = (url, checkLayerLoaded = true, layerId = 'boundary') =>
         const r = bbox[2];
         const d = bbox[1];
         const u = bbox[3];
-        console.log(bbox);
         coords = [[l, u], [r, u], [r, d], [l, d]];
         MAPBOX.coords = coords;
         MAPBOX.fitBounds(bbox, {padding: 20});

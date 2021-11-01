@@ -152,13 +152,22 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
             layer_id: layerId
         })
     }).then((response) => response.json()).then(async data => {
-        const output = data.output;
-        if (drawToMap) {
-            if (output.includes('.json') > 0) {
-                await loadGeoJsonLayer(output, data.style_url, layerId);
-            } else if(output.includes('.tif') > 0) {
-                await loadGeoTiffLayer(output, data.style_url, layerId);
+        if (data['status'] === 'Pending') {
+            setTimeout(async () => {
+                await clipSelectedLayer(boundary, layerId, drawToMap);
+            }, 1000)
+        }
+        else if (data['status'] === 'Success') {
+            const output = data.output;
+            if (drawToMap) {
+                if (output.includes('.json') > 0) {
+                    await loadGeoJsonLayer(output, data.style_url, layerId);
+                } else if(output.includes('.tif') > 0) {
+                    await loadGeoTiffLayer(output, data.style_url, layerId);
+                }
             }
+        } else {
+            console.error('Error clipping layer')
         }
     }).catch((error) => console.log(error))
 }
@@ -203,9 +212,6 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
     }
 })()
 
-// d340760a-5be9-3a93-b4f2-077f7ecd3d30 33
-// d340760a-5be9-3a93-b4f2-077f7ecd3d30 32
-// d340760a-5be9-3a93-b4f2-077f7ecd3d30 31
 const loadTestLayers = async () => {
     // await clipSelectedLayer(boundary, 32, true)
 }

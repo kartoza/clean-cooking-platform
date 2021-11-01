@@ -13,6 +13,7 @@ from .models.unit import Unit
 from .models.menu import *
 from custom.models.preset import Preset
 from custom.models.use_case import UseCase
+from custom.models.clipped_layer import ClippedLayer
 
 
 class MapSlugMappingAdmin(admin.ModelAdmin):
@@ -171,6 +172,12 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
         js = ('/static/admin/js/category.js', )
 
 
+class ClippedLayerAdmin(admin.ModelAdmin):
+    list_display = (
+        'layer', 'boundary_uuid', 'created_date',
+        'layer_type', 'process_state')
+
+
 admin.site.register(Geography, GeographyAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CCAPreferences, PreferencesAdmin)
@@ -179,3 +186,4 @@ admin.site.register(MainMenu, MainMenuAdmin)
 admin.site.register(SubMenu, SubMenuAdmin)
 admin.site.register(Preset, PresetAdmin)
 admin.site.register(UseCase, UseCaseAdmin)
+admin.site.register(ClippedLayer, ClippedLayerAdmin)

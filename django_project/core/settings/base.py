@@ -32,7 +32,7 @@ MIDDLEWARE = (
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'geonode.base.middleware.MaintenanceMiddleware',
     'geonode.base.middleware.ReadOnlyMiddleware',  # a Middleware enabling Read Only mode of Geonode
-    'custom.middlewares.access_middleware.RestrictAccessMiddleware',
+    # 'custom.middlewares.access_middleware.RestrictAccessMiddleware',
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
@@ -102,3 +102,5 @@ DIRECTORY = ''
 RESTRICT_ACCESS = ast.literal_eval(os.getenv('RESTRICT_ACCESS', 'False'))
 ACCOUNT_ADAPTER = 'custom.adapters.CustomLocalAccountAdapter'
 STATICFILES_STORAGE = 'core.storage.WhiteNoiseStaticFilesStorage'
+
+CELERY_TASK_ALWAYS_EAGER = False
