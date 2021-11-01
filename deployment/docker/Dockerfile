@@ -17,7 +17,7 @@ RUN pip install -r requirements.txt
 RUN pip uninstall -y django-geonode-mapstore-client
 
 ADD deployment/docker/REQUIREMENTS.txt /REQUIREMENTS.txt
-RUN pip install -r /REQUIREMENTS.txt
+RUN pip uninstall -y celery && pip install -r /REQUIREMENTS.txt
 #
 #USER www-data
 ADD django_project /home/web/django_project
