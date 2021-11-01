@@ -8,6 +8,8 @@ from django.conf import settings
 from django.http.response import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from custom.models import Category
 from custom.models.geography import Geography
 from custom.serializers.geography_serializer import GeographySerializer
 from custom.tools.rasterize_layer import rasterize_layer
@@ -170,9 +172,21 @@ class GeographyRasterMask(APIView):
             except Exception as e: # noqa
                 raise Http404
 
+        all_layer_ids = []
+        all_category = Category.objects.filter(
+            geography__id=geo_id,
+            boundary_layer=False,
+            online=True
+        )
+        for category in all_category:
+            for dataset in category.datasetfile_set.all():
+                if dataset.geonode_layer:
+                    all_layer_ids.append(dataset.geonode_layer.id)
+
         return Response({
             'Success': True,
             'Geo': geo.name,
             'RasterPath': f'{settings.MEDIA_URL}rasterized/{uuid_string}',
-            'File': uuid_string
+            'File': uuid_string,
+            'AllLayerIds': all_layer_ids
         })
