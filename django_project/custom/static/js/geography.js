@@ -36,7 +36,7 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
       method: 'POST',
       credentials: "same-origin",
       headers: {
-        'X-CSRFToken': getCookie("csrftoken"),
+        'X-CSRFToken': csrfToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },

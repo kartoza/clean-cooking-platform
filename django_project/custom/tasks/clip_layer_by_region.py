@@ -6,6 +6,8 @@ import requests
 import zipfile
 
 from django.conf import settings
+from django.db.models import Q
+
 from custom.celery import app
 
 from custom.tools.clip_layer import clip_vector_layer, clip_raster_layer
@@ -44,7 +46,7 @@ def clip_layer_by_region(self, clipped_layer_id):
     raster_layer = None
     if 'Vector' in layer.display_type:
         vector_layer = layer.upload_session.layerfile_set.all().filter(
-            file__icontains='shp'
+            Q(file__icontains='shp') | Q(file__icontains='geojson')
         ).first()
     elif 'Raster' in layer.display_type:
         raster_layer = layer.upload_session.layerfile_set.all().filter(
@@ -74,7 +76,7 @@ def clip_layer_by_region(self, clipped_layer_id):
                 settings.MEDIA_ROOT,
                 vector_layer.file.name
             )
-            if not os.path.exists(layer_vector_file):
+            if not os.path.exists(layer_vector_file) or 'geojson' in layer_vector_file:
                 # Download file
                 layer_temp_folder = os.path.join(
                     settings.MEDIA_ROOT,

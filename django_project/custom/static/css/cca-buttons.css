@@ -12,6 +12,12 @@
     color: white;
 }
 
+.btn-cca-primary:disabled:hover {
+    background: white;
+    border-color: #e0e0e0;
+    color: #969393;
+}
+
 .btn-cca-primary:active, .btn-cca-primary:focus {
     background: #0479b1 !important;
     border-color: #0479b1 !important;
