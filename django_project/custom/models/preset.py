@@ -33,3 +33,6 @@ class Preset(models.Model):
     class Meta:
         verbose_name_plural = 'Presets'
         ordering = ['order']
+
+    def __str__(self):
+        return self.name

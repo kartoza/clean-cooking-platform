@@ -120,21 +120,21 @@ section > svg.flair-right {
 }
 
 .green-text {
-    color: rgb(72 124 51);
+    color: #3e6b2c;
 }
 
 .splide__slide p {
     font-size: 20px;
     font-weight: 400;
-    color: rgb(72 124 51);
+    color: #111111;
 }
 
 .splide__arrow svg {
-    fill: #578c43 !important;
+    fill: #3e6b2c !important;
 }
 
 .splide__pagination__page.is-active {
-    background: #578c43 !important;
+    background: #3e6b2c !important;
 }
 
 @media screen and (max-width: 888px) {
@@ -571,7 +571,7 @@ section.hero-large .bg-image {
 }
 
 .blue-text {
-    color: #0280BF;
+    color: #016597;
 }
 
 .headshot {

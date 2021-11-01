@@ -1,112 +1,79 @@
-const geotiffLayer = new ol.layer.Image();
-const tileLayer = new ol.layer.Tile();
-const geotiffLayerAdded = false;
+let subregion_source = null;
 
-const map = new ol.Map({
-  target: 'map',
-  layers: [
-    new ol.layer.Tile({
-      source: new ol.source.OSM()
-    }),
-    tileLayer,
-    geotiffLayer
-  ],
-  view: new ol.View({
-    center: [0, 0],
-    zoom: 2
-  })
+MAPBOX = new mapboxgl.Map({
+    container: 'map', // container ID
+    style: mapboxStyle,
+    center: [0, 0], // starting position [lng, lat]
+    zoom: 2, // starting zoom
+    preserveDrawingBuffer: true,
 });
 
 
 const zoomToBoundingBox = (bboxString = '80.0584517,26.3479682,88.2015273,30.4731565') => {
   const bbox = bboxString.split(',');
-  let col = new ol.Collection();
-  let bboxLayer = new ol.layer.Vector({
-    source: new ol.source.Vector({
-      features: col
-    })
-  })
-  col.push(new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([bbox[0], bbox[1]]))
-  }));
-  col.push(new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([bbox[2], bbox[3]]))
-  }));
-  map.getView().fit(bboxLayer.getSource().getExtent());
+  const bbox_1 = proj4("EPSG:3857", "EPSG:4326").forward([parseFloat(bbox[0]), parseFloat(bbox[1])]);
+  const bbox_2 =  proj4("EPSG:3857", "EPSG:4326").forward([parseFloat(bbox[2]), parseFloat(bbox[3])]);
+  MAPBOX.fitBounds([
+    [bbox_1[0], bbox_1[1]], // southwestern corner of the bounds
+    [bbox_2[0], bbox_2[1]] // northeastern corner of the bounds
+  ]);
 }
 
 let width, height, extent;
 
-const statusBtn = document.getElementById('btn-status');
-const loadingSpinner1 = document.getElementById('loading-spinner-1');
-
-const onGeoTiffLoaded = (data) => {
-  const tiff = GeoTIFF.parse(data);
-  const image = tiff.getImage();
-  const rawBox = image.getBoundingBox();
-  const box = [rawBox[0],rawBox[1] - (rawBox[3] - rawBox[1]), rawBox[2], rawBox[1]];
-  const bands = image.readRasters();
-  const band = bands[0];
-  let the_canvas = document.createElement('canvas');
-  const minValue = -1;
-  const maxValue = 255;
-  const plot = new plotty.plot({
-    canvas: the_canvas,
-    data: band, width: image.getWidth(), height: image.getHeight(),
-    domain: [minValue, maxValue],
-    colorScale: 'earth',
-    clampLow: true,
-    clampHigh: true
-  });
-  plot.render();
-  const imgSource = new ol.source.ImageStatic({
-    url: the_canvas.toDataURL("image/png"),
-    imageExtent: box,
-    projection: 'EPSG:4326'
-  })
-  geotiffLayer.setSource(imgSource);
-}
-
-const showGeoTiffLayer = (url) => {
-  fetch(url).then(
-    response => response.arrayBuffer()
-  ).then(onGeoTiffLoaded)
-}
-
 const addedLayer = {};
 const showGeoJSONLayer = (url, checkLayerLoaded = true, layerId = 'boundary') => {
-  const geojsonSource = new ol.source.Vector({
-      url: url,
-      format: new ol.format.GeoJSON(),
-  });
-  const vectorLayer = new ol.layer.Vector({
-    source: geojsonSource,
-  });
-  if (layerId in addedLayer) {
-    map.removeLayer(addedLayer[layerId]);
-  }
-  addedLayer[layerId] = vectorLayer;
-  map.addLayer(vectorLayer);
-  if (checkLayerLoaded) {
-    const intervalID = setInterval(() => {
-      try {
-        if (vectorLayer.getSource().getFeatures().length > 0) {
-          map.getView().fit(vectorLayer.getSource().getExtent());
-          loadingSpinner1.style.display = "none";
-          clearInterval(intervalID);
+  fetch(url).then(response => response.json()).then(
+      async data => {
+        if (subregion_source) {
+            MAPBOX.removeLayer('subregion-layer');
+            MAPBOX.removeSource('subregion-source');
         }
-      } catch (e) {}
-    });
-  }
+        subregion_source = MAPBOX.addSource('subregion-source', {
+          type: 'geojson',
+          data: data
+        });
+        MAPBOX.addLayer({
+          'id': 'subregion-layer',
+          'type': 'fill',
+          'source': 'subregion-source',
+          'paint': {
+            'fill-color': '#0280BF',
+            'fill-opacity': 0.8
+          }
+        });
+        bbox = turf.extent(data);
+        const l = bbox[0];
+        const r = bbox[2];
+        const d = bbox[1];
+        const u = bbox[3];
+        console.log(bbox);
+        coords = [[l, u], [r, u], [r, d], [l, d]];
+        MAPBOX.coords = coords;
+        MAPBOX.fitBounds(bbox, {padding: 20});
+      }
+  )
 }
 
 showTileLayer = (layerName) => {
-  tileLayer.setSource(new ol.source.TileWMS({
-    url: `/proxy_cca/${geoserverUrl}/wms`,
-    params: {'LAYERS': layerName, 'TILED': true},
-    serverType: 'geoserver',
-    transition: 0
-  }));
-  loadingSpinner1.style.display = "none";
-  statusBtn.querySelector('.text').innerHTML = 'Please Choose a Sub Region';
+  MAPBOX.on('load', function() {
+    MAPBOX.addSource('boundary-source', {
+      'type': 'raster',
+      'tiles': [
+        `/proxy_cca/${geoserverUrl}/wms?bbox={bbox-epsg-3857}&format=image/png&
+        service=WMS&TILED=true&version=1.1.1&request=GetMap&srs=EPSG:3857&
+        transparent=true&width=256&height=256&LAYERS=${layerName}`,
+      ],
+      'tileSize': 256
+    });
+    MAPBOX.addLayer(
+        {
+          'id': 'boundary-layer',
+          'type': 'raster',
+          'source': 'boundary-source',
+          'paint': {}
+        }
+    );
+    loadingSpinner1.style.display = "none";
+  });
 }

@@ -54,8 +54,12 @@
 }
 
 h1, h2, h3, strong {
-  color: #578C43;
+  color: #3e6b2c;
   font-family:  'Aktiv Grotesk Corp', sans-serif;
+}
+
+.light-green {
+  color: #74b55c;
 }
 
 a {
@@ -285,7 +289,7 @@ section .flex-center{
 
 .target-member {
   text-align: center;
-  background-color: #0180bf;
+  background-color: #016597;
   border-radius: 0.8em;
   color: white;
   font-size: 15px;
