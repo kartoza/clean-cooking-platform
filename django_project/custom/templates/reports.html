@@ -39,6 +39,7 @@
         let url = new URL(window.location.href);
         let boundary = url.searchParams.get('boundary');
         let geoId = url.searchParams.get('geoId');
+        let subRegion = '{{ subRegion.1 }}';
         mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
         let mapboxStyle = 'mapbox://styles/{{ MAPBOX_THEME }}';
         let allLayerIds = {{ all_layer_ids }};
@@ -82,9 +83,9 @@
 
         .btn-scene {
             width: 100%;
-            padding-bottom: 2em;
+            padding-bottom: 0.5em;
             padding-top: 0.5em;
-            height: 65px;
+            height: 100%;
             justify-content: center;
         }
 
@@ -164,14 +165,18 @@
                             data-url="{{ preset.permalink }}" data-layers="{{ preset.layers }}">{{ preset.name }}</option>
                 {% endfor %}
             </select>
-            <div style="margin-top: 20px;">
-                <button class="btn btn-scene btn-cca-primary" id="report-btn" disabled>Clean Cooking Access Report
-                </button>
-            </div>
-            <div style="margin-top: 20px;">
-                <button class="btn btn-scene" id="cca-tool-btn" disabled>
-                    <div style="position: absolute; display: none" id="loading-spinner-1" class="loading-spinner-container"><div class="loading-spinner"><div></div></div></div> Clean Cooking Explorer Tool
-                </button>
+            <div class="row" style="margin-top: 2em">
+                <div class="col-lg-6">
+                    <button class="btn btn-scene btn-cca-primary"
+                            id="report-btn">
+                        <span>Clean Cooking Access Report</span>
+                    </button>
+                </div>
+                <div class="col-lg-6">
+                    <button class="btn btn-scene" id="cca-tool-btn" disabled>
+                        <div style="position: absolute; display: none" id="loading-spinner-1" class="loading-spinner-container"><div class="loading-spinner"><div></div></div></div> Clean Cooking Explorer Tool
+                    </button>
+                </div>
             </div>
             <div class="spacer" style="height: 10px"></div>
         </div>
@@ -233,6 +238,7 @@
             <canvas id="ani-output"></canvas>
         </div>
 
+        <canvas id="output"></canvas>
     </div>
 {% endblock %}
 

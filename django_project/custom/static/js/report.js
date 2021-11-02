@@ -247,7 +247,6 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
             loadingSpinner1.style.display = "none";
             ccaToolBtn.disabled = false;
             ccaReportBtn.disabled = false;
-            console.log("DONE");
         });
     }
 
@@ -255,8 +254,61 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         e.preventDefault();
         window.location.href = selectedScenario.dataset.url + '&boundary=' + boundary + '&geoId=' + geoId;
     }
-})()
 
-const loadTestLayers = async () => {
-    // await clipSelectedLayer(boundary, 32, true)
-}
+    ccaReportBtn.onclick = (e) => {
+        e.preventDefault();
+
+        let url = '/generate-report-pdf/';
+        let request = new XMLHttpRequest();
+        let fd = new FormData();
+
+        let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+
+        let width = 800;
+        let height = 600;
+        const canvas = document.getElementById('output');
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(mapCanvas,
+            (mapCanvas.width / 2) - (width / 2),0,
+            width, height,
+            0,0,
+            width, height
+        );
+        let mapImage = canvas.toDataURL('image/png', 1.0);
+
+        fd.append('geoId', geoId);
+        fd.append('subRegion', subRegion);
+        fd.append('mapImage', mapImage);
+
+        request.open('POST', url, true);
+        request.setRequestHeader('X-CSRFToken', csrfToken);
+        request.responseType = 'blob';
+
+        request.onload = function () {
+            // Only handle status code 200
+            if (request.status === 200) {
+                // Try to find out the filename from the content disposition `filename` value
+                let disposition = request.getResponseHeader('content-disposition');
+                let matches = /"([^"]*)"/.exec(disposition);
+                let filename = (matches != null && matches[1] ? matches[1] : 'Report.pdf');
+
+                // The actual download
+                let blob = new Blob([request.response], {type: 'application/pdf'});
+                let link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+
+                document.body.appendChild(link);
+
+                link.click();
+
+                document.body.removeChild(link);
+            }
+        };
+
+        request.send(fd);
+    }
+})()
