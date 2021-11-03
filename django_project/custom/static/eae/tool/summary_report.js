@@ -122,6 +122,7 @@ export async function init() {
 	if (boundary) {
 		datasets_url += `&boundary=${boundary}`
 	}
+	return
 	await api_get(datasets_url)
 		.then(async r => {
 			return Promise.all(r.map(async e => {
