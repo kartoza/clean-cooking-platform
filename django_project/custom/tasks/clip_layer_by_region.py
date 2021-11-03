@@ -24,8 +24,9 @@ def clip_layer_by_region(self, clipped_layer_id):
     )
     layer = clipped_layer.layer
     boundary_uuid = clipped_layer.boundary_uuid
-    clipped_layer.process_state = self.request.id
-    clipped_layer.save()
+    if self.request.id:
+        clipped_layer.process_state = self.request.id
+        clipped_layer.save()
 
     logger.info('Clipping layer {}'.format(clipped_layer.id))
     logger.info('Geonode layer {}'.format(layer.id))
@@ -101,10 +102,14 @@ def clip_layer_by_region(self, clipped_layer_id):
                                 unzipped_file)
                             break
 
-                if not layer_vector_file:
+                if not layer_vector_file or '.shp' not in layer_vector_file:
+                    if 'geojson' in layer_name:
+                        layer_name = layer_name.replace('.geojson', '.zip')
+                    else:
+                        layer_name = layer_name.replace('.shp', '.zip')
                     shp_zip_file = os.path.join(
                         layer_vector_dir,
-                        layer_name.replace('.shp', '.zip')
+                        layer_name
                     )
                     url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/ows'
                     params = {
@@ -120,13 +125,17 @@ def clip_layer_by_region(self, clipped_layer_id):
                     with open(shp_zip_file, 'wb') as fd:
                         for chunk in r.iter_content(chunk_size):
                             fd.write(chunk)
-                    with zipfile.ZipFile(shp_zip_file, 'r') as zip_ref:
-                        zip_ref.extractall(layer_vector_dir)
-                    for unzipped_file in os.listdir(layer_vector_dir):
-                        if unzipped_file.endswith('.shp'):
-                            layer_vector_file = os.path.join(layer_vector_dir,
-                                                             unzipped_file)
-                    os.remove(shp_zip_file)
+                    try:
+                        with zipfile.ZipFile(shp_zip_file, 'r') as zip_ref:
+                            zip_ref.extractall(layer_vector_dir)
+                        for unzipped_file in os.listdir(layer_vector_dir):
+                            if unzipped_file.endswith('.shp'):
+                                layer_vector_file = os.path.join(layer_vector_dir,
+                                                                 unzipped_file)
+                        os.remove(shp_zip_file)
+                    except zipfile.BadZipFile:
+                        logger.info('Cannot download zip file')
+                        return
 
             clip_vector_layer(
                 layer_vector_file=layer_vector_file,

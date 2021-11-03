@@ -36,9 +36,9 @@ class ReportView(TemplateView):
             online=True
         )
         for category in all_category:
-            for dataset in category.datasetfile_set.all():
-                if dataset.geonode_layer:
-                    context['all_layer_ids'].append(dataset.geonode_layer.id)
+            for dataset in category.datasetfile_set.filter(
+                    geonode_layer__isnull=False):
+                context['all_layer_ids'].append(dataset.geonode_layer.id)
 
         if self.request.GET.get('subRegion', None):
             context['subRegion'] = self.request.GET.get('subRegion').split(':')

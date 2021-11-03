@@ -3,7 +3,7 @@
     display: flex;
     background: #0280BF;
     border-color: #0280BF;
-    border-radius: 3px;
+    border-radius: 6px !important;
 }
 
 .btn-cca-primary:hover {

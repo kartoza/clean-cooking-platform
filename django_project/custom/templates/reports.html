@@ -39,6 +39,8 @@
         let url = new URL(window.location.href);
         let boundary = url.searchParams.get('boundary');
         let geoId = url.searchParams.get('geoId');
+        let subRegion = '{{ subRegion.1 }}';
+        let useCaseId = '{{ use_case.id }}';
         mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
         let mapboxStyle = 'mapbox://styles/{{ MAPBOX_THEME }}';
         let allLayerIds = {{ all_layer_ids }};
@@ -82,9 +84,9 @@
 
         .btn-scene {
             width: 100%;
-            padding-bottom: 2em;
+            padding-bottom: 0.5em;
             padding-top: 0.5em;
-            height: 65px;
+            height: 100%;
             justify-content: center;
         }
 
@@ -109,6 +111,14 @@
 
         #output {
             display: none;
+        }
+
+        .loading-spinner-container {
+            position: absolute;
+            left: 0;
+            margin-left: 10px;
+            height: 100%;
+            margin-top: -0.4em;
         }
     </style>
 {% endblock %}
@@ -164,18 +174,22 @@
                             data-url="{{ preset.permalink }}" data-layers="{{ preset.layers }}">{{ preset.name }}</option>
                 {% endfor %}
             </select>
-            <div style="margin-top: 20px;">
-                <button class="btn btn-scene btn-cca-primary" id="report-btn" disabled>Clean Cooking Access Report
-                </button>
-            </div>
-            <div style="margin-top: 20px;">
-                <button class="btn btn-scene" id="cca-tool-btn" disabled>
-                    <div style="position: absolute; display: none" id="loading-spinner-1" class="loading-spinner-container"><div class="loading-spinner"><div></div></div></div> Clean Cooking Explorer Tool
-                </button>
+            <div class="row" style="margin-top: 2em">
+                <div class="col-lg-6">
+                    <button class="btn btn-scene btn-cca-primary"
+                            id="report-btn" disabled>
+                        <div style="position: absolute; display: none" id="loading-spinner-0" class="loading-spinner-container"><div class="loading-spinner"><div></div></div></div> Clean Cooking Access Report
+                    </button>
+                </div>
+                <div class="col-lg-6">
+                    <button class="btn btn-scene" id="cca-tool-btn" disabled>
+                        <div style="position: absolute; display: none" id="loading-spinner-1" class="loading-spinner-container"><div class="loading-spinner"><div></div></div></div> Clean Cooking Explorer Tool
+                    </button>
+                </div>
             </div>
             <div class="spacer" style="height: 10px"></div>
         </div>
-        <div id="map" class="map"></div>
+        <div id="map" class="map" style="margin-bottom: 20px;"></div>
 
         <div id="cards-pane">
           <div id="cards-list"></div>
@@ -227,12 +241,19 @@
         </template>
 
         <div>
-            <canvas id="eai-output"></canvas>
+            <canvas id="ani-output" style="display: none;"></canvas>
         </div>
         <div>
-            <canvas id="ani-output"></canvas>
+            <canvas id="eai-output" style="display: none"></canvas>
+        </div>
+        <div>
+            <canvas id="supply-output" style="display: none"></canvas>
+        </div>
+        <div>
+            <canvas id="demand-output" style="display: none"></canvas>
         </div>
 
+        <canvas id="output"></canvas>
     </div>
 {% endblock %}
 
@@ -240,13 +261,14 @@
     <script src="{% static "halfmoon-1.1.1/js/halfmoon.min.js" %}"
             type="text/javascript"></script>
 
-    <script src="{% static "js/report.js" %}" type="text/javascript"></script>
 
     <script type="module">
-        import {init} from '/static/eae/tool/summary_report.js';
-        // init();
+        import {init, getDatasets} from '/static/eae/tool/summary_report.js';
+        init();
+        window.getDatasets = getDatasets;
     </script>
 
+    <script src="{% static "js/report.js" %}" type="text/javascript"></script>
 
     <script src="{% static "js/mapbox-helper/plot.js" %}" type="text/javascript"></script>
     <script src="{% static "js/mapbox-helper/style.js" %}" type="text/javascript"></script>

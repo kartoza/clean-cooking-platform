@@ -35,6 +35,9 @@ class DatasetList(APIView):
     def get(self, request, *args):
         geography_id = self.request.GET.get('geography', None)
         clipped_boundary = self.request.GET.get('boundary', None)
+        inputs = self.request.GET.get('inputs', None)
+        if inputs:
+            inputs = inputs.split(',')
         datasets = Category.objects.filter(
             ~Q(datasetfile__endpoint='') |
             Q(datasetfile__geonode_layer__isnull=False),
@@ -43,6 +46,14 @@ class DatasetList(APIView):
         ).exclude(
             boundary_layer=True,
         ).distinct()
+        if inputs:
+            name_filter = '('
+            for input_name in inputs:
+                name_filter += input_name.replace('-',' ').lower() + '|'
+            name_filter = name_filter[:-1] + ')'
+            datasets = datasets.filter(
+                name_long__iregex=r'{}'.format(name_filter)
+            )
         return Response(
             DatasetSerializer(datasets, many=True, context={
                 'clipped_boundary': clipped_boundary

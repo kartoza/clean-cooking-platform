@@ -112,8 +112,7 @@
 
   .breadcrumb a:after {
     content: "";
-    width: 38px;
-    height: 38px;
+    height: 100%;
     right: -19px;
     transform: scale(0.707) rotate(45deg);
   }
