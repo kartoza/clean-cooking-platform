@@ -118,11 +118,22 @@ export async function init() {
     const datasetBoundaries = await api_get(boundary_url)
     let ds = new DS(datasetBoundaries, false);
 
-    let datasets_url = `/api/datasets/?geography=${geoId}`;
+};
+
+async function run_analysis (output) {
+	const raster = run(output);
+	plot.outputcanvas(raster, qs(`canvas#${output}-output`));
+};
+
+export async function getDatasets(inputs) {
+
+	let datasets_url = `/api/datasets/?geography=${geoId}`;
 	if (boundary) {
 		datasets_url += `&boundary=${boundary}`
 	}
-	return
+	if (inputs) {
+		datasets_url += `&inputs=${inputs}`;
+	}
 	await api_get(datasets_url)
 		.then(async r => {
 			return Promise.all(r.map(async e => {
@@ -238,23 +249,92 @@ export async function init() {
 				return new DS(e, inputs.includes(e.category.name))
 			}))
 		});
-	U.params.inputs = [...new Set(DS.array.map(e => e.id))];
+	// U.params.inputs = [...new Set(DS.array.map(e => e.id))];
 
 	init_template();
+	const inputList = inputs.split(',').reverse();
+	for (const [key, value] of DST.entries()) {
+	 	await DST.get(key)._active(false, false);
+	}
+	await DST.get('boundaries')._active(true, false);
+	for (let i = 0; i < inputList.length; i++) {
+		await DST.get(inputList[i])._active(true, true);
+	}
 	await run_analysis("eai");
+	await run_analysis("supply");
+	await run_analysis("demand");
 	await run_analysis("ani");
-};
 
+	document.getElementById('loading-spinner-0').style.display = 'none';
+	document.getElementById('report-btn').disabled = false;
+}
 
-async function run_analysis (output) {
-	const inputs = ["roads", "population-density"];
+document.getElementById('report-btn').onclick = async (e) => {
+	e.preventDefault();
 
-	await DST.get('boundaries')._active(true, true);
-	await DST.get('population-density')._active(true, true);
-	await DST.get('roads').active(true, true);
+	let button = document.getElementById('report-btn');
+	button.disabled = true;
+	button.innerHTML = 'Generating...'
 
-	setTimeout(() => {
-		const raster = run(output);
-		plot.outputcanvas(raster, qs(`canvas#${output}-output`));
-	}, 1000)
-};
+	let url = '/generate-report-pdf/';
+	let request = new XMLHttpRequest();
+	let fd = new FormData();
+
+	let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+
+	let width = 800;
+	let height = 600;
+	const canvas = document.getElementById('output');
+	const ctx = canvas.getContext("2d");
+
+	canvas.width = width;
+	canvas.height = height;
+	ctx.drawImage(mapCanvas,
+		(mapCanvas.width / 2) - (width / 2),0,
+		width, height,
+		0,0,
+		width, height
+	);
+	let mapImage = canvas.toDataURL('image/png', 1.0);
+
+	let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
+	let supplyImage = document.getElementById('supply-output').toDataURL('image/png', 1.0);
+
+	fd.append('geoId', geoId);
+	fd.append('subRegion', subRegion);
+	fd.append('mapImage', mapImage);
+	fd.append('demandImage', demandImage);
+	fd.append('supplyImage', supplyImage);
+	fd.append('useCaseId', useCaseId);
+
+	request.open('POST', url, true);
+	request.setRequestHeader('X-CSRFToken', csrfToken);
+	request.responseType = 'blob';
+
+	request.onload = function () {
+		// Only handle status code 200
+		if (request.status === 200) {
+			// Try to find out the filename from the content disposition `filename` value
+			let disposition = request.getResponseHeader('content-disposition');
+			let matches = /"([^"]*)"/.exec(disposition);
+			let filename = (matches != null && matches[1] ? matches[1] : 'Report.pdf');
+
+			// The actual download
+			let blob = new Blob([request.response], {type: 'application/pdf'});
+			let link = document.createElement('a');
+			link.href = window.URL.createObjectURL(blob);
+			link.download = filename;
+
+			document.body.appendChild(link);
+
+			link.click();
+
+			document.body.removeChild(link);
+
+			button.disabled = false;
+			button.innerHTML = 'Clean Cooking Access Report'
+		}
+	};
+
+	request.send(fd);
+}
