@@ -121,7 +121,10 @@ class ClipLayerByRegion(APIView):
                         'status': 'Failed'
                     })
             if clipped_layer.clipped_file:
-                style_url = layer.default_style.sld_url
+                try:
+                    style_url = layer.default_style.sld_url
+                except AttributeError:
+                    style_url = ''
                 return Response({
                     'status': 'Success',
                     'output': f'{settings.MEDIA_URL}{clipped_layer.clipped_file.name}',
