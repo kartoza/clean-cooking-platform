@@ -144,6 +144,8 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
         x[i].style.display = "none";
       }
       return
+    } else {
+      loadingSpinner1.style.display = "block";
     }
 
     //statusBtn.querySelector('.text').innerHTML = 'Generate Sub Region Boundary';
@@ -162,7 +164,7 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
           for (i = 0; i < x.length; i++) {
             x[i].style.display = "flex";
           }
-
+          loadingSpinner1.style.display = "none";
           const subregionListData = data.subregion_list;
           document.getElementById('subregionPropertyLabel').innerHTML = selectedSubRegion.innerHTML;
           subregionPropertySelect.innerHTML = '';
@@ -184,6 +186,7 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
     ).catch(
         error => {
           console.error(error)
+          loadingSpinner1.style.display = "none";
           subregionPropertySelect.innerHTML = "";
           subregionPropertySelect.disabled = false;
         }

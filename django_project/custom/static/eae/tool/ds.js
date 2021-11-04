@@ -14,6 +14,12 @@ export default class DS {
 
 		this.category_overrides(o.category_overrides);
 
+		this.unit = o.unit || '';
+
+		if (this.category && this.unit) {
+			this.category.unit = this.unit;
+		}
+
 		this.on = on || false;
 
 		let config = o.configuration || {};

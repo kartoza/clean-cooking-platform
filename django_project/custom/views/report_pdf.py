@@ -47,6 +47,7 @@ class ReportPDFView(View):
     use_case = None
     demand_summary = []
     supply_summary = []
+    total_population = 'X'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -173,13 +174,13 @@ class ReportPDFView(View):
                 page,
                 summary['desc'],
                 25,
-                x_pos + 250,
+                x_pos + 300,
                 y_pos,
                 35
             )
             page.setFont("AktivGroteskCorpBold", 70)
             page.drawRightString(
-                x_pos + 200,
+                x_pos + 250,
                 prev_y_pos - ((prev_y_pos-y_pos)/2) - 10,
                 summary['value'])
             y_pos -= 30
@@ -249,7 +250,7 @@ class ReportPDFView(View):
 
         table_data = [
             ['', self.subregion],
-            ['Population', 'X'],
+            ['Population', self.total_population],
             ['Households', 'X'],
             ['Urban ratio', 'X%']
         ]
@@ -257,7 +258,7 @@ class ReportPDFView(View):
         table_width = self.sidebar_width
         table_height = 1000
         table_x = self.sidebar_x + self.sidebar_x_padding
-        table_y = self.page_height - y_pos - 300
+        table_y = y_pos - 125
 
         table = Table(table_data)
         table.setStyle(TableStyle([
@@ -327,30 +328,61 @@ class ReportPDFView(View):
         self.demand_image = request.POST.get('demandImage', None)
         self.supply_image = request.POST.get('supplyImage', None)
         self.subregion = request.POST.get('subRegion', '')
+        self.demand_high_percentage = (
+            request.POST.get('demandDataHighPercentage', '')
+        )
+        self.supply_high_percentage = (
+            request.POST.get('supplyDataHighPercentage', '')
+        )
+
+        self.total_population = (
+            request.POST.get('totalPopulation', '')
+        )
         self.geography = Geography.objects.get(id=geo_id)
 
         self.demand_summary = [
             {
                 'desc': 'Population within areas of high demand index',
-                'value': '10%'
+                'value': f'{self.demand_high_percentage}%'
             },
             {
                 'desc': 'Number of educational facilities within areas of high '
                         'demand index',
-                'value': '1000'
+                'value': 'X'
             },
             {
                 'desc': 'Number of health facilities within areas of high '
                         'demand index',
-                'value': '500'
+                'value': 'X'
             },
             {
                 'desc': 'Number of restaurants within areas of high '
                         'demand index',
-                'value': '40'
+                'value': 'X'
             },
         ]
-        self.supply_summary = self.demand_summary
+
+        self.supply_summary = [
+            {
+                'desc': 'Population within areas of high supply index',
+                'value': f'{self.supply_high_percentage}%'
+            },
+            {
+                'desc': 'Number of educational facilities within areas of high '
+                        'supply index',
+                'value': 'X'
+            },
+            {
+                'desc': 'Number of health facilities within areas of high '
+                        'supply index',
+                'value': 'X'
+            },
+            {
+                'desc': 'Number of restaurants within areas of high '
+                        'supply index',
+                'value': 'X'
+            },
+        ]
 
         if use_case_id:
             try:

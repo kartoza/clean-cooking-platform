@@ -2,7 +2,7 @@ import api_get from "./api.js";
 import DS from "./ds.js";
 import Overlord from "./overlord.js";
 import run, {plot_active as analysis_plot_active} from "./analysis.js";
-import summary_analyse from './summary.js';
+import analyse from './summary.js';
 import * as plot from "./plot.js";
 const ea_nanny_steps = [];
 
@@ -122,7 +122,9 @@ export async function init() {
 
 async function run_analysis (output) {
 	const raster = run(output);
+	const data = await analyse(raster);
 	plot.outputcanvas(raster, qs(`canvas#${output}-output`));
+	return data;
 };
 
 export async function getDatasets(inputs) {
@@ -260,10 +262,10 @@ export async function getDatasets(inputs) {
 	for (let i = 0; i < inputList.length; i++) {
 		await DST.get(inputList[i])._active(true, true);
 	}
-	await run_analysis("eai");
-	await run_analysis("supply");
-	await run_analysis("demand");
-	await run_analysis("ani");
+	// await run_analysis("eai");
+	window.supplyData = await run_analysis("supply");
+	window.demandData = await run_analysis("demand");
+	// await run_analysis("ani");
 
 	document.getElementById('loading-spinner-0').style.display = 'none';
 	document.getElementById('report-btn').disabled = false;
@@ -272,13 +274,17 @@ export async function getDatasets(inputs) {
 document.getElementById('report-btn').onclick = async (e) => {
 	e.preventDefault();
 
+	let buttonText = document.getElementById('report-btn-text');
 	let button = document.getElementById('report-btn');
 	button.disabled = true;
-	button.innerHTML = 'Generating...'
+	buttonText.innerHTML = 'Generating...'
 
 	let url = '/generate-report-pdf/';
 	let request = new XMLHttpRequest();
 	let fd = new FormData();
+
+	MAPBOX.fitBounds(BBOX, {padding: 20, duration: 0});
+	await new Promise(r => setTimeout(r, 500));
 
 	let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
 
@@ -307,6 +313,15 @@ document.getElementById('report-btn').onclick = async (e) => {
 	fd.append('supplyImage', supplyImage);
 	fd.append('useCaseId', useCaseId);
 
+	try {
+		fd.append('supplyDataHighPercentage', (window.supplyData['population-density']['distribution'][4] * 100).toFixed(2))
+		fd.append('totalPopulation', Math.round(window.supplyData['population-density']['total']))
+	} catch (e) {}
+
+	try {
+		fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
+	} catch (e) {}
+
 	request.open('POST', url, true);
 	request.setRequestHeader('X-CSRFToken', csrfToken);
 	request.responseType = 'blob';
@@ -332,7 +347,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 			document.body.removeChild(link);
 
 			button.disabled = false;
-			button.innerHTML = 'Clean Cooking Access Report'
+			buttonText.innerHTML = 'Clean Cooking Access Report'
 		}
 	};
 

@@ -44,6 +44,7 @@ fetch(geojsonBoundary).then(response => response.json()).then(
             coords = [[l, u], [r, u], [r, d], [l, d]];
             MAPBOX.coords = coords;
             MAPBOX.fitBounds(bbox, {padding: 20});
+            BBOX = bbox;
             await fetchRasterBoundary();
         });
     }

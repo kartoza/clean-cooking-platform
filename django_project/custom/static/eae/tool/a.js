@@ -719,7 +719,11 @@ function map_click(e) {
 
 					else if (d.raster) {
 						dict.push([d.id, d.name]);
-						props[d.id] = d.raster.data[o.index] + " " + "km (proximity to)";
+						let defaultUnit = 'km';
+						if(d.category.unit) {
+							defaultUnit = d.category.unit;
+						}
+						props[d.id] = d.raster.data[o.index] + " " + defaultUnit + " (proximity to)";
 					}
 				});
 
