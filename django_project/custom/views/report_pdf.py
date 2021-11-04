@@ -24,6 +24,9 @@ class ReportPDFView(View):
 
     image_path = absolute_path(
         'custom', 'static', 'report', 'report_template_1.png')
+    cca_logo_path = absolute_path(
+        'custom', 'static', 'img', 'cca_logo_transparent.png'
+    )
     page_width = 2000
     page_height = 1125
     sidebar_width = 700
@@ -32,7 +35,7 @@ class ReportPDFView(View):
     navbar_height = 50
     geography = None
     subregion = ''
-    map_image = 'data:image/png;base64'
+    map_image = ''
     demand_image = None
     supply_image = None
     use_case = None
@@ -98,6 +101,11 @@ class ReportPDFView(View):
         page.setFillColorRGB(0.349, 0.549, 0.286)
         page.rect(self.sidebar_x,
                   0, self.sidebar_width, self.page_height, stroke=0, fill=1)
+        page.drawImage(self.cca_logo_path,
+                       self.sidebar_x - 180, -250,
+                       width=600,
+                       preserveAspectRatio=True,
+                       mask='auto')
 
 
     def draw_page_one(self, page):
