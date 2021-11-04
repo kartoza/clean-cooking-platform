@@ -15,7 +15,8 @@ class Preset(models.Model):
 
     permalink = models.URLField(
         verbose_name='Permalink Snippet',
-        default=''
+        default='',
+        max_length=512
     )
 
     image = models.ImageField(
