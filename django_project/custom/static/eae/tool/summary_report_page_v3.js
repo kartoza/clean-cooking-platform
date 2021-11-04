@@ -316,6 +316,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 	fd.append('demandImage', demandImage);
 	fd.append('supplyImage', supplyImage);
 	fd.append('useCaseId', useCaseId);
+	fd.append('scenarioId', document.getElementById('scenarioSelect').value);
 
 	try {
 		fd.append('supplyDataHighPercentage', (window.supplyData['population-density']['distribution'][4] * 100).toFixed(2))

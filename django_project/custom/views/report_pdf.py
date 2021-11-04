@@ -17,7 +17,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import registerFontFamily
 
 from core.settings.utils import absolute_path
-from custom.models import Geography, UseCase
+from custom.models import Geography, UseCase, Preset
 
 
 class ReportPDFView(View):
@@ -45,6 +45,7 @@ class ReportPDFView(View):
     demand_image = None
     supply_image = None
     use_case = None
+    preset = None
     demand_summary = []
     supply_summary = []
     total_population = 'X'
@@ -135,9 +136,8 @@ class ReportPDFView(View):
             self.page_height - 165
         )
 
-    def _draw_map(self, page, map_image, legend_path = None):
+    def _draw_map(self, page, map_image, legend_path = None, img_width = 650):
         img = ImageReader(map_image)
-        img_width = 800
         page.drawImage(
             img, (self.sidebar_x / 2) - (img_width / 2), 0,
             width=img_width,
@@ -216,7 +216,7 @@ class ReportPDFView(View):
 
         self._draw_sidebar(page)
         self._draw_footer(page, 2)
-        self._draw_map(page, self.map_image)
+        self._draw_map(page, self.map_image, None, 900)
         self._draw_title(page, 'Regional Summary', self.subregion)
 
         # Add sidebar title
@@ -241,7 +241,7 @@ class ReportPDFView(View):
 
         y_pos = self._draw_wrapped_line(
             page,
-            self.use_case.description,
+            self.preset.description,
             45,
             self.sidebar_x + self.sidebar_x_padding,
             self.page_height - 190,
@@ -258,7 +258,7 @@ class ReportPDFView(View):
         table_width = self.sidebar_width
         table_height = 1000
         table_x = self.sidebar_x + self.sidebar_x_padding
-        table_y = y_pos - 125
+        table_y = y_pos - 300
 
         table = Table(table_data)
         table.setStyle(TableStyle([
@@ -323,6 +323,7 @@ class ReportPDFView(View):
         buffer = io.BytesIO()
         geo_id = request.POST.get('geoId', '')
         use_case_id = request.POST.get('useCaseId', None)
+        preset_id = request.POST.get('scenarioId', None)
 
         self.map_image = request.POST.get('mapImage', '')
         self.demand_image = request.POST.get('demandImage', None)
@@ -388,6 +389,12 @@ class ReportPDFView(View):
             try:
                 self.use_case = UseCase.objects.get(id=use_case_id)
             except UseCase.DoesNotExist:
+                pass
+
+        if preset_id:
+            try:
+                self.preset = Preset.objects.get(id=preset_id)
+            except Preset.DoesNotExist:
                 pass
 
         # Create the PDF object, using the buffer as its "file."
