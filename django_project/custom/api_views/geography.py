@@ -160,6 +160,7 @@ class GeographyRasterMask(APIView):
 
         if (
             os.path.exists(shp_file)
+            and not os.path.exists(destination_path)
         ):
             try:
                 rasterize_layer(
@@ -179,9 +180,9 @@ class GeographyRasterMask(APIView):
             online=True
         )
         for category in all_category:
-            for dataset in category.datasetfile_set.all():
-                if dataset.geonode_layer:
-                    all_layer_ids.append(dataset.geonode_layer.id)
+            for dataset in category.datasetfile_set.filter(
+                    geonode_layer__isnull=False):
+                all_layer_ids.append(dataset.geonode_layer.id)
 
         return Response({
             'Success': True,

@@ -1,5 +1,7 @@
 import os
 import urllib.parse
+
+import requests
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.sites.models import Site
@@ -11,7 +13,8 @@ from custom.models.dataset_file import DatasetFile
 from geonode.base.models import Link
 
 
-def geonode_layer_links(geonode_layer, geography):
+def geonode_layer_links(geonode_layer, geography,
+                        default_styles_geoserver = None):
     """
     Return links for layer and the style
     """
@@ -35,17 +38,27 @@ def geonode_layer_links(geonode_layer, geography):
             x=x,
             y=y
         )
-    try:
-        style_url = geonode_layer.default_style.sld_url
-        current_site = Site.objects.get_current()
-        if 'example' not in current_site.domain:
-            style_url = style_url.replace(
-                settings.GEOSERVER_LOCATION,
-                'http://{}/geoserver/'.format(current_site.domain)
-            )
-        style_url = '/proxy_cca/' + style_url
-    except AttributeError:
-        style_url = ''
+
+    style_url = ''
+    if default_styles_geoserver:
+        for default_style in default_styles_geoserver:
+            if default_style['name'] == geonode_layer.name:
+                style_url = default_style['href'].replace(
+                    '.json', '.sld'
+                )
+    if not style_url:
+        try:
+            style_url = '/proxy_cca/' + geonode_layer.default_style.sld_url
+        except AttributeError:
+            style_url = ''
+
+    current_site = Site.objects.get_current()
+    if 'example' not in current_site.domain:
+        style_url = style_url.replace(
+            settings.GEOSERVER_LOCATION,
+            'http://{}/geoserver/'.format(current_site.domain)
+        )
+
     return layer_url, style_url
 
 
@@ -138,6 +151,18 @@ class DatasetFileSerializer(serializers.ModelSerializer):
         geonode_layer = None
         style = None
         clipped_boundary = self.context.get('clipped_boundary', None)
+        default_styles_geoserver = self.context.get('default_styles_geoserver', None)
+        if not default_styles_geoserver:
+            try:
+                url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/rest/workspaces/geonode/styles.json'
+                r = requests.get(url)
+                if r.status_code == 200:
+                    self.context['default_styles_geoserver'] = (
+                        r.json()['styles']['style']
+                    )
+            except KeyError:
+                self.context['default_styles_geoserver'] = {}
+
         layer_file = None
         if clipped_boundary:
             clipped_layer_directory = os.path.join(
@@ -162,7 +187,8 @@ class DatasetFileSerializer(serializers.ModelSerializer):
         if obj.use_geonode_layer and obj.geonode_layer:
             geonode_layer, style = geonode_layer_links(
                 obj.geonode_layer,
-                obj.category.geography
+                obj.category.geography,
+                self.context['default_styles_geoserver']
             )
         if layer_file:
             geonode_layer = layer_file

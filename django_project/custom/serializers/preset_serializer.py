@@ -18,9 +18,9 @@ class PresetSerializer(serializers.ModelSerializer):
             category = Category.objects.filter(
                 name_long__icontains=layer_input).first()
             if category:
-                for dataset in category.datasetfile_set.all():
-                    if dataset.geonode_layer:
-                        layer_ids.append(dataset.geonode_layer.id)
+                for dataset in category.datasetfile_set.filter(
+                        geonode_layer__isnull=False):
+                    layer_ids.append(dataset.geonode_layer.id)
         return layer_ids
 
     class Meta:

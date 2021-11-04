@@ -1,6 +1,4 @@
 import io
-import re
-import base64
 import textwrap
 
 from django.views.generic import View
@@ -8,7 +6,9 @@ from django.http import FileResponse
 
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate, Table, PageBreak, TableStyle, Paragraph
+from reportlab.platypus import (
+    SimpleDocTemplate, Table, PageBreak, TableStyle, Paragraph
+)
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.units import inch
 
@@ -45,6 +45,8 @@ class ReportPDFView(View):
     demand_image = None
     supply_image = None
     use_case = None
+    demand_summary = []
+    supply_summary = []
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -102,9 +104,9 @@ class ReportPDFView(View):
                             page_number
                         ))
 
-    def _draw_sidebar(self, page):
+    def _draw_sidebar(self, page, color = (0.349, 0.549, 0.286)):
 
-        page.setFillColorRGB(0.349, 0.549, 0.286)
+        page.setFillColorRGB(*color)
         page.rect(self.sidebar_x,
                   0, self.sidebar_width, self.page_height, stroke=0, fill=1)
         page.drawImage(self.cca_logo_path,
@@ -118,14 +120,17 @@ class ReportPDFView(View):
         page.setFillColorRGB(29 / 255, 63 / 255, 116 / 255)
         page.setFont("AktivGroteskCorpMedium", 40)
         page.drawString(
-            100, self.page_height - 100, title)
+            75, self.page_height - 100, title)
         page.setFont("AktivGroteskCorpBold", 50)
         page.drawString(
-            100, self.page_height - 150, sub_title)
+            75, self.page_height - 150, sub_title)
+        page.setLineWidth(inch * 0.08)
+
+        page.setStrokeColorRGB(29 / 255, 63 / 255, 116 / 255)
         page.line(
-            100,
+            75,
             self.page_height - 165,
-            self.page_width - self.sidebar_width - 200,
+            self.sidebar_x - 100,
             self.page_height - 165
         )
 
@@ -146,6 +151,45 @@ class ReportPDFView(View):
                 width=100,
                 preserveAspectRatio=True,
                 mask='auto')
+
+    def _draw_summary(self, page, summary_data):
+
+        y_pos = self.page_height - 250
+        x_pos = self.sidebar_x + 50
+        page.setFillColorRGB(1, 1, 1)
+        page.setStrokeColorRGB(1, 1, 1)
+        page.setLineWidth(inch * 0.04)
+        page.line(
+            x_pos,
+            y_pos,
+            self.page_width - 50,
+            y_pos
+        )
+        y_pos -= 50
+        for summary in summary_data:
+            page.setFont("AktivGroteskCorpLight", 30)
+            prev_y_pos = y_pos
+            y_pos = self._draw_wrapped_line(
+                page,
+                summary['desc'],
+                25,
+                x_pos + 250,
+                y_pos,
+                35
+            )
+            page.setFont("AktivGroteskCorpBold", 70)
+            page.drawRightString(
+                x_pos + 200,
+                prev_y_pos - ((prev_y_pos-y_pos)/2) - 10,
+                summary['value'])
+            y_pos -= 30
+            page.line(
+                x_pos,
+                y_pos,
+                self.page_width - 50,
+                y_pos
+            )
+            y_pos -= 50
 
     def draw_page_one(self, page):
         page.drawImage(self.image_path, 0, 0,
@@ -234,10 +278,21 @@ class ReportPDFView(View):
     def draw_page_three(self, page):
         if not self.demand_image:
             return
-        self._draw_sidebar(page)
+        self._draw_sidebar(page, (0.459, 0.714, 0.831))
         self._draw_footer(page, 3)
         self._draw_title(page, 'Analysis', 'Demand index')
         self._draw_map(page, self.demand_image, self.demand_legend_path)
+        self._draw_summary(page, self.demand_summary)
+
+        page.setFillColorRGB(0, 0, 0)
+        page.setFont("AktivGroteskCorpLight", 25)
+        self._draw_wrapped_line(
+            page,
+            'This index helps us understand where there is high demand in the '
+            'form of population and public needs for clean cooking.',
+            100,
+            100, 125, 40
+        )
 
         page.showPage()
 
@@ -248,6 +303,17 @@ class ReportPDFView(View):
         self._draw_footer(page, 4)
         self._draw_title(page, 'Analysis', 'Supply index')
         self._draw_map(page, self.supply_image, self.supply_legend_path)
+        self._draw_summary(page, self.supply_summary)
+
+        page.setFillColorRGB(0, 0, 0)
+        page.setFont("AktivGroteskCorpLight", 25)
+        self._draw_wrapped_line(
+            page,
+            'This index helps us understand where there is high '
+            'potential for electric cooking.',
+            100,
+            75, 125, 40
+        )
 
         page.showPage()
 
@@ -262,6 +328,29 @@ class ReportPDFView(View):
         self.supply_image = request.POST.get('supplyImage', None)
         self.subregion = request.POST.get('subRegion', '')
         self.geography = Geography.objects.get(id=geo_id)
+
+        self.demand_summary = [
+            {
+                'desc': 'Population within areas of high demand index',
+                'value': '10%'
+            },
+            {
+                'desc': 'Number of educational facilities within areas of high '
+                        'demand index',
+                'value': '1000'
+            },
+            {
+                'desc': 'Number of health facilities within areas of high '
+                        'demand index',
+                'value': '500'
+            },
+            {
+                'desc': 'Number of restaurants within areas of high '
+                        'demand index',
+                'value': '40'
+            },
+        ]
+        self.supply_summary = self.demand_summary
 
         if use_case_id:
             try:
