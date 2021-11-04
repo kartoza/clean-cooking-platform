@@ -79,15 +79,26 @@ class ReportPDFView(View):
             canvas.drawString(x_pos, y_pos, text)
         return y_pos
 
-    def draw_sidebar(self, page):
-        page.setFillColorRGB(0.349, 0.549, 0.286)
-
-        page.rect(self.sidebar_x,
-                  0, self.sidebar_width, self.page_height, stroke=0, fill=1)
+    def draw_footer(self, page, page_number = 1):
 
         page.setFillColorRGB(0.121, 0.247, 0.447)
         page.rect(0, 0, self.page_width, self.navbar_height,
                   stroke=0, fill=1)
+
+        page.setFillColorRGB(0.459, 0.714, 0.831)
+        page.setFont("AktivGroteskCorpLight", 25)
+        page.drawString(self.page_width - 420,
+                        self.navbar_height - 35,
+                        "CLEAN COOKING ALLIANCE  —  {}".format(
+                            page_number
+                        ))
+
+    def draw_sidebar(self, page):
+
+        page.setFillColorRGB(0.349, 0.549, 0.286)
+        page.rect(self.sidebar_x,
+                  0, self.sidebar_width, self.page_height, stroke=0, fill=1)
+
 
     def draw_page_one(self, page):
         page.drawImage(self.image_path, 0, 0,
@@ -108,9 +119,26 @@ class ReportPDFView(View):
             ))
         page.showPage()
 
+    def draw_title(self, page, title, sub_title):
+        # Add title
+        page.setFillColorRGB(29 / 255, 63 / 255, 116 / 255)
+        page.setFont("AktivGroteskCorpMedium", 40)
+        page.drawString(
+            100, self.page_height - 100, title)
+        page.setFont("AktivGroteskCorpBold", 50)
+        page.drawString(
+            100, self.page_height - 150, sub_title)
+        page.line(
+            100,
+            self.page_height - 165,
+            self.page_width - self.sidebar_width - 200,
+            self.page_height - 165
+        )
+
     def draw_page_two(self, page):
 
         self.draw_sidebar(page)
+        self.draw_footer(page, 2)
 
         img = ImageReader(self.map_image)
         img_width, img_height = img.getSize()
@@ -120,6 +148,8 @@ class ReportPDFView(View):
             height=self.page_height,
             preserveAspectRatio=True,
             mask='auto')
+
+        self.draw_title(page, 'Regional Summary', self.subregion)
 
         # Add sidebar title
         page.setFillColorRGB(1, 1, 1)
@@ -183,23 +213,10 @@ class ReportPDFView(View):
             return
 
         self.draw_sidebar(page)
+        self.draw_footer(page, 3)
 
         # Add title
-        page.setFillColorRGB(29/255, 63/255, 116/255)
-        page.setFont("AktivGroteskCorpMedium", 40)
-        page.drawString(
-            100, self.page_height - 100, "Analysis")
-
-        page.setFont("AktivGroteskCorpBold", 50)
-        page.drawString(
-            100, self.page_height - 150, "Demand index")
-
-        page.line(
-            100,
-            self.page_height - 165,
-            self.page_width - self.sidebar_width - 200,
-            self.page_height - 165
-        )
+        self.draw_title(page, 'Analysis', 'Demand index')
 
         img = ImageReader(self.demand_image)
         img_width = 800
@@ -217,23 +234,10 @@ class ReportPDFView(View):
             return
 
         self.draw_sidebar(page)
+        self.draw_footer(page, 4)
 
         # Add title
-        page.setFillColorRGB(29/255, 63/255, 116/255)
-        page.setFont("AktivGroteskCorpMedium", 40)
-        page.drawString(
-            100, self.page_height - 100, "Analysis")
-
-        page.setFont("AktivGroteskCorpBold", 50)
-        page.drawString(
-            100, self.page_height - 150, "Supply index")
-
-        page.line(
-            100,
-            self.page_height - 165,
-            self.page_width - self.sidebar_width - 200,
-            self.page_height - 165
-        )
+        self.draw_title(page, 'Analysis', 'Supply index')
 
         img = ImageReader(self.supply_image)
         img_width = 800
