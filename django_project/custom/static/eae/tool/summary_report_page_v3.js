@@ -260,7 +260,11 @@ export async function getDatasets(inputs) {
 	}
 	await DST.get('boundaries')._active(true, false);
 	for (let i = 0; i < inputList.length; i++) {
-		await DST.get(inputList[i])._active(true, true);
+		try {
+			await DST.get(inputList[i])._active(true, true);
+		} catch (e) {
+			console.log(e);
+		}
 	}
 	// await run_analysis("eai");
 	window.supplyData = await run_analysis("supply");
