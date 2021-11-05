@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.http.response import Http404
 from django.db.models import Q
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from custom.models.category import Category
@@ -9,6 +10,7 @@ from custom.serializers.dataset_serializer import (
     BoundaryGeographySerializer,
     DatasetSerializer
 )
+from custom.utils.cache import get_cache_dataset, set_cache_dataset
 
 
 class BoundariesDataset(APIView):
@@ -36,28 +38,39 @@ class DatasetList(APIView):
         geography_id = self.request.GET.get('geography', None)
         clipped_boundary = self.request.GET.get('boundary', None)
         inputs = self.request.GET.get('inputs', None)
+
+        dataset_key = f'{geography_id}{clipped_boundary}{inputs}'
+
+        cached = get_cache_dataset(dataset_key)
+
         if inputs:
             inputs = inputs.split(',')
-        datasets = Category.objects.filter(
-            ~Q(datasetfile__endpoint='') |
-            Q(datasetfile__geonode_layer__isnull=False),
-            geography_id=geography_id,
-            online=True
-        ).exclude(
-            boundary_layer=True,
-        ).distinct()
-        if inputs:
-            name_filter = '('
-            for input_name in inputs:
-                name_filter += input_name.replace('-',' ').lower() + '|'
-            name_filter = name_filter[:-1] + ')'
-            datasets = datasets.filter(
-                name_long__iregex=r'{}'.format(name_filter)
-            )
-        return Response(
-            DatasetSerializer(datasets, many=True, context={
+
+        if cached is None or not isinstance(cached, list):
+            datasets = Category.objects.filter(
+                ~Q(datasetfile__endpoint='') |
+                Q(datasetfile__geonode_layer__isnull=False),
+                geography_id=geography_id,
+                online=True
+            ).exclude(
+                boundary_layer=True,
+            ).distinct()
+            if inputs:
+                name_filter = '('
+                for input_name in inputs:
+                    name_filter += input_name.replace('-',' ').lower() + '|'
+                name_filter = name_filter[:-1] + ')'
+                datasets = datasets.filter(
+                    name_long__iregex=r'{}'.format(name_filter)
+                )
+
+            cached = set_cache_dataset(dataset_key, DatasetSerializer(
+                datasets, many=True, context={
                 'clipped_boundary': clipped_boundary
-            }).data
+            }).data)
+
+        return Response(
+            cached
         )
 
 
@@ -97,9 +110,13 @@ class DatasetDetail(APIView):
         if pk and not dataset:
             dataset = self.get_object(pk)
 
+        cached = cache.get('dataset*')
+        if cached is None:
+            cache.set('dataset', DatasetSerializer(dataset, many=False).data)
+
         if dataset:
             return Response(
-                DatasetSerializer(dataset, many=False).data
+                cache.get('dataset')
             )
 
         raise Http404

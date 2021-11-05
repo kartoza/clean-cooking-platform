@@ -104,3 +104,10 @@ ACCOUNT_ADAPTER = 'custom.adapters.CustomLocalAccountAdapter'
 STATICFILES_STORAGE = 'core.storage.WhiteNoiseStaticFilesStorage'
 
 CELERY_TASK_ALWAYS_EAGER = False
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'cache:11211',
+    }
+}

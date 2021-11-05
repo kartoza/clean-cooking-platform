@@ -141,8 +141,12 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         if (addedLayers.length > 0) {
             for (let i = 0; i < addedLayers.length; i++) {
                 const addedLayer = addedLayers[i];
-                MAPBOX.removeLayer(addedLayer);
-                MAPBOX.removeSource(addedLayer);
+                try {
+                    MAPBOX.removeLayer(addedLayer);
+                    MAPBOX.removeSource(addedLayer);
+                } catch (e) {
+                    console.log(e)
+                }
             }
             addedLayers = [];
         }

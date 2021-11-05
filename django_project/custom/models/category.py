@@ -4,8 +4,11 @@
 from django.contrib.gis.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
-from custom.models.unit import Unit
+from django.db.models.signals import post_delete, post_save
+from django.dispatch.dispatcher import receiver
 
+from custom.models.unit import Unit
+from custom.utils.cache import delete_all_dataset_cache
 
 LINEAR = 'linear'
 INTERVALS = 'intervals'
@@ -274,3 +277,13 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name_long
+
+
+@receiver(post_delete, sender=Category)
+def category_post_delete_handler(sender, **kwargs):
+     delete_all_dataset_cache()
+
+
+@receiver(post_save, sender=Category)
+def category_post_save_handler(sender, **kwargs):
+    delete_all_dataset_cache()
