@@ -110,13 +110,9 @@ class DatasetDetail(APIView):
         if pk and not dataset:
             dataset = self.get_object(pk)
 
-        cached = cache.get('dataset*')
-        if cached is None:
-            cache.set('dataset', DatasetSerializer(dataset, many=False).data)
-
         if dataset:
             return Response(
-                cache.get('dataset')
+                DatasetSerializer(dataset, many=False).data
             )
 
         raise Http404
