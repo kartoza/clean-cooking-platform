@@ -709,7 +709,8 @@ function map_click(e) {
 				.forEach(d => {
 					if (d.datatype === 'raster') {
 						dict.push([d.id, d.name]);
-						props[d.id] = d.raster.data[o.index] + " " + d.category.unit;
+						let value = d.raster.data[o.index];
+						props[d.id] = value.toFixed(2) + " " + d.category.unit;
 					}
 
 					else if (d.config.column && d.category.name !== 'boundaries') {
@@ -719,11 +720,17 @@ function map_click(e) {
 
 					else if (d.raster) {
 						dict.push([d.id, d.name]);
-						let defaultUnit = 'km';
+						let defaultUnit = 'meters';
+						let value = d.raster.data[o.index];
 						if(d.category.unit) {
 							defaultUnit = d.category.unit;
 						}
-						props[d.id] = d.raster.data[o.index] + " " + defaultUnit + " (proximity to)";
+						if (defaultUnit === 'meters') {
+							value = value / 1000;
+							defaultUnit = 'km';
+						}
+						value = value.toFixed(2)
+						props[d.id] = value + " " + defaultUnit + " (proximity to)";
 					}
 				});
 
