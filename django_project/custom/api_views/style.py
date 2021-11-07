@@ -1,23 +1,16 @@
 import os
 
 import requests
-from wsgiref.util import FileWrapper
 
-from django.http.response import HttpResponse, Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.http.response import HttpResponse, Http404
 from django.conf import settings
 from django.core.cache import cache
 
-from core.settings.utils import absolute_path
-
 
 class StyleApiView(APIView):
-
-    sld_file = absolute_path(
-       'custom',
-       'static/geonode__bytetest.sld')
 
     def post(self, request, *args, **kwargs):
         dataset_id = request.data.get('datasetId', '')
