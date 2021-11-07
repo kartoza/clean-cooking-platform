@@ -115,6 +115,10 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
     let selectedScenario = null;
     let selectedLayers = null;
 
+    setTimeout(() => {
+        scenarioSelect.selectedIndex = 0;
+    }, 200)
+
     scenarioSelect.onchange = async (e) => {
         // Clear canvas
         let eaiCanvas = document.getElementById('eai-output');
