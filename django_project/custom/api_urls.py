@@ -11,6 +11,7 @@ from custom.api_views.subregion import (
     SubregionListAPI,
     ClipLayerByRegion
 )
+from custom.api_views.style import StyleApiView
 
 urlpatterns = [
     url(r'^geography/$',
@@ -28,5 +29,7 @@ urlpatterns = [
     url(r'^geography-raster-mask/$',
         GeographyRasterMask.as_view()),
     url(r'^clip-layer-by-region/$',
-        ClipLayerByRegion.as_view())
+        ClipLayerByRegion.as_view()),
+    url(r'^style-api/$',
+        StyleApiView.as_view())
 ]

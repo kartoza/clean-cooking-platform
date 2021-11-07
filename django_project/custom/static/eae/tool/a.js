@@ -361,7 +361,50 @@ async function dsinit(id, inputs, pack, callback) {
 							"precision": 0,
 							"color_stops": []
 						};
-						let sldStr = await fetch(item.file.style).then(response => response.text()).then(str => str);
+						let sldUrl = `/api/style-api/?datasetId=${item.file.id}&styleUrl=${item.file.style}`;
+						let isSldData = true;
+						let sldStr = '';
+						let mapboxStyleData = null;
+						await fetch(sldUrl).then(response => {
+							const contentType = response.headers.get("content-type");
+							if (contentType && contentType.indexOf("application/json") !== -1) {
+								return response.json().then(data => {
+									// process your JSON data further
+									isSldData = false;
+									mapboxStyleData = data;
+									return data;
+								});
+							} else {
+								return response.text().then(text => {
+									// this is text, do something with it
+									isSldData = true;
+									sldStr = text;
+									return text;
+								});
+							}
+						});
+
+						if (mapboxStyleData) {
+							try {
+								if (mapboxStyleData.hasOwnProperty('color_stops')) {
+									e.category.domain = mapboxStyleData.domain;
+									e.category.colorstops = mapboxStyleData.color_stops;
+									e.category.analysis.intervals = mapboxStyleData.intervals;
+									e.category.raster = mapboxStyleData;
+									item.file.configuration = mapboxStyleData;
+								} else {
+									if (mapboxStyleData.hasOwnProperty('vectors')) {
+										item.file.configuration = mapboxStyleData.vectors;
+										e.category.vectors = mapboxStyleData.vectors;
+										e.configuration = mapboxStyleData.configuration;
+									}
+
+								}
+							} catch (e) {
+								console.error(e)
+							}
+							continue;
+						}
 
 						if (sldStr.includes('<UserLayer>')) {
 							sldStr = sldStr.replace('<UserLayer>', '<sld:NamedLayer>');
@@ -391,6 +434,7 @@ async function dsinit(id, inputs, pack, callback) {
 							e.category.analysis.intervals = raster_configuration.intervals;
 							e.category.raster = raster_configuration;
 							item.file.configuration = raster_configuration;
+							update_style(item.file.id, raster_configuration);
 						} else {
 							if (JSON.stringify(styleObject).includes(('"kind":"Mark"'))) {
 								let pointConfiguration = {
@@ -405,7 +449,6 @@ async function dsinit(id, inputs, pack, callback) {
 								let vectorConf = await mapboxParser.writeStyle(styleObject).then(mObj => mObj)
 								let vectorConfObj = JSON.parse(vectorConf);
 								vectorConfObj['shape_type'] = 'lines';
-								item.file.configuration = vectorConfObj
 								if (!e.category.vectors) {
 									e.category.vectors = {
 										specs: null,
@@ -414,6 +457,7 @@ async function dsinit(id, inputs, pack, callback) {
 									}
 								}
 								e.category.vectors.specs = vectorConfObj.layers;
+								item.file.configuration = e.category.vectors;
 								if (!e.configuration) {
 									let customVectorConfiguration = {
 										"attributes": [],
@@ -450,6 +494,10 @@ async function dsinit(id, inputs, pack, callback) {
 									e.configuration = customVectorConfiguration;
 								}
 							}
+							update_style(item.file.id, {
+								'vectors': e.category.vectors,
+								'configuration': e.configuration
+							});
 						}
 					}
 				}
@@ -466,6 +514,23 @@ async function dsinit(id, inputs, pack, callback) {
 
 	callback(bounds);
 };
+
+function update_style(dataset_id, style_data) {
+	fetch('/api/style-api/', {
+    	method: 'POST',
+		headers: {
+			'X-CSRFToken': csrfToken,
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+    	body: JSON.stringify({
+			'datasetId': dataset_id,
+			'styleData': style_data
+		})
+	}).then(data => {
+		console.log(data)
+	});
+}
 
 function load_view() {
 	const timeline = qs('#timeline');

@@ -19,6 +19,7 @@
           let url = new URL(window.location.href);
           let boundary = url.searchParams.get('boundary');
           let geoId = url.searchParams.get('geoId');
+          let csrfToken = '{{ csrf_token }}';
       </script>
 
     <script src="{% static "eae/lib/browsers.js" %}"></script>
