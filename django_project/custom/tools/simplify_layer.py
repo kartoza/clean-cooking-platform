@@ -5,12 +5,17 @@ from django.conf import settings
 
 
 def simplify_layer(geonode_layer, output, tolerance=0.01):
-    layer_created = False
 
     try:
         base_file = geonode_layer.layer.get_base_file()[0].file
-    except IndexError:
-        return layer_created
+    except:  # noqa
+        base_file = (
+            geonode_layer.layer.upload_session.layerfile_set.all().filter(
+                file__icontains='shp').first().file
+        )
+
+    if not base_file:
+        return False
 
     layer_vector_file = os.path.join(
         settings.MEDIA_ROOT,
