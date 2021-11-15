@@ -63,8 +63,12 @@ export default class DS {
 		this.init();
 
 		if (!this.disabled) {
-			this.card = new dscard(this);
-			this.controls = new dscontrols(this);
+			try {
+				if(o.category.controls.path[0] !== '') {
+					this.card = new dscard(this);
+					this.controls = new dscontrols(this);
+				}
+			} catch (e) {}
 		}
 
 		DST.set(this.id, this);
