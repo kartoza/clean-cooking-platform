@@ -288,7 +288,7 @@ nav.filter h4 {
     background-origin: initial;
     background-clip: initial;
     background-color: initial;
-    min-height: 100vh;
+    min-height: 90vh;
 }
 
 .item-container {

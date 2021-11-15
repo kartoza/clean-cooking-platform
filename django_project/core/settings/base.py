@@ -111,3 +111,5 @@ CACHES = {
         'LOCATION': 'cache:11211',
     }
 }
+
+PROXY_ALLOWED_HOSTS += ['geoserver']
