@@ -12,6 +12,8 @@ from custom.models.geography import Geography
 from custom.models.dataset_file import DatasetFile
 from geonode.base.models import Link
 
+from custom.tools.simplify_layer import simplify_layer
+
 
 def geonode_layer_links(geonode_layer, geography,
                         default_styles_geoserver = None):
@@ -119,6 +121,24 @@ class BoundaryGeographySerializer(serializers.ModelSerializer):
             )
             if use_clipped_boundary:
                 layer_url = f'{settings.MEDIA_URL}rasterized/{clipped_boundary}.json'
+            else:
+                # Merge and simplify layer
+                simplified_layer = os.path.join(
+                    settings.MEDIA_ROOT,
+                    'minified',
+                    f'{obj.vector_boundary_layer.name}.json'
+                )
+                if not os.path.exists(simplified_layer):
+                    simplify_layer(
+                        obj.vector_boundary_layer,
+                        simplified_layer
+                    )
+                if os.path.exists(simplified_layer):
+                    layer_url = (
+                        f'{settings.MEDIA_URL}minified/'
+                        f'{obj.vector_boundary_layer.name}.json'
+                    )
+
             dataset_files.append({
                 'func': 'vectors',
                 'active': True,
