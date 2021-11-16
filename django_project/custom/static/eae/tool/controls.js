@@ -102,14 +102,15 @@ export default class dscontrols extends HTMLElement {
 
 		case 'polygons-fixed':
 		case 'polygons-timeline': {
+			if (!this.ds.raster) break;
 			await until(_ => this.ds.domain);
 
-			this.range_group = range.call(this.ds, {
-				ramp: lr,
-				steps: steps,
-				sliders: cat.controls.range,
-				domain: this.ds.domain
-			});
+			// this.range_group = range.call(this.ds, {
+			// 	ramp: lr,
+			// 	steps: steps,
+			// 	sliders: cat.controls.range,
+			// 	domain: this.ds.domain
+			// });
 			break;
 		}
 
@@ -238,7 +239,7 @@ export default class dscontrols extends HTMLElement {
 	};
 
 	manual_setup() {
-		if (!this.manual_min || !this.manual_max) return;
+		if (!this.manual_min || !this.manual_max || !this.ds.domain) return;
 
 		this.manual_min.value = this.ds.domain.min;
 		this.manual_max.value = this.ds.domain.max;

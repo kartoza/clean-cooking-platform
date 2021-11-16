@@ -12,6 +12,7 @@ INSTALLED_APPS += (
 INSTALLED_APPS = (
     'grappelli.dashboard',
     'filebrowser',
+    'django_cleanup.apps.CleanupConfig',
 ) + INSTALLED_APPS
 
 MIDDLEWARE = (

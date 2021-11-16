@@ -5,6 +5,8 @@ import os
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.core.files.storage import FileSystemStorage
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 from geonode.layers.models import Layer
 
