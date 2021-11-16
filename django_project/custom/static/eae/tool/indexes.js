@@ -85,7 +85,11 @@ export async function graphs(raster) {
 
 		PIES['area'].change(1);
 
-		qs('#area-number').innerHTML = g['total'].toLocaleString() + "&nbsp;" + "km<sup>2</sup>";
+		try {
+			qs('#area-number').innerHTML = g['total'].toLocaleString() + "&nbsp;" + "km<sup>2</sup>";
+		} catch (e) {
+			console.log(e)
+		}
 
 		g['distribution'].forEach((x,i) => PIES['area']['data'][i].shift());
 	} else {

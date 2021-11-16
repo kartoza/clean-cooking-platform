@@ -742,5 +742,7 @@ export function init() {
 	sort_datasets(SIDEBAR);
 
 	const first = qs('.controls-branch-tab', tabs_el);
-	select_tab(first, first.id.replace('controls-tab-', ''));
+	if (first) {
+		select_tab(first, first.id.replace('controls-tab-', ''));
+	}
 };

@@ -112,7 +112,7 @@ This is not fatal but the dataset is now disabled.`
 					Object.assign(this.vectors, f.configuration, f);
 				}
 
-				this.vectors.key = maybe(f, 'configuration', 'key') || f.key || 'OBJECTID';
+				this.vectors.key = maybe(f, 'configuration', 'key') || f.key || 'fid';
 				this.vectors.fileid = f.id;
 				this.vectors.features = f.features;
 				let p; switch (this.vectors.shape_type) {
@@ -122,6 +122,11 @@ This is not fatal but the dataset is now disabled.`
 				}
 
 				case 'polygons': {
+					p = x => parse.polygons.call(x || this);
+					break;
+				}
+
+				case 'polygons-fixed': {
 					p = x => parse.polygons.call(x || this);
 					break;
 				}

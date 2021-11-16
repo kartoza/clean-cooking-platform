@@ -5,6 +5,8 @@ import re
 import requests
 from django.contrib.gis.db import models
 from django.conf import settings
+from django.core.cache import cache
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 from geonode.layers.models import Layer
@@ -98,3 +100,9 @@ class DatasetFile(models.Model):
 
     class Meta:
         verbose_name_plural = 'Dataset Files'
+
+
+@receiver(post_save, sender=Layer)
+def layer_post_save(sender, instance, **kwargs):
+    cache.delete('style_dataset_{}'.format(instance.id))
+
