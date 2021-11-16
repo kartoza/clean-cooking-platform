@@ -403,7 +403,7 @@ async function dsinit(id, inputs, pack, callback) {
 							} catch (e) {
 								console.error(e)
 							}
-							continue;
+							//continue;
 						}
 
 						if (sldStr.includes('<UserLayer>')) {
@@ -434,9 +434,9 @@ async function dsinit(id, inputs, pack, callback) {
 							e.category.analysis.intervals = raster_configuration.intervals;
 							e.category.raster = raster_configuration;
 							item.file.configuration = raster_configuration;
-							update_style(item.file.id, raster_configuration);
+							// update_style(item.file.id, raster_configuration);
 						} else {
-							if (JSON.stringify(styleObject).includes(('"kind":"Mark"'))) {
+							if (JSON.stringify(styleObject).includes(('"kind":"Mark"'))) { // points
 								let pointConfiguration = {
 								  "fill": styleObject.rules[0].symbolizers[0].color,
 								  "width": styleObject.rules[0].symbolizers[0].radius,
@@ -445,7 +445,7 @@ async function dsinit(id, inputs, pack, callback) {
 								}
 								item.file.configuration = pointConfiguration;
 								e.category.vectors = pointConfiguration;
-							} else {
+							} else { // lines
 								let vectorConf = await mapboxParser.writeStyle(styleObject).then(mObj => mObj)
 								let vectorConfObj = JSON.parse(vectorConf);
 								vectorConfObj['shape_type'] = 'lines';
@@ -462,9 +462,13 @@ async function dsinit(id, inputs, pack, callback) {
 									let customVectorConfiguration = {
 										"attributes": [],
 										"attributes_map": [],
-										"features_specs": []
+										"features_specs": [],
+										"key": "fid"
 									};
 									for (const layer of vectorConfObj.layers) {
+										if (layer.type === 'fill') {
+											e.category.vectors.shape_type = 'polygons-fixed'
+										}
 										let filters = layer.filter;
 										if (!customVectorConfiguration.attributes.includes(filters[1])) {
 											customVectorConfiguration.attributes.push(filters[1]);
@@ -473,9 +477,27 @@ async function dsinit(id, inputs, pack, callback) {
 												'dataset': filters[1]
 											})
 										}
-										const styleSpec = {
-											"key": filters[1],
-											"match": filters[2],
+										let key = filters[1];
+										if (key.length > 1) {
+											key = key[1];
+										}
+
+										let styleSpec = {};
+
+										if (layer.type === 'fill') {
+											styleSpec = {
+												"key": key,
+												"match": filters[1],
+											}
+										} else {
+											styleSpec = {
+												"key": filters[1],
+												"match": filters[2],
+											}
+										}
+
+										if (filters.length > 2) {
+											styleSpec["match_2"] = filters[2]
 										}
 										if ('line-color' in layer.paint) {
 											styleSpec['stroke'] = layer.paint['line-color']
@@ -491,13 +513,19 @@ async function dsinit(id, inputs, pack, callback) {
 										}
 										customVectorConfiguration.features_specs.push(styleSpec)
 									}
+									if (e.category.vectors.shape_type.match('polygons')) {
+										e.category.vectors.paint = vectorConfObj.layers[0].paint;
+										e.category.vectors.stroke = vectorConfObj.layers[0].paint['fill-outline-color'];
+										e.category.vectors.opacity = 1;
+										e.category.vectors.fill = vectorConfObj.layers[0].paint['fill-color'];
+									}
 									e.configuration = customVectorConfiguration;
 								}
 							}
-							update_style(item.file.id, {
-								'vectors': e.category.vectors,
-								'configuration': e.configuration
-							});
+							// update_style(item.file.id, {
+							// 	'vectors': e.category.vectors,
+							// 	'configuration': e.configuration
+							// });
 						}
 					}
 				}

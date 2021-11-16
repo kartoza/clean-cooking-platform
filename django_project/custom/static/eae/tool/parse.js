@@ -228,9 +228,10 @@ function specs_set(fs, specs) {
 		fs[i].properties['__radius'] = this.vectors['radius'];
 		fs[i].properties['__stroke'] = this.vectors['stroke'];
 		fs[i].properties['__stroke-width'] = this.vectors['stroke-width'];
+		fs[i].properties['__color'] = this.vectors['fill'];
 
 		if (specs) {
-			const c = { params: [] };
+			const c = { params: [], conditions: '' };
 			let p = false;
 
 			for (let s of specs) {
@@ -243,10 +244,27 @@ function specs_set(fs, specs) {
 
 				const vs = v + "";
 
-				if (vs === s.match || (m = vs.match(r))) {
+				let value_found = false;
+
+				// Check if there is conditional expression
+				if (s.match.length > 2 && (s.match.includes('>=') || s.match.includes('<=') || s.match.includes('==') || s.match.includes('>') || s.match.includes('<'))) {
+					value_found = eval(`${v} ${s.match[0]} ${s.match[2]}`);
+				} else {
+					value_found = (vs === s.match || (m = vs.match(r)));
+				}
+
+				if (value_found) {
 					c[s.key] = vs ? vs : m[1];
 
-					if (c.params.indexOf(s.key) < 0) c.params.push(s.key);
+					if (Array.isArray(s.match) && s.match.length > 2) {
+						const condition = `${parseFloat(s.match[2]).toFixed(2)} - ${parseFloat(s.match_2[2]).toFixed(2)}`
+						if (c.condition !== condition) {
+							c.condition = condition
+						}
+						if (c.params.indexOf('condition') < 0) c.params.push('condition');
+					} else {
+						if (c.params.indexOf(s.key) < 0) c.params.push(s.key);
+					}
 
 					if (has(s, 'radius')) {
 						fs[i].properties['__radius'] = c['radius'] = s['radius'];
@@ -254,6 +272,10 @@ function specs_set(fs, specs) {
 
 					if (has(s, 'stroke')) {
 						fs[i].properties['__stroke'] = c['stroke'] = s['stroke'];
+					}
+
+					if (has(s, 'fill')) {
+						fs[i].properties['__color'] = c['fill'] = s['fill'];
 					}
 
 					if (has(s, 'stroke-width')) {
@@ -438,8 +460,7 @@ export function polygons() {
 					"__name": this.name,
 					"stroke": this.vectors['stroke'],
 				}));
-
-				this.card.polygon_legends(criteria.map(x => JSON.parse(x)));
+				this.card.legends(criteria.map(x => JSON.parse(x)), 'polygons');
 			}
 
 			mapbox_dblclick(this.id);
