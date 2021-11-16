@@ -403,7 +403,7 @@ async function dsinit(id, inputs, pack, callback) {
 							} catch (e) {
 								console.error(e)
 							}
-							//continue;
+							continue;
 						}
 
 						if (sldStr.includes('<UserLayer>')) {
@@ -434,7 +434,7 @@ async function dsinit(id, inputs, pack, callback) {
 							e.category.analysis.intervals = raster_configuration.intervals;
 							e.category.raster = raster_configuration;
 							item.file.configuration = raster_configuration;
-							// update_style(item.file.id, raster_configuration);
+							update_style(item.file.id, raster_configuration);
 						} else {
 							if (JSON.stringify(styleObject).includes(('"kind":"Mark"'))) { // points
 								let pointConfiguration = {
@@ -522,10 +522,10 @@ async function dsinit(id, inputs, pack, callback) {
 									e.configuration = customVectorConfiguration;
 								}
 							}
-							// update_style(item.file.id, {
-							// 	'vectors': e.category.vectors,
-							// 	'configuration': e.configuration
-							// });
+							update_style(item.file.id, {
+								'vectors': e.category.vectors,
+								'configuration': e.configuration
+							});
 						}
 					}
 				}

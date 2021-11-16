@@ -28,10 +28,10 @@ class StyleApiView(APIView):
         if not dataset_id or not style_url or not style_name:
             raise Http404()
 
-        # cached_style = cache.get('style_dataset_{}'.format(dataset_id))
-        #
-        # if cached_style:
-        #     return Response(cached_style)
+        cached_style = cache.get('style_dataset_{}'.format(dataset_id))
+
+        if cached_style:
+            return Response(cached_style)
 
         # Check if style already download in media file
         styles_folder = os.path.join(settings.MEDIA_ROOT, 'styles')
