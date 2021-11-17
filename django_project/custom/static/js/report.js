@@ -50,7 +50,7 @@ fetch(geojsonBoundary).then(response => response.json()).then(
     }
 )
 
-const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true) => {
+const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true, currentTry = 0) => {
     return new Promise((resolve, reject) => {
         const url = '/api/clip-layer-by-region/';
         fetch(url, {
@@ -68,12 +68,15 @@ const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true) => {
         }).then((response) => response.json()).then(async data => {
             if (data['status'] === 'Pending') {
                 setTimeout(async () => {
-                    resolve(clipSelectedLayer(boundary, layerId, drawToMap));
+                    if (currentTry === 25) {
+                        reject('Error clipping layer ' + layerId)
+                    }
+                    resolve(clipSelectedLayerPromise(boundary, layerId, drawToMap, currentTry+=1));
                 }, 1000)
             } else if (data['status'] === 'Success') {
                 resolve("FINISH")
             } else {
-                reject('Error clipping layer')
+                reject('Error clipping layer ' + layerId)
             }
         }).catch((error) => reject(error))
     })
@@ -117,7 +120,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
 
     setTimeout(() => {
         scenarioSelect.selectedIndex = 0;
-    }, 200)
+    }, 400)
 
     scenarioSelect.onchange = async (e) => {
         // Clear canvas
@@ -167,16 +170,17 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
             }
         }
 
-        Promise.all(tasks).then(function(results){
-            loadingSpinner1.style.display = "none";
-            ccaToolBtn.disabled = false;
-            getDatasets(inputString);
+        Promise.allSettled(tasks).
+            then(function (results) {
+                results.forEach((result) => console.log(result))
+                loadingSpinner1.style.display = "none";
+                ccaToolBtn.disabled = false;
+                getDatasets(inputString);
 
-            for (let i=0; i < inputs.length; i++) {
-                addedLayers.push(inputs[i]);
-            }
-
-        });
+                for (let i=0; i < inputs.length; i++) {
+                    addedLayers.push(inputs[i]);
+                }
+            });
     }
 
     ccaToolBtn.onclick = (e) => {

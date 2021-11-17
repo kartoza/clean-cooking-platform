@@ -6,6 +6,7 @@ x-common-django:
   build:
     context: ../
     dockerfile: deployment/docker/Dockerfile
+  image: kartoza/cca_django:latest
   environment:
     # editable in .env
     - HTTPS_HOST=${HTTPS_HOST}

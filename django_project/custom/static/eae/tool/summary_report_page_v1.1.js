@@ -156,7 +156,51 @@ export async function getDatasets(inputs) {
 							"precision": 0,
 							"color_stops": []
 						};
-						let sldStr = await fetch(item.file.style).then(response => response.text()).then(str => str);
+
+						let sldUrl = `/api/style-api/?datasetId=${item.file.id}&styleUrl=${item.file.style}`;
+						let isSldData = true;
+						let sldStr = '';
+						let mapboxStyleData = null;
+						await fetch(sldUrl).then(response => {
+							const contentType = response.headers.get("content-type");
+							if (contentType && contentType.indexOf("application/json") !== -1) {
+								return response.json().then(data => {
+									// process your JSON data further
+									isSldData = false;
+									mapboxStyleData = data;
+									return data;
+								});
+							} else {
+								return response.text().then(text => {
+									// this is text, do something with it
+									isSldData = true;
+									sldStr = text;
+									return text;
+								});
+							}
+						});
+
+						if (mapboxStyleData) {
+							try {
+								if (mapboxStyleData.hasOwnProperty('color_stops')) {
+									e.category.domain = mapboxStyleData.domain;
+									e.category.colorstops = mapboxStyleData.color_stops;
+									e.category.analysis.intervals = mapboxStyleData.intervals;
+									e.category.raster = mapboxStyleData;
+									item.file.configuration = mapboxStyleData;
+								} else {
+									if (mapboxStyleData.hasOwnProperty('vectors')) {
+										item.file.configuration = mapboxStyleData.vectors;
+										e.category.vectors = mapboxStyleData.vectors;
+										e.configuration = mapboxStyleData.configuration;
+									}
+
+								}
+							} catch (e) {
+								console.error(e)
+							}
+							continue;
+						}
 
 						if (sldStr.includes('<UserLayer>')) {
 							sldStr = sldStr.replace('<UserLayer>', '<sld:NamedLayer>');

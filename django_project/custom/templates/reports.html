@@ -60,6 +60,7 @@
         O = null;
         U = null;
         DST = new Map();
+        DOMAIN_DATA = [];
     </script>
 
     <link rel="stylesheet" href="{% static "ol-6.8.1/ol.css" %}">
@@ -270,7 +271,7 @@
     </script>
 
     <script type="module">
-        import {init, getDatasets} from '/static/eae/tool/summary_report_page_v4.js';
+        import {init, getDatasets} from '/static/eae/tool/summary_report_page_v1.1.js';
         init();
         window.getDatasets = getDatasets;
     </script>

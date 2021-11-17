@@ -250,7 +250,9 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
     for (let j = 0; j < allLayerIds.length; j++) {
       tasks.push(clipSelectedLayerPromise(boundaryUUID, allLayerIds[j]));
     }
-    Promise.all(tasks).then(function(results){
+
+    Promise.allSettled(tasks).then(function (results) {
+      results.forEach((result) => console.log(result))
       exploreBtn.querySelector('.text').innerHTML = 'Go to Explorer Tool';
       exploreBtn.disabled = false;
       window.location.href = '/tool/?boundary=' + boundaryUUID + '&geoId=' + geoId;
