@@ -105,12 +105,12 @@ export default class dscontrols extends HTMLElement {
 			if (!this.ds.raster) break;
 			await until(_ => this.ds.domain);
 
-			// this.range_group = range.call(this.ds, {
-			// 	ramp: lr,
-			// 	steps: steps,
-			// 	sliders: cat.controls.range,
-			// 	domain: this.ds.domain
-			// });
+			this.range_group = range.call(this.ds, {
+				ramp: lr,
+				steps: steps,
+				sliders: cat.controls.range,
+				domain: this.ds.domain
+			});
 			break;
 		}
 
