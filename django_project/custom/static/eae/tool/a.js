@@ -47,7 +47,32 @@ const UProxyHandler = {
 
 		case "inputs": {
 			if (!i || i === "") v = [];
-			else v = i.split(',').filter(e => o.params.inputs.indexOf(e) > -1);
+			else v = i.split(',').filter(e => o.params.inputs.indexOf(e.replace(/ *\([^)]*\) */g, "")) > -1);
+			if (v.length > 0) {
+				for (let j=0; j<v.length;j++) {
+					if (v[j].includes('(')) {
+						let value = v[j].replace(/ *\([^)]*\) */g, "");
+						let matches = v[j].match(/ *\([^)]*\) */g);
+
+						if (DOMAIN_DATA.length === 0 || DOMAIN_DATA.find(o => o.name !== value)) {
+							let domain = '';
+							if (matches) {
+									domain = matches[0].replace('(', '').replace(')', '').split(':');
+									domain = {
+										'min': domain[0],
+										'max': domain[1]
+									}
+							}
+							DOMAIN_DATA.push({
+								'name': value,
+								'domain': domain
+							})
+						}
+
+						v[j] = value;
+					}
+				}
+			}
 			break;
 		}
 
@@ -82,6 +107,14 @@ const UProxyHandler = {
 		}
 
 		case "inputs": {
+			for (let i=0; i < v.length; i++) {
+				let domain_data = DOMAIN_DATA.find(o => o.name === v[i]);
+				if (domain_data) {
+					if (domain_data.domain) {
+						v[i] += `(${domain_data.domain.min}:${domain_data.domain.max})`
+					}
+				}
+			}
 			o.url.searchParams.set(t, [...new Set(v)]);
 			break;
 		}
@@ -239,6 +272,8 @@ function mobile() {
 export async function init() {
 	const url = new URL(location);
 	const id = url.searchParams.get('geo') || DEFAULT_GEO_ID;
+
+	DOMAIN_DATA = [];
 
 	SIDEBAR = {
 		sort_subbranches: [],
@@ -539,6 +574,16 @@ async function dsinit(id, inputs, pack, callback) {
 	//
 	DS.array.filter(d => d.mutant).forEach(d => d.mutant_init());
 	DS.array.filter(d => d.items).forEach(d => d.items_init());
+
+	if (U.inputs.length > 0) {
+		U.inputs.forEach(data => {
+			let ds = DS.array.find(o => o.id === data);
+			let domain_data = DOMAIN_DATA.find(o => o.name === data);
+			if (domain_data) {
+				ds._domain = domain_data.domain;
+			}
+		})
+	}
 
 	callback(bounds);
 };

@@ -38,7 +38,24 @@ export default class Overlord {
 
 		switch (arg) {
 		case "domain": {
+			let domain_data = DOMAIN_DATA.find(o => o.name === ds.id);
+			if (!domain_data) {
+				DOMAIN_DATA.push({
+					'name': ds.id,
+					'domain': {
+						'min': data.min,
+						'max': data.max
+					}
+				})
+			} else {
+				domain_data.domain = {
+					'min': data.min,
+					'max': data.max
+				}
+			}
 			ds._domain = data;
+			O.datasets = U.inputs;
+
 			break;
 		}
 
