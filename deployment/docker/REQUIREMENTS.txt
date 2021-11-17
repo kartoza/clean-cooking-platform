@@ -23,3 +23,4 @@ django-admin-sortable2==1.0
 whitenoise==5.3.0
 reportlab==3.6.2
 celery==4.4.2
+django-cleanup==5.2.0

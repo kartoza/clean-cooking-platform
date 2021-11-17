@@ -77,7 +77,11 @@ def clip_layer_by_region(self, clipped_layer_id):
                 settings.MEDIA_ROOT,
                 vector_layer.file.name
             )
-            if not os.path.exists(layer_vector_file) or 'geojson' in layer_vector_file:
+            if (
+                not os.path.exists(layer_vector_file) or
+                    'geojson' in layer_vector_file or
+                    layer.srid != 'EPSG:4326'
+            ):
                 # Download file
                 layer_temp_folder = os.path.join(
                     settings.MEDIA_ROOT,
@@ -95,6 +99,7 @@ def clip_layer_by_region(self, clipped_layer_id):
                     os.mkdir(layer_vector_dir)
                     layer_vector_file = None
                 else:
+                    layer_vector_file = None
                     for unzipped_file in os.listdir(layer_vector_dir):
                         if unzipped_file.endswith('.shp'):
                             layer_vector_file = os.path.join(
@@ -111,20 +116,21 @@ def clip_layer_by_region(self, clipped_layer_id):
                         layer_vector_dir,
                         layer_name
                     )
-                    url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/ows'
-                    params = {
-                        'service': 'WFS',
-                        'version': '1.0.0',
-                        'request': 'GetFeature',
-                        'typeNames': str(layer),
-                        'outputFormat': 'SHAPE-ZIP',
-                        'srs': 'EPSG:4326'
-                    }
-                    r = requests.get(url=url, params=params, stream=True)
-                    chunk_size = 2000
-                    with open(shp_zip_file, 'wb') as fd:
-                        for chunk in r.iter_content(chunk_size):
-                            fd.write(chunk)
+                    if not os.path.exists(shp_zip_file):
+                        url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/ows'
+                        params = {
+                            'service': 'WFS',
+                            'version': '1.1.0',
+                            'request': 'GetFeature',
+                            'typeNames': str(layer),
+                            'outputFormat': 'SHAPE-ZIP',
+                            'srsName': 'EPSG:4326'
+                        }
+                        r = requests.get(url=url, params=params, stream=True)
+                        chunk_size = 2000
+                        with open(shp_zip_file, 'wb') as fd:
+                            for chunk in r.iter_content(chunk_size):
+                                fd.write(chunk)
                     try:
                         with zipfile.ZipFile(shp_zip_file, 'r') as zip_ref:
                             zip_ref.extractall(layer_vector_dir)

@@ -2,6 +2,8 @@
 """Datasets files model definition.
 """
 import re
+
+import os
 import requests
 from django.contrib.gis.db import models
 from django.conf import settings
@@ -10,6 +12,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 from geonode.layers.models import Layer
+
 
 CSV = 'csv'
 VECTORS = 'vectors'
@@ -104,5 +107,10 @@ class DatasetFile(models.Model):
 
 @receiver(post_save, sender=Layer)
 def layer_post_save(sender, instance, **kwargs):
+    from custom.models import ClippedLayer
     cache.delete('style_dataset_{}'.format(instance.id))
 
+    # Remove clipped layers if exist
+    clipped_layers = ClippedLayer.objects.filter(layer=instance)
+    if clipped_layers.exists():
+        clipped_layers.delete()
