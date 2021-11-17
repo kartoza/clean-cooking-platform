@@ -137,12 +137,13 @@ class Category(models.Model):
     legend_range_steps = models.IntegerField(
         verbose_name='Range steps',
         null=True,
-        blank=True
+        blank=True,
+        default=10
     )
 
     range_type = models.CharField(
         max_length=128,
-        default='',
+        default='double',
         help_text='Range data type, e.g. double',
         blank=True
     )
