@@ -1,8 +1,7 @@
 #--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
 # Note this base image is based on debian
 
-FROM cca_django:latest
-MAINTAINER Irwan Fathurrahman<irwan@kartoza.com>
+FROM kartoza/cca_django:latest
 
 # This section taken on 2 July 2015 from
 # https://docs.docker.com/examples/running_ssh_service/
