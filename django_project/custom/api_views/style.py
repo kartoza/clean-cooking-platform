@@ -1,3 +1,4 @@
+import ast
 import os
 
 import requests
@@ -21,6 +22,7 @@ class StyleApiView(APIView):
 
     def get(self, request, *args):
         dataset_id = request.GET.get('datasetId', '')
+        use_cache = ast.literal_eval(request.GET.get('useCache', 'True'))
         style_url = request.GET.get('styleUrl', '')
         style_url = style_url.replace('/proxy_cca/', '')
         style_name = style_url.split('/')[-1]
@@ -30,7 +32,7 @@ class StyleApiView(APIView):
 
         cached_style = cache.get('style_dataset_{}'.format(dataset_id))
 
-        if cached_style:
+        if cached_style and use_cache:
             return Response(cached_style)
 
         # Check if style already download in media file
