@@ -505,35 +505,36 @@ async function dsinit(id, inputs, pack, callback) {
 											e.category.vectors.shape_type = 'polygons-fixed'
 										}
 										let filters = layer.filter;
-										if (!customVectorConfiguration.attributes.includes(filters[1])) {
-											customVectorConfiguration.attributes.push(filters[1]);
-											customVectorConfiguration.attributes_map.push({
-												'target': filters[1],
-												'dataset': filters[1]
-											})
-										}
-										let key = filters[1];
-										if (key.length > 1) {
-											key = key[1];
-										}
-
 										let styleSpec = {};
-
-										if (layer.type === 'fill') {
-											styleSpec = {
-												"key": key,
-												"match": filters[1],
+										if (filters) {
+											if (!customVectorConfiguration.attributes.includes(filters[1])) {
+												customVectorConfiguration.attributes.push(filters[1]);
+												customVectorConfiguration.attributes_map.push({
+													'target': filters[1],
+													'dataset': filters[1]
+												})
 											}
-										} else {
-											styleSpec = {
-												"key": filters[1],
-												"match": filters[2],
+											let key = filters[1];
+											if (key.length > 1) {
+												key = key[1];
+											}
+
+											if (layer.type === 'fill') {
+												styleSpec = {
+													"key": key,
+													"match": filters[1],
+												}
+											} else {
+												styleSpec = {
+													"key": filters[1],
+													"match": filters[2],
+												}
+											}
+											if (filters.length > 2) {
+												styleSpec["match_2"] = filters[2]
 											}
 										}
 
-										if (filters.length > 2) {
-											styleSpec["match_2"] = filters[2]
-										}
 										if ('line-color' in layer.paint) {
 											styleSpec['stroke'] = layer.paint['line-color']
 										}
@@ -549,10 +550,15 @@ async function dsinit(id, inputs, pack, callback) {
 										customVectorConfiguration.features_specs.push(styleSpec)
 									}
 									if (e.category.vectors.shape_type.match('polygons')) {
-										e.category.vectors.paint = vectorConfObj.layers[0].paint;
-										e.category.vectors.stroke = vectorConfObj.layers[0].paint['fill-outline-color'];
-										e.category.vectors.opacity = 1;
-										e.category.vectors.fill = vectorConfObj.layers[0].paint['fill-color'];
+										if (vectorConfObj.layers.length > 0) {
+											e.category.vectors.paint = vectorConfObj.layers[0].paint;
+											e.category.vectors.stroke = vectorConfObj.layers[0].paint['fill-outline-color'];
+											e.category.vectors.opacity = 1;
+											e.category.vectors.fill = vectorConfObj.layers[0].paint['fill-color'];
+										}
+									} else {
+										if (customVectorConfiguration.features_specs.length > 0)
+											e.category.vectors.stroke = customVectorConfiguration.features_specs[0]['stroke']
 									}
 									e.configuration = customVectorConfiguration;
 								}

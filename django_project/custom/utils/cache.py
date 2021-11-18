@@ -30,9 +30,10 @@ def set_cache_dataset(dataset_key, dataset):
     """
     dataset_keys_cache = cache.get('dataset_keys')
 
-    if dataset_key not in dataset_keys_cache:
-        dataset_keys_cache.append(dataset_key)
-        cache.set('dataset_keys', dataset_keys_cache)
+    if dataset_keys_cache:
+        if dataset_key not in dataset_keys_cache:
+            dataset_keys_cache.append(dataset_key)
+            cache.set('dataset_keys', dataset_keys_cache)
 
     cache.set(dataset_key, dataset)
 

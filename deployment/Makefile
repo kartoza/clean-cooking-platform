@@ -7,7 +7,7 @@ build:
 	@echo "------------------------------------------------------------------"
 	@echo "Building in production mode"
 	@echo "------------------------------------------------------------------"
-	@docker-compose -p $(PROJECT_ID) build
+	@docker-compose -p $(PROJECT_ID) build django
 
 up:
 	@echo
@@ -28,7 +28,7 @@ geonode-up:
 	@echo "------------------------------------------------------------------"
 	@echo "Building in production mode"
 	@echo "------------------------------------------------------------------"
-	@cd geonode/scripts/spcgeonode; docker-compose up --build -d django geoserver postgres nginx
+	@cd geonode/scripts/spcgeonode; docker-compose up --build -d django geoserver postgres nginx celery rabbitmq cache
 
 kill:
 	@echo

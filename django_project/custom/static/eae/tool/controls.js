@@ -61,7 +61,7 @@ export default class dscontrols extends HTMLElement {
 
 		let steps;
 		if (!cat.controls) return;
-		if (cat.controls.range_steps && this.ds.domain.max && this.ds.domain.min) {
+		if (cat.controls.range_steps && this.ds.domain && this.ds.domain.max && this.ds.domain.min) {
 			steps = [];
 			const s = (this.ds.domain.max - this.ds.domain.min) / (cat.controls.range_steps - 1);
 

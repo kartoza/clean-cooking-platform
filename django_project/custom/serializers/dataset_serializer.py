@@ -173,6 +173,8 @@ class DatasetFileSerializer(serializers.ModelSerializer):
         style = None
         clipped_boundary = self.context.get('clipped_boundary', None)
         default_styles_geoserver = self.context.get('default_styles_geoserver', None)
+        self.context['default_styles_geoserver'] = {}
+
         if not default_styles_geoserver:
             try:
                 url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/rest/workspaces/geonode/styles.json'
