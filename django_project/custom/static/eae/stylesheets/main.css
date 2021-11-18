@@ -597,3 +597,25 @@ section.hero-large .bg-image {
     width: 85%;
     margin-left: 0;
 }
+
+.organization {
+    font-size: 24px; text-decoration: underline;
+}
+
+.organization a {
+    text-decoration-color: rgb(62, 107, 44);
+}
+
+.partner-organization {
+    color: #052549;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.partner-organization a {
+    text-decoration-color: #052549;
+}
+
+.archive-body {
+    padding-bottom: 0;
+}
