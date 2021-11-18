@@ -261,16 +261,34 @@ export async function getDatasets(inputs) {
 									};
 									for (const layer of vectorConfObj.layers) {
 										let filters = layer.filter;
-										if (!customVectorConfiguration.attributes.includes(filters[1])) {
-											customVectorConfiguration.attributes.push(filters[1]);
-											customVectorConfiguration.attributes_map.push({
-												'target': filters[1],
-												'dataset': filters[1]
-											})
-										}
-										const styleSpec = {
-											"key": filters[1],
-											"match": filters[2],
+										let styleSpec = {};
+										if (filters) {
+											if (!customVectorConfiguration.attributes.includes(filters[1])) {
+												customVectorConfiguration.attributes.push(filters[1]);
+												customVectorConfiguration.attributes_map.push({
+													'target': filters[1],
+													'dataset': filters[1]
+												})
+											}
+											let key = filters[1];
+											if (key.length > 1) {
+												key = key[1];
+											}
+
+											if (layer.type === 'fill') {
+												styleSpec = {
+													"key": key,
+													"match": filters[1],
+												}
+											} else {
+												styleSpec = {
+													"key": filters[1],
+													"match": filters[2],
+												}
+											}
+											if (filters.length > 2) {
+												styleSpec["match_2"] = filters[2]
+											}
 										}
 										if ('line-color' in layer.paint) {
 											styleSpec['stroke'] = layer.paint['line-color']
@@ -369,7 +387,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 
 	try {
 		fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
-	} catch (e) {}
+	} catch (e) {}+
 
 	request.open('POST', url, true);
 	request.setRequestHeader('X-CSRFToken', csrfToken);
