@@ -387,7 +387,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 
 	try {
 		fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
-	} catch (e) {}+
+	} catch (e) {}
 
 	request.open('POST', url, true);
 	request.setRequestHeader('X-CSRFToken', csrfToken);
