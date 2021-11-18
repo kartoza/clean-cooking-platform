@@ -380,6 +380,14 @@ async function dsinit(id, inputs, pack, callback) {
 					SIDEBAR.sort_subbranches.push(subbranch_name)
 				}
 				for (const item of e.df) {
+					if (item.func === 'vectors' && item.file.geonode_layer && !boundary) {
+						e.category.vectors = {
+							specs: null,
+							shape_type: 'lines',
+							opacity: 1
+						}
+						continue
+					}
 					if (item.file.style) {
 						let raster_configuration = {
 							"init": {
