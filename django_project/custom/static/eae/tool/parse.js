@@ -294,7 +294,37 @@ function specs_set(fs, specs) {
 	return criteria;
 };
 
+function loadGeonodeLayer() {
+	let urlSearchParams = new URLSearchParams(this.vectors.geonode_layer);
+	let layerName = urlSearchParams.get('typename');
+	this.add_source({
+		'type': 'raster',
+		'tiles': [
+			`/proxy_cca/${geoserverUrl}/wms?bbox={bbox-epsg-3857}&` +
+			`format=image/png&TILED=true&service=WMS&version=1.1.1&` +
+			`request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&LAYERS=${layerName}`,
+		],
+		'tileSize': 256
+	});
+	this.add_layer({
+		'type': 'raster',
+		'transparent': true,
+		'paint': {}
+	});
+
+	let legendUrl = `/proxy_cca/${geoserverUrl}/ows?service=WMS&` +
+		`request=GetLegendGraphic&format=image/png&WIDTH=30&HEIGHT=20&` +
+		`transparent=true&LAYER=${layerName}&legend_options=fontAntiAliasing:true;fontSize:12;forceLabels:on`;
+	this.card.image_legends(legendUrl);
+}
+
 export function points() {
+
+	if (this.vectors.geonode_layer && !boundary) {
+		loadGeonodeLayer.call(this);
+		return
+	}
+
 	return geojson.call(this)
 		.then(_ => {
 			const v = this.vectors;
@@ -344,6 +374,12 @@ export function points() {
 };
 
 export function lines() {
+
+	if (this.vectors.geonode_layer && !boundary) {
+		loadGeonodeLayer.call(this);
+		return
+	}
+
 	return geojson.call(this)
 		.then(_ => {
 			let da = [1];
@@ -395,6 +431,10 @@ export function lines() {
 };
 
 export function polygons() {
+	if (this.id !== 'boundaries' && this.vectors.geonode_layer && !boundary) {
+		loadGeonodeLayer.call(this);
+		return
+	}
 	return geojson.call(this)
 		.then(async _ => {
 			if (this.csv) {

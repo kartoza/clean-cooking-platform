@@ -224,6 +224,15 @@ export default class dscard extends HTMLElement {
 		it.replaceChildren(ul);
 	};
 
+	image_legends(url) {
+		const it = qs('[slot=svg]', this);
+		elem_empty(it);
+		const ul = ce('div', null, { style: "font-size: smaller;" });
+		const img = ce('img', '', { 'src': url, 'class': 'geography-img' });
+		ul.append(img);
+		it.append(ul)
+	}
+
 	line_legends(legends) {
 		const it = qs('[slot=svg]', this);
 
@@ -320,8 +329,13 @@ export default class dscard extends HTMLElement {
 					break;
 				}
 
-				for (let i of t)
-					MAPBOX.setPaintProperty(this.ds.id, i, parseFloat(o));
+				for (let i of t) {
+					try {
+						MAPBOX.setPaintProperty(this.ds.id, i, parseFloat(o));
+					} catch (e) {
+						MAPBOX.setPaintProperty(this.ds.id, 'raster-opacity', parseFloat(o));
+					}
+				}
 			}
 		});
 

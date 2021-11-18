@@ -20,6 +20,7 @@
           let boundary = url.searchParams.get('boundary');
           let geoId = url.searchParams.get('geoId');
           let csrfToken = '{{ csrf_token }}';
+          const geoserverUrl = '{{ geoserver_url }}';
       </script>
 
     <script src="{% static "eae/lib/browsers.js" %}"></script>
@@ -225,7 +226,7 @@
   </script>
 
   <script type="module">
-	import {init} from '/static/eae/tool/a.js';
+	import {init} from '/static/eae/tool/a.1.2.js';
 	init();
   </script>
 

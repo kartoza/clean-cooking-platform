@@ -22,6 +22,7 @@ class ToolView(TemplateView):
         context = super(ToolView, self).get_context_data(**kwargs)
         context['MAPBOX_TOKEN'] = settings.MAPBOX_TOKEN
         context['MAPBOX_THEME'] = settings.MAPBOX_THEME
+        context['geoserver_url'] = settings.GEOSERVER_PUBLIC_LOCATION
         geo = Geography.objects.filter(
             online=True
         )
