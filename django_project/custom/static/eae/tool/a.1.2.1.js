@@ -468,6 +468,18 @@ async function dsinit(id, inputs, pack, callback) {
 										raster_configuration.init.min = item.quantity;
 										raster_configuration.domain.min = item.quantity;
 									}
+									if (index === styleObject.rules[0].symbolizers[0].colorMap.colorMapEntries.length - 1) {
+										if (item.label) {
+											let legends = item.label.split('-');
+											if (legends.length > 1) {
+												let legend = legends[1].trim();
+												if (parseFloat(legend) > raster_configuration.domain.max) {
+													raster_configuration.domain.max = parseFloat(legend);
+													raster_configuration.init.max = parseFloat(legend);
+												}
+											}
+										}
+									}
 								})
 							} catch (e) {
 								console.log(e)
