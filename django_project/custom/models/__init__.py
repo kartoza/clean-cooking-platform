@@ -8,3 +8,4 @@ from .menu import *
 from .preset import *
 from .use_case import *
 from .clipped_layer import *
+from .report_summary import *

@@ -1,0 +1,62 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta Http-Equiv="Cache-Control" Content="no-cache">
+    <meta Http-Equiv="Pragma" Content="no-cache">
+    <meta Http-Equiv="Expires" Content="0">
+    <meta Http-Equiv="Pragma-directive: no-cache">
+    <meta Http-Equiv="Cache-directive: no-cache">
+    <title>Summary Report</title>
+
+
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon.min.css" %}"
+          rel="stylesheet">
+    <link href="{% static "halfmoon-1.1.1/css/halfmoon-variables.min.css" %}"
+          rel="stylesheet">
+    <script src="https://cdn.rawgit.com/seikichi/tiff.js/master/tiff.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+
+    <h1>{{ object.name }} : {{ object.category }}</h1>
+    <small>{{ object.created_at }}</small>
+    <hr>
+    <div class="row">
+        <div class="col-4">
+            <p>Layer name : {{ object.vector_layer.title }}</p>
+            <img src="{{ object.vector_layer.thumbnail_url }}">
+        </div>
+        <div class="col-6">
+            <p>Raster file</p>
+            <div id="raster-file"></div>
+        </div>
+    </div>
+    <h5><strong>Result</strong></h5>
+    <div>
+        <p>Total features : {{ result.total_features }}</p>
+        <p>Total features in raster : {{ result.total_in_raster }}</p>
+        <p>Total features in high area : {{ result.total_high }}</p>
+    </div>
+    <p>
+        Execution completed in {{ result.execution_time }} seconds
+    </p>
+</div>
+
+<script>
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = 'arraybuffer';
+    xhr.open('GET', "{{ object.raster_file.url }}");
+    xhr.onload = function (e) {
+      let tiff = new Tiff({buffer: xhr.response});
+      let canvas = tiff.toCanvas();
+      document.getElementById('raster-file').append(canvas);
+    };
+    xhr.send();
+</script>
+
+</body>

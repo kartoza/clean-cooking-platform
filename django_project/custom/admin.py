@@ -5,6 +5,8 @@ from django_json_widget.widgets import JSONEditorWidget
 from preferences.admin import PreferencesAdmin
 from adminsortable2.admin import SortableAdminMixin
 from geonode.layers.models import Layer
+
+from .models import ReportSummary
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
@@ -178,6 +180,12 @@ class ClippedLayerAdmin(admin.ModelAdmin):
         'layer_type', 'process_state')
 
 
+class ReportSummaryAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'vector_layer', 'raster_file', 'created_at'
+    )
+
+
 admin.site.register(Geography, GeographyAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CCAPreferences, PreferencesAdmin)
@@ -187,3 +195,4 @@ admin.site.register(SubMenu, SubMenuAdmin)
 admin.site.register(Preset, PresetAdmin)
 admin.site.register(UseCase, UseCaseAdmin)
 admin.site.register(ClippedLayer, ClippedLayerAdmin)
+admin.site.register(ReportSummary, ReportSummaryAdmin)

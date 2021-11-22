@@ -2,12 +2,13 @@
 """Urls for custom apps."""
 
 from django.conf.urls import url
-from django.urls import include
+from django.urls import include, path
 from django.views.generic import TemplateView
 from custom.proxy import proxy_request
 from custom.views import HomeView, map_view_with_slug, ToolView, GeographyView
 from custom.views.preset import UseCaseView
-from custom.views.report import ReportView, generate_report_pdf
+from custom.views.report import ReportView
+from custom.views.summary_report import SummaryReportView
 from custom.views.report_pdf import ReportPDFView
 
 urlpatterns = [
@@ -48,4 +49,8 @@ urlpatterns = [
         view=ReportView.as_view(),
         name='scenario'),
     url(r'^generate-report-pdf/$', view=ReportPDFView.as_view())
+]
+
+urlpatterns += [
+    path('summary-report/<int:pk>/', SummaryReportView.as_view(), name='summary-report-view'),
 ]
