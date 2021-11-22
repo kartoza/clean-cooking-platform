@@ -38,7 +38,9 @@ class CustomIndexDashboard(Dashboard):
                         'custom.models.unit.Unit',
                         'custom.models.menu.MainMenu',
                         'custom.models.menu.SubMenu',
-                        'custom.models.clipped_layer.ClippedLayer',)
+                        'custom.models.clipped_layer.ClippedLayer',
+                        'custom.models.summary_report_category.SummaryReportCategory',
+                        'custom.models.summary_report_result.SummaryReportResult',)
                 )
             ]
         ))
