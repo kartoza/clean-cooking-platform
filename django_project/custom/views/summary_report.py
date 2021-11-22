@@ -4,27 +4,28 @@ import os
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.detail import DetailView
 
-from custom.models import ReportSummary
+from custom.models import SummaryReportResult
 
 
-def sample_raster_with_vector(report_summary: ReportSummary):
+def sample_raster_with_vector(summary_report_result: SummaryReportResult):
 
     import rasterio
     import geopandas as gpd
 
     start_time = time.time()
+    summary_report = summary_report_result.summary_report_category
 
     try:
-        base_file = report_summary.vector_layer.get_base_file()[0].file
+        base_file = summary_report.vector_layer.get_base_file()[0].file
     except:  # noqa
         base_file = (
-            report_summary.vector_layer.upload_session.layerfile_set.all(
+            summary_report.vector_layer.upload_session.layerfile_set.all(
             ).filter(
                 file__icontains='shp'
             ).first().file
         )
     vector_file = base_file.path
-    raster_file = report_summary.raster_file.path
+    raster_file = summary_report_result.raster_file.path
     raster_file_size = os.stat(raster_file).st_size
 
     # Read points from shapefile
@@ -41,9 +42,9 @@ def sample_raster_with_vector(report_summary: ReportSummary):
     sampling_data = pts[pts['Raster Value'].lt(255)]
     high_data = sampling_data[sampling_data['Raster Value'].gt(190.0)]
 
-    if report_summary.result and 'raster_file_size' in report_summary.result:
-        if report_summary.result['raster_file_size'] == raster_file_size:
-            return report_summary.result
+    if summary_report_result.result and 'raster_file_size' in summary_report_result.result:
+        if summary_report_result.result['raster_file_size'] == raster_file_size:
+            return summary_report_result.result
 
     result_data = {
         'total_features': len(pts.index),
@@ -52,15 +53,15 @@ def sample_raster_with_vector(report_summary: ReportSummary):
         'execution_time': time.time() - start_time,
         'raster_file_size': raster_file_size
     }
-    report_summary.result = result_data
-    report_summary.save()
+    summary_report_result.result = result_data
+    summary_report_result.save()
 
     return result_data
 
 
 class SummaryReportView(UserPassesTestMixin, DetailView):
     template_name = 'summary_report.html'
-    model = ReportSummary
+    model = SummaryReportResult
 
     def test_func(self):
         return self.request.user.is_superuser

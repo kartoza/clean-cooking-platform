@@ -23,13 +23,13 @@
 <body>
 <div class="container">
 
-    <h1>{{ object.name }} : {{ object.category }}</h1>
+    <h1>{{ object.summary_report_category.name }} : {{ object.category }}</h1>
     <small>{{ object.created_at }}</small>
     <hr>
     <div class="row">
         <div class="col-4">
-            <p>Layer name : {{ object.vector_layer.title }}</p>
-            <img src="{{ object.vector_layer.thumbnail_url }}">
+            <p>Layer name : {{ object.summary_report_category.vector_layer.title }}</p>
+            <img src="{{ object.summary_report_category.vector_layer.thumbnail_url }}">
         </div>
         <div class="col-6">
             <p>Raster file</p>
