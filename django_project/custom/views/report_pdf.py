@@ -17,7 +17,8 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import registerFontFamily
 
 from core.settings.utils import absolute_path
-from custom.models import Geography, UseCase, Preset
+from custom.models import Geography, UseCase, Preset, SummaryReportCategory, SummaryReportResult
+from custom.views.summary_report import sample_raster_with_vector
 
 
 class ReportPDFView(View):
@@ -40,6 +41,9 @@ class ReportPDFView(View):
     sidebar_x_padding = 50
     navbar_height = 50
     geography = None
+    summary_categories = None
+    demand_tiff_file = None
+    supply_tiff_file = None
     subregion = ''
     map_image = ''
     demand_image = None
@@ -279,6 +283,24 @@ class ReportPDFView(View):
     def draw_page_three(self, page):
         if not self.demand_image:
             return
+
+        for summary_category in self.summary_categories:
+            summary_result, _ = SummaryReportResult.objects.get_or_create(
+                summary_report_category=summary_category,
+                category='demand'
+            )
+            summary_result.raster_file = self.demand_tiff_file
+            summary_result.save()
+            summary_result_data = sample_raster_with_vector(
+                summary_result
+            )
+            self.demand_summary.append({
+                'desc': 'Number of {} within areas of high demand index'.format(
+                    summary_category.name
+                ),
+                'value': '{}'.format(summary_result_data['total_high'])
+            })
+
         self._draw_sidebar(page, (0.459, 0.714, 0.831))
         self._draw_footer(page, 3)
         self._draw_title(page, 'Analysis', 'Demand index')
@@ -300,6 +322,24 @@ class ReportPDFView(View):
     def draw_page_four(self, page):
         if not self.supply_image:
             return
+
+        for summary_category in self.summary_categories:
+            summary_result, _ = SummaryReportResult.objects.get_or_create(
+                summary_report_category=summary_category,
+                category='supply'
+            )
+            summary_result.raster_file = self.supply_tiff_file
+            summary_result.save()
+            summary_result_data = sample_raster_with_vector(
+                summary_result
+            )
+            self.supply_summary.append({
+                'desc': 'Number of {} close to supply'.format(
+                    summary_category.name
+                ),
+                'value': '{}'.format(summary_result_data['total_high'])
+            })
+
         self._draw_sidebar(page)
         self._draw_footer(page, 4)
         self._draw_title(page, 'Analysis', 'Supply index')
@@ -327,6 +367,8 @@ class ReportPDFView(View):
 
         self.map_image = request.POST.get('mapImage', '')
         self.demand_image = request.POST.get('demandImage', None)
+        self.demand_tiff_file = request.FILES.get('demandTiff', None)
+        self.supply_tiff_file = request.FILES.get('supplyTiff', None)
         self.supply_image = request.POST.get('supplyImage', None)
         self.subregion = request.POST.get('subRegion', '')
         self.demand_high_percentage = (
@@ -341,48 +383,22 @@ class ReportPDFView(View):
         )
         self.geography = Geography.objects.get(id=geo_id)
 
+        self.summary_categories = SummaryReportCategory.objects.filter(
+            preset_id=preset_id
+        )
+
         self.demand_summary = [
             {
                 'desc': 'Population within areas of high demand index',
                 'value': f'{self.demand_high_percentage}%'
-            },
-            {
-                'desc': 'Number of educational facilities within areas of high '
-                        'demand index',
-                'value': 'X'
-            },
-            {
-                'desc': 'Number of health facilities within areas of high '
-                        'demand index',
-                'value': 'X'
-            },
-            {
-                'desc': 'Number of restaurants within areas of high '
-                        'demand index',
-                'value': 'X'
-            },
+            }
         ]
 
         self.supply_summary = [
             {
                 'desc': 'Population within areas of high supply index',
                 'value': f'{self.supply_high_percentage}%'
-            },
-            {
-                'desc': 'Number of educational facilities within areas of high '
-                        'supply index',
-                'value': 'X'
-            },
-            {
-                'desc': 'Number of health facilities within areas of high '
-                        'supply index',
-                'value': 'X'
-            },
-            {
-                'desc': 'Number of restaurants within areas of high '
-                        'supply index',
-                'value': 'X'
-            },
+            }
         ]
 
         if use_case_id:
