@@ -357,6 +357,8 @@ export async function getDatasets(inputs) {
 	document.getElementById('report-btn').disabled = false;
 }
 
+window.getDatasets = getDatasets;
+
 document.getElementById('report-btn').onclick = async (e) => {
 	e.preventDefault();
 

@@ -74,7 +74,7 @@ async function trigger(value) {
 		c.previousSibling.style.display = '';
 
 	const r = DS.array.filter(d => !d.disabled && (d.id + ";" + d.name).match(value));
-	DS.array.forEach(d => d.controls.style.display = r.indexOf(d) > -1 ? '' : 'none');
+	DS.array.forEach(d => d.controls ? d.controls.style.display = r.indexOf(d) > -1 ? '' : 'none' : 'none');
 
 	for (let c of containers) {
 		if (Array.from(qsa('ds-controls', c)).every(d => d.style.display === 'none'))

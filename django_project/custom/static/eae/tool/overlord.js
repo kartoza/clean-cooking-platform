@@ -20,16 +20,11 @@ export default class Overlord {
 	dataset(_ds, arg, data) {
 		let ds;
 
-		switch (_ds.constructor.name) {
-		case "DS":
-			ds = _ds;
-			break;
-
-		case "String":
+		if (_ds.constructor === String) {
 			ds = DST.get(_ds);
-			break;
-
-		default:
+		} else if (_ds.constructor === DS) {
+			ds = _ds;
+		} else {
 			console.error("O.dataset: Do not know what to do with", _ds);
 			throw Error("O.dataset: ArgumentError.");
 		}

@@ -6,6 +6,7 @@ INSTALLED_APPS += (
     'django_json_widget',
     'preferences',
     'adminsortable2',
+    'webpack_loader',
     'custom',
 )
 
@@ -114,3 +115,12 @@ CACHES = {
 }
 
 PROXY_ALLOWED_HOSTS += ['geoserver']
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'CACHE': not DEBUG,
+    'STATS_FILE': absolute_path('custom', 'webpack-stats.json'),
+    'POLL_INTERVAL': 0.1,
+    'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+  }
+}

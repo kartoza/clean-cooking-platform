@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 
 <html>
@@ -225,10 +226,8 @@
     DOMAIN_DATA = [];
   </script>
 
-  <script type="module">
-	import {init} from '/static/eae/tool/a.1.2.1.js';
-	init();
-  </script>
+
+  {% render_bundle 'tool_main' %}
 
   <template id="bottom-right-container-output-template">
     <div id="bottom-right-container-output" class="bottom-right-container">

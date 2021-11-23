@@ -175,7 +175,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
                 results.forEach((result) => console.log(result))
                 loadingSpinner1.style.display = "none";
                 ccaToolBtn.disabled = false;
-                getDatasets(inputString);
+                window.getDatasets(inputString);
 
                 for (let i=0; i < inputs.length; i++) {
                     addedLayers.push(inputs[i]);
