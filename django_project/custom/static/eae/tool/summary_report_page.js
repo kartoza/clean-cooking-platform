@@ -1,10 +1,14 @@
 import api_get from "./api.js";
 import DS from "./ds.js";
 import Overlord from "./overlord.js";
-import run, {plot_active as analysis_plot_active} from "./analysis.js";
+import run, {
+	plot_active as analysis_plot_active,
+	raster_to_tiff
+} from "./analysis.js";
 import analyse from './summary.js';
 import * as plot from "./plot.js";
 const ea_nanny_steps = [];
+const raster_data = {};
 
 function nanny_init() {
 	window.ea_nanny = new nanny(ea_nanny_steps);
@@ -97,9 +101,9 @@ export async function init() {
 	const map = ce('div', tmpl('#svg-map'), { bind: 'map', ripple: "" });
 	const outputs = ce('div', tmpl('#svg-pie'), { bind: 'outputs', ripple: "" });
 
-    const url = new URL(location);
+	const url = new URL(location);
 	const geoId = url.searchParams.get('geoId');
-    const boundary = url.searchParams.get('boundary');
+	const boundary = url.searchParams.get('boundary');
 	let params = 'default';
 
     GEOGRAPHY = await api_get(`/api/geography/?geo=${geoId}`);
@@ -123,6 +127,7 @@ export async function init() {
 async function run_analysis (output) {
 	const raster = run(output);
 	const data = await analyse(raster);
+	raster_data[output] = raster;
 	plot.outputcanvas(raster, qs(`canvas#${output}-output`));
 	return data;
 };
@@ -135,6 +140,9 @@ export async function getDatasets(inputs) {
 	}
 	if (inputs) {
 		datasets_url += `&inputs=${inputs}`;
+		if (!datasets_url.includes('population-density')){
+			datasets_url += ',population-density';
+		}
 	}
 	await api_get(datasets_url)
 		.then(async r => {
@@ -349,6 +357,8 @@ export async function getDatasets(inputs) {
 	document.getElementById('report-btn').disabled = false;
 }
 
+window.getDatasets = getDatasets;
+
 document.getElementById('report-btn').onclick = async (e) => {
 	e.preventDefault();
 
@@ -383,11 +393,15 @@ document.getElementById('report-btn').onclick = async (e) => {
 
 	let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
 	let supplyImage = document.getElementById('supply-output').toDataURL('image/png', 1.0);
+	let demandRaster = await raster_to_tiff('demand', raster_data['demand']);
+	let supplyRaster = await raster_to_tiff('supply', raster_data['supply']);
 
 	fd.append('geoId', geoId);
 	fd.append('subRegion', subRegion);
 	fd.append('mapImage', mapImage);
 	fd.append('demandImage', demandImage);
+	fd.append('demandTiff', new Blob([demandRaster], { type: 'application/octet-stream;charset=utf-8' }), `demand_${boundary}_${geoId}_${subRegion}.tiff`);
+	fd.append('supplyTiff', new Blob([supplyRaster], { type: 'application/octet-stream;charset=utf-8' }), `supply_${boundary}_${geoId}_${subRegion}.tiff`);
 	fd.append('supplyImage', supplyImage);
 	fd.append('useCaseId', useCaseId);
 	fd.append('scenarioId', document.getElementById('scenarioSelect').value);

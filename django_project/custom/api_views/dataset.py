@@ -58,7 +58,7 @@ class DatasetList(APIView):
             if inputs:
                 name_filter = '('
                 for input_name in inputs:
-                    name_filter += input_name.replace('-',' ').lower() + '|'
+                    name_filter += input_name.lower() + '|'
                 name_filter = name_filter[:-1] + ')'
                 datasets = datasets.filter(
                     name_long__iregex=r'{}'.format(name_filter)

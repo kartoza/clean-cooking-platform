@@ -245,10 +245,12 @@ export async function plot_active(type, doindexes) {
 	return raster;
 };
 
-export async function raster_to_tiff(type) {
+export async function raster_to_tiff(type, raster=null) {
 	const b = DST.get('boundaries');
 
-	const raster = await run(type);
+	if (!raster) {
+		raster = await run(type);
+	}
 
 	if (!raster.length) return;
 

@@ -12,3 +12,5 @@ deployment/media/
 deployment/volumes/
 celery.log
 django_project/celerybeat-schedule
+webpack-stats.json
+node_modules/

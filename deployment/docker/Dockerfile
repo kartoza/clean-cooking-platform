@@ -23,6 +23,12 @@ RUN pip uninstall -y celery && pip install -r /REQUIREMENTS.txt
 ADD django_project /home/web/django_project
 WORKDIR /home/web/django_project
 
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+      apt-get install -y nodejs && cd custom && \
+      npm install --quiet -g webpack@4.16.5 && \
+      npm install --quiet -g webpack-cli@4.2.0 && \
+      npm install --quiet && webpack --mode production
+
 # Open port 8080 as we will be running our uwsgi socket on that
 #EXPOSE 8080
 

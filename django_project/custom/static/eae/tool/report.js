@@ -2,11 +2,9 @@
 
 import DS from './ds.js';
 
-import '../lib/jspdf.js';
+import { jsPDF } from "jspdf";
 
-import '../lib/jspdf-autotable.js';
-
-const jsPDF = jspdf.jsPDF;
+import 'jspdf-autotable';
 
 export function pdf() {
 	const canvas = DST.get('population-density').raster.canvas;

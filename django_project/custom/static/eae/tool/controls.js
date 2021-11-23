@@ -438,6 +438,7 @@ function range(opts = {}) {
 	const v2 = ce('div', null, { bind: "v2" });
 
 	const l = tmpl('#ramp');
+	if (typeof l === 'undefined') return
 	l.className = 'ramp';
 	l.append(v1, ce('div', opts.ramp || 'range', { class: "unit-ramp" }), v2);
 
