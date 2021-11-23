@@ -14,3 +14,4 @@ celery.log
 django_project/celerybeat-schedule
 webpack-stats.json
 node_modules/
+webpack_bundles/
