@@ -6,7 +6,6 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('layers', '0034_auto_20211122_0346'),
         ('custom', '0045_reportsummary'),
     ]
 

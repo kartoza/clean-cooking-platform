@@ -8,7 +8,6 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('layers', '0034_auto_20211122_0346'),
         ('custom', '0044_auto_20211115_0842'),
     ]
 
