@@ -26,3 +26,4 @@ celery==4.4.2
 django-cleanup==5.2.0
 geopandas==0.10.2
 rasterio==1.2.10
+django-webpack-loader==1.4.1
