@@ -63,9 +63,9 @@ showTileLayer = (layerName) => {
     MAPBOX.addSource('boundary-source', {
       'type': 'raster',
       'tiles': [
-        `/proxy_cca/${geoserverUrl}/wms?bbox={bbox-epsg-3857}&format=image/png&
-        service=WMS&TILED=true&version=1.1.1&request=GetMap&srs=EPSG:3857&
-        transparent=true&width=256&height=256&LAYERS=${layerName}`,
+        `/proxy_cca/${geoserverUrl}/wms?bbox={bbox-epsg-3857}&format=image/png&` +
+        `service=WMS&TILED=true&version=1.1.1&request=GetMap&srs=EPSG:3857&` +
+        `transparent=true&width=256&height=256&LAYERS=${layerName}`,
       ],
       'tileSize': 256
     });
