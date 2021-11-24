@@ -108,10 +108,16 @@ class ClipLayerByRegion(APIView):
         except Layer.DoesNotExist:
             raise Http404
 
-        clipped_layer, created = ClippedLayer.objects.get_or_create(
-            layer=layer,
-            boundary_uuid=boundary_uuid,
-        )
+        try:
+            clipped_layer, created = ClippedLayer.objects.get_or_create(
+                layer=layer,
+                boundary_uuid=boundary_uuid,
+            )
+        except ClippedLayer.MultipleObjectsReturned:
+            clipped_layers = ClippedLayer.objects.filter(layer=layer, boundary_uuid=boundary_uuid)
+            created = False
+            clipped_layer = clipped_layers.last()
+            clipped_layers.exclude(id=clipped_layer.id).delete()
 
         if not created:
             if clipped_layer.process_state and not clipped_layer.clipped_file:

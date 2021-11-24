@@ -58,7 +58,10 @@ class DatasetList(APIView):
             if inputs:
                 name_filter = '('
                 for input_name in inputs:
-                    name_filter += input_name.lower() + '|'
+                    input_name = input_name.lower()
+                    if input_name != 'population-density':
+                        input_name = input_name.replace('-', ' ')
+                    name_filter += input_name + '|'
                 name_filter = name_filter[:-1] + ')'
                 datasets = datasets.filter(
                     name_long__iregex=r'{}'.format(name_filter)

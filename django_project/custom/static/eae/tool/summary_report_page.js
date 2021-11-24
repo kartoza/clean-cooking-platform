@@ -9,6 +9,7 @@ import analyse from './summary.js';
 import * as plot from "./plot.js";
 const ea_nanny_steps = [];
 const raster_data = {};
+let addedLayers = [];
 
 function nanny_init() {
 	window.ea_nanny = new nanny(ea_nanny_steps);
@@ -106,44 +107,70 @@ export async function init() {
 	const boundary = url.searchParams.get('boundary');
 	let params = 'default';
 
-    GEOGRAPHY = await api_get(`/api/geography/?geo=${geoId}`);
+	GEOGRAPHY = await api_get(`/api/geography/?geo=${geoId}`);
 
 	U = new Proxy({ url: url, params: ea_params[params] }, UProxyHandler);
 	O = new Overlord();
 
 	const inputs = U.inputs;
-
-    nanny_init();
-
-    let boundary_url = `/api/boundaries-dataset/?geography=${geoId}`;
+	nanny_init();
+	let boundary_url = `/api/boundaries-dataset/?geography=${geoId}`;
 	if (boundary) {
 		boundary_url += `&boundary=${boundary}`
 	}
-    const datasetBoundaries = await api_get(boundary_url)
-    let ds = new DS(datasetBoundaries, false);
+	const datasetBoundaries = await api_get(boundary_url)
+	let ds = new DS(datasetBoundaries, false);
 
 };
 
-async function run_analysis (output) {
-	const raster = run(output);
+async function run_analysis (output, id = "") {
+	const key = `${output}${id}`;
+	let raster;
+	if (raster_data.hasOwnProperty(key)) {
+		raster = raster_data[key]
+	} else {
+		raster = await run(output);
+		raster_data[key] = raster;
+	}
 	const data = await analyse(raster);
-	raster_data[output] = raster;
 	plot.outputcanvas(raster, qs(`canvas#${output}-output`));
 	return data;
-};
+}
 
-export async function getDatasets(inputs) {
+export async function getDatasets(inputs, scenarioId) {
 
 	let datasets_url = `/api/datasets/?geography=${geoId}`;
 	if (boundary) {
 		datasets_url += `&boundary=${boundary}`
 	}
 	if (inputs) {
-		datasets_url += `&inputs=${inputs}`;
-		if (!datasets_url.includes('population-density')){
-			datasets_url += ',population-density';
+		if (!inputs.includes('population-density')) {
+			let inputList = inputs.split(',');
+			inputList.unshift('population-density');
+			inputs = inputList.join(',');
 		}
+		datasets_url += `&inputs=${inputs}`;
 	}
+
+	DST.forEach((value, key) => {
+		if (key !== 'boundaries') {
+			DST.delete(key);
+		}
+	})
+
+	if (addedLayers.length > 0) {
+		for (let i = 0; i < addedLayers.length; i++) {
+			const addedLayer = addedLayers[i];
+			try {
+				MAPBOX.removeLayer(addedLayer);
+				MAPBOX.removeSource(addedLayer);
+			} catch (e) {
+				console.log(e)
+			}
+		}
+		addedLayers = [];
+	}
+
 	await api_get(datasets_url)
 		.then(async r => {
 			return Promise.all(r.map(async e => {
@@ -334,7 +361,6 @@ export async function getDatasets(inputs) {
 			}))
 		});
 	// U.params.inputs = [...new Set(DS.array.map(e => e.id))];
-
 	init_template();
 	const inputList = inputs.split(',').reverse();
 	for (const [key, value] of DST.entries()) {
@@ -343,14 +369,19 @@ export async function getDatasets(inputs) {
 	await DST.get('boundaries')._active(true, false);
 	for (let i = 0; i < inputList.length; i++) {
 		try {
-			await DST.get(inputList[i])._active(true, true);
+			await DST.get(inputList[i]).active(true, true);
+			addedLayers.push(inputList[i]);
 		} catch (e) {
+			debugger;
 			console.log(e);
 		}
 	}
 	// await run_analysis("eai");
-	window.supplyData = await run_analysis("supply");
-	window.demandData = await run_analysis("demand");
+	await setTimeout(() => {}, 200)
+	await run_analysis("ani", scenarioId);
+	window.supplyData = await run_analysis("supply", scenarioId);
+	window.demandData = await run_analysis("demand", scenarioId);
+	await run_analysis("eai", scenarioId);
 	// await run_analysis("ani");
 
 	document.getElementById('loading-spinner-0').style.display = 'none';
@@ -363,6 +394,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 	e.preventDefault();
 
 	let buttonText = document.getElementById('report-btn-text');
+	const scenarioSelect = document.getElementById('scenarioSelect');
 	let button = document.getElementById('report-btn');
 	button.disabled = true;
 	buttonText.innerHTML = 'Generating...'
@@ -393,8 +425,8 @@ document.getElementById('report-btn').onclick = async (e) => {
 
 	let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
 	let supplyImage = document.getElementById('supply-output').toDataURL('image/png', 1.0);
-	let demandRaster = await raster_to_tiff('demand', raster_data['demand']);
-	let supplyRaster = await raster_to_tiff('supply', raster_data['supply']);
+	let demandRaster = await raster_to_tiff('demand', raster_data['demand' + scenarioSelect.selectedIndex]);
+	let supplyRaster = await raster_to_tiff('supply', raster_data['supply' + scenarioSelect.selectedIndex]);
 
 	fd.append('geoId', geoId);
 	fd.append('subRegion', subRegion);
