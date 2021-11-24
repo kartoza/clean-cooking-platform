@@ -81,6 +81,18 @@ width: -moz-fit-content;
     this.set_el(this.content, maybe(o, 'content'));
     this.set_el(this.footer, maybe(o, 'footer'));
 
+    // Update header to add X button
+    this.header.style.display = 'flex';
+    let x = document.createElement('div');
+    x.style.marginLeft = 'auto';
+    x.classList.add('hover-button');
+    x.innerHTML = '✕';
+    let that = this;
+    x.addEventListener('click', function (event) {
+      that.hide();
+    })
+    this.header.append(x);
+
     return this;
   }
 
