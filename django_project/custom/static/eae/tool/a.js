@@ -972,7 +972,7 @@ function nanny_force() {
 	DS.array.filter(d => d.on).forEach(d => d.active(false, false));
 
 	O.view = 'inputs';
-	controlssearch.select_tab(qs('#controls-tab-census'), "census");
+	// controlssearch.select_tab(qs('#controls-tab-census'), "census");
 	ea_modal.hide();
 
 	O.view = U.view;

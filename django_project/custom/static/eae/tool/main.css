@@ -844,3 +844,7 @@ table.summary .index-name {
     padding: 1em;
     overflow-y: scroll;
 }
+
+.hover-button:hover {
+    cursor: pointer;
+}
