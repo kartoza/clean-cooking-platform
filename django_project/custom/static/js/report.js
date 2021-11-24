@@ -1,4 +1,3 @@
-let addedLayers = [];
 let rasterBoundaryLayer = null;
 const loadingSpinner1 = document.getElementById('loading-spinner-1');
 const loadingSpinner0 = document.getElementById('loading-spinner-0');
@@ -145,18 +144,6 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         let inputString = new URL(datasetUrl).searchParams.get('inputs')
         let inputs = inputString.split(',')
 
-        if (addedLayers.length > 0) {
-            for (let i = 0; i < addedLayers.length; i++) {
-                const addedLayer = addedLayers[i];
-                try {
-                    MAPBOX.removeLayer(addedLayer);
-                    MAPBOX.removeSource(addedLayer);
-                } catch (e) {
-                    console.log(e)
-                }
-            }
-            addedLayers = [];
-        }
         if (selectedLayers.length > 0) {
             selectedLayers.reverse();
         }
@@ -175,11 +162,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
                 results.forEach((result) => console.log(result))
                 loadingSpinner1.style.display = "none";
                 ccaToolBtn.disabled = false;
-                window.getDatasets(inputString);
-
-                for (let i=0; i < inputs.length; i++) {
-                    addedLayers.push(inputs[i]);
-                }
+                window.getDatasets(inputString, scenarioSelect.selectedIndex);
             });
     }
 

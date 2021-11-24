@@ -12,6 +12,10 @@ DATABASES = {
         'HOST': 'postgres',
         'PORT': 5432,
         'CONN_MAX_AGE': 5,
+        'TEST_NAME': 'unittests',
+        'TEST': {
+            'NAME': 'test_cca'
+        },
         'ENGINE': 'django.contrib.gis.db.backends.postgis'},
     'datastore': {
         'NAME': 'geonode_data',
@@ -20,5 +24,8 @@ DATABASES = {
         'HOST': 'postgres',
         'PORT': 5432,
         'CONN_MAX_AGE': 5,
+        'TEST': {
+            'SKIP': True
+        },
         'ENGINE': 'django.contrib.gis.db.backends.postgis'}
 }

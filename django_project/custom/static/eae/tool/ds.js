@@ -503,7 +503,6 @@ This is not fatal but the dataset is now disabled.`
 		let spinner = qs('.spinner', content);
 		let right = qs('.right', content);
 		let left = qs('.left', content);
-		console.log(b)
 
 		if ((Object.keys(b).length > 0 && this.metadata.description !== "") || !this.geonode_metadata) {
 			spinner.style.display = 'none';
@@ -582,9 +581,7 @@ This is not fatal but the dataset is now disabled.`
 
 		if (this.items) {
 			// Collections will (as of now) always share rasters.
-			//
 			if (this.raster) this.raster.parse();
-
 			await Promise.all(this.items.map(d => d.load(arg)));
 		}
 

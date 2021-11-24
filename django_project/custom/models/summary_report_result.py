@@ -37,4 +37,5 @@ class SummaryReportResult(models.Model):
         return self.summary_report_category.name
 
     class Meta:
-        verbose_name_plural = 'Summary Report Results'
+        verbose_name_plural = 'Summary Calculation Results'
+        verbose_name = 'Summary Calculation Result'
