@@ -117,7 +117,7 @@ section.hero-medium .text-content h1 {
     margin-bottom: 50px;
 }
 
-@media screen and (min-width: 1600px) {
+@media screen and (min-width: 768px) {
   section.hero-medium .bg-image {
       left: 0px;
       width: 100%;
@@ -144,15 +144,6 @@ section.hero-medium {
 section.hero-medium .h2 {
     font-size: 51px;
     font-weight: 400;
-}
-
-section.hero-medium .h2:after {
-    content: 'BETA';
-    font-size: 0.4em;
-    position: relative;
-    top: -2em;
-    left: -2.5em;
-    color: #74b55c;
 }
 
 .text-content {
@@ -211,4 +202,27 @@ section.hero-medium .h2:after {
     /*    padding-left: 30px !important;*/
     /*    padding-right: 30px !important;*/
     /*}*/
+}
+
+.banner-title .title-first {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+.banner-title .title-explorer h1 {
+    margin-top: -10px !important;
+}
+
+.welcome-text {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.explore-btn-container {
+    display: flex;
+}
+
+.explore-btn-container a {
+    margin-left: auto;
+    margin-right: auto;
 }
