@@ -1,4 +1,5 @@
 import io
+import math
 import textwrap
 
 from urllib.parse import urlparse
@@ -26,6 +27,7 @@ from custom.models import (
     Geography, UseCase, Preset,
     SummaryReportCategory, SummaryReportResult, Category
 )
+from custom.tools.calculate_household import calculate_household
 from custom.tools.category import category_from_url
 from custom.views.summary_report import sample_raster_with_vector
 
@@ -62,7 +64,8 @@ class ReportPDFView(View):
     preset = None
     demand_summary = []
     supply_summary = []
-    total_population = 'X'
+    total_population = '0'
+    total_household = 0
 
     default_font = 'AktivGroteskCorpMedium'
     default_font_bold = 'AktivGroteskCorpBold'
@@ -349,27 +352,38 @@ class ReportPDFView(View):
 
         table_data = [
             ['', self.subregion],
-            ['Population', self.total_population],
-            ['Households', 'X'],
+            ['Population', "{:,}".format(int(self.total_population))],
+            ['Households', "{:,}".format(math.trunc(self.total_household))],
             ['Urban ratio', 'X%']
         ]
 
         table_width = self.sidebar_width
         table_height = 1000
         table_x = self.sidebar_x + self.sidebar_x_padding
-        table_y = y_pos - 300
+        table_y = y_pos - 250
 
-        table = Table(table_data)
-        table.setStyle(TableStyle([
+        table_style = [
+            ('GRID', (0, 0), (-1, -1), 0.25, colors.Color(
+                red=220/255,green=220/255,blue=220/255)),
+            ('INNERGRID', (0, 0), (0, 1), 0.25, colors.Color(
+                0.341, 0.553, 0.267
+            )),
+            ('INNERGRID', (1, 0), (1, 1), 0.25, colors.Color(
+                0.341, 0.553, 0.267
+            )),
+            ('FONTNAME', (0, 0), (1, 0), self.default_font_bold),
+            ('FONTNAME', (0, 0), (0, -1), self.default_font_bold),
             ('BACKGROUND', (0, 0), (1, -1), colors.white),
             ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
                 red=29/255,green=63/255,blue=116/255)),
-            ('FONTSIZE', (0, 0), (1, -1), 33),
+            ('FONTSIZE', (0, 0), (1, -1), 28),
             ('RIGHTPADDING', (0, 0), (1, -1), 50),
-            ('LEFTPADDING', (0, 0), (1, -1), 50),
+            ('LEFTPADDING', (0, 0), (1, -1), 20),
             ('BOTTOMPADDING', (0, 0), (1, -1), 30),
-            ('ALIGN', (1, 1), (1, -1), "RIGHT"),
-        ]))
+        ]
+
+        table = Table(table_data, colWidths=[4.2*inch,4.2*inch])
+        table.setStyle(TableStyle(table_style))
         table.wrapOn(page, table_width, table_height)
         table.drawOn(page, table_x, table_y)
 
@@ -463,6 +477,7 @@ class ReportPDFView(View):
         geo_id = request.POST.get('geoId', '')
         use_case_id = request.POST.get('useCaseId', None)
         preset_id = request.POST.get('scenarioId', None)
+        boundary_id = request.POST.get('boundary', None)
 
         self.map_image = request.POST.get('mapImage', '')
         self.demand_image = request.POST.get('demandImage', None)
@@ -481,6 +496,14 @@ class ReportPDFView(View):
             request.POST.get('totalPopulation', '')
         )
         self.geography = Geography.objects.get(id=geo_id)
+
+        if self.geography.household_layer:
+            household_result = calculate_household(
+                self.geography,
+                boundary_id
+            )
+            if household_result:
+                self.total_household = household_result['total_household']
 
         self.summary_categories = SummaryReportCategory.objects.filter(
             preset_id=preset_id

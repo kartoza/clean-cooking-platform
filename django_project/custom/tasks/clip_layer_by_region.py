@@ -141,7 +141,8 @@ def clip_layer_by_region(self, clipped_layer_id):
                         os.remove(shp_zip_file)
                     except zipfile.BadZipFile:
                         logger.info('Cannot download zip file')
-                        return
+                        os.remove(shp_zip_file)
+                        raise Exception('Cannot download zip file')
 
             clip_vector_layer(
                 layer_vector_file=layer_vector_file,
@@ -177,3 +178,4 @@ def clip_layer_by_region(self, clipped_layer_id):
     logger.info('Finish clipping layer')
     logger.info('Output {}'.format(output))
     clipped_layer.save()
+    return clipped_layer
