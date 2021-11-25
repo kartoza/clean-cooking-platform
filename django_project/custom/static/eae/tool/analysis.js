@@ -99,6 +99,8 @@ export default async function run(type, wait_for_raster=false) {
 				_ => nr.raster.data,
 				_ => plot_active(U.output).then(raster => indexes_graphs(raster))
 			);
+
+			return it
 		}
 	}
 
@@ -217,7 +219,7 @@ export function datasets(type) {
  */
 
 export async function plot_active(type, doindexes) {
-	const raster = run(type);
+	const raster = await run(type);
 	plot.outputcanvas(raster);
 
 	const index = ea_indexes[type];
@@ -240,7 +242,6 @@ export async function plot_active(type, doindexes) {
 	let canvas_source = MAPBOX.getSource('output-source');
 	if (canvas_source) {
 		canvas_source.raster = raster;
-
 		canvas_source.play();
 		canvas_source.pause();
 	}
