@@ -82,6 +82,21 @@ class Geography(models.Model):
         on_delete=models.SET_NULL
     )
 
+    household_layer = models.ForeignKey(
+        Layer,
+        null=True,
+        blank=True,
+        related_name='household_layer',
+        on_delete=models.SET_NULL
+    )
+
+    household_layer_field = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+        help_text='Field to get value from household layer'
+    )
+
     configuration = JSONField(
         null=True,
         blank=True
