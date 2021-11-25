@@ -110,7 +110,7 @@ section > svg.flair-right {
 }
 
 .how-section {
-    background-color: rgba(128,173,75,.3);
+    background-color: #EBF5FA;
     padding-bottom: 3em;
     padding-top: 2em;
     display: flex;
@@ -571,7 +571,7 @@ section.hero-large .bg-image {
 }
 
 .blue-text {
-    color: #016597;
+    color: #183B72;
 }
 
 .headshot {

@@ -54,7 +54,7 @@
 }
 
 h1, h2, h3, strong {
-  color: #3e6b2c;
+  color: #356635;
   font-family:  'Aktiv Grotesk Corp', sans-serif;
 }
 
@@ -242,12 +242,13 @@ section .flex-center{
 .first-section {
   padding: 2em;
   margin-top: -2em;
-  background-color: #ebf5fa;
+  background-color: #EBF5FA;
 }
 
 .github-box {
   position: relative;
-  background-color: rgba(36, 41, 47, 0.09);
+  background-color: #0280bf;
+  color: white;
   padding: 2em;
   border-bottom-left-radius: 2em;
   border-top-right-radius: 2em;
@@ -261,7 +262,7 @@ section .flex-center{
   bottom: 0;
   right: 0;
   color: white;
-  background-color: #24292f;
+  background-color: #00689c;
   border-top-left-radius: 1em;
   display: flex;
 }
@@ -277,7 +278,7 @@ section .flex-center{
 }
 
 .blue-section {
-  background-color: rgba(123,188,222,.3);
+  background-color: #99D4F2;
 }
 
 .target-category {
@@ -289,7 +290,7 @@ section .flex-center{
 
 .target-member {
   text-align: center;
-  background-color: #016597;
+  background-color: #00689C;
   border-radius: 0.8em;
   color: white;
   font-size: 15px;
