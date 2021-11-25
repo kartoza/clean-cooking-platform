@@ -437,7 +437,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 	fd.append('supplyTiff', new Blob([supplyRaster], { type: 'application/octet-stream;charset=utf-8' }), `supply_${boundary}_${geoId}_${subRegion}.tiff`);
 	fd.append('supplyImage', supplyImage);
 	fd.append('useCaseId', useCaseId);
-	fd.append('scenarioId', document.getElementById('scenarioSelect').value);
+	fd.append('scenarioId', scenarioSelect.value);
 	fd.append('boundary', boundary);
 
 	try {
@@ -459,7 +459,9 @@ document.getElementById('report-btn').onclick = async (e) => {
 			// Try to find out the filename from the content disposition `filename` value
 			let disposition = request.getResponseHeader('content-disposition');
 			let matches = /"([^"]*)"/.exec(disposition);
-			let filename = (matches != null && matches[1] ? matches[1] : 'Report.pdf');
+			let presetName = scenarioSelect.options[scenarioSelect.selectedIndex].text;
+
+			let filename = `${useCaseName}-${presetName}-${geographyName}.pdf`
 
 			// The actual download
 			let blob = new Blob([request.response], {type: 'application/pdf'});

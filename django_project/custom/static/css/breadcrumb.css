@@ -26,6 +26,7 @@
   z-index: 1;
   background-color: #0180bf;
   font-size: 14px;
+  margin-bottom: -40px;
 }
 
 .breadcrumb a {

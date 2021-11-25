@@ -42,6 +42,8 @@
         let geoId = url.searchParams.get('geoId');
         let subRegionUrl = url.searchParams.get('subRegion');
         let subRegion = '{{ subRegion.1 }}';
+        let geographyName = '{{ subRegion.1 }}, {{ geo.name }}';
+        let useCaseName = '{{ use_case.name }}';
         let useCaseId = '{{ use_case.id }}';
         mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
         let mapboxStyle = 'mapbox://styles/{{ MAPBOX_THEME }}';
@@ -133,7 +135,6 @@
 
 {% block content %}
     <div class="container">
-        <div style="height: 20px;"></div>
 
          <div class="container">
              <div class="breadcrumb">
