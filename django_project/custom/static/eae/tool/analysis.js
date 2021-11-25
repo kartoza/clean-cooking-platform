@@ -16,7 +16,7 @@ import {
  * returns a raster (FloatArray) to be plotted onto a canvas.
  */
 
-export default function run(type) {
+export default async function run(type, wait_for_raster=false) {
 	const t0 = performance.now();
 	const boundaries = DST.get('boundaries');
 	let list = datasets(type);
@@ -85,16 +85,21 @@ export default function run(type) {
 
 	let nr = list.find(l => !maybe(l, 'raster', 'data'));
 	if (nr) {
-		console.warn(`Dataset '${nr.id}' has no raster.data (yet).`,
-			           "Skipping this run.",
-			           "Telling O to wait for it...");
+		if (wait_for_raster) {
+			await O.wait_for(
+				_ => nr.raster.data,
+				_ => console.log(nr.raster.data)
+			);
+		} else {
+			console.warn(`Dataset '${nr.id}' has no raster.data (yet).`,
+									 "Skipping this run.",
+									 "Telling O to wait for it...");
 
-		O.wait_for(
-			_ => nr.raster.data,
-			_ => plot_active(U.output).then(raster => indexes_graphs(raster))
-		);
-
-		return it;
+			O.wait_for(
+				_ => nr.raster.data,
+				_ => plot_active(U.output).then(raster => indexes_graphs(raster))
+			);
+		}
 	}
 
 	if (list.length === 1 && full_weight === 0) return it;

@@ -129,7 +129,7 @@ async function run_analysis (output, id = "") {
 	if (raster_data.hasOwnProperty(key)) {
 		raster = raster_data[key]
 	} else {
-		raster = await run(output);
+		raster = await run(output, true);
 		raster_data[key] = raster;
 	}
 	const data = await analyse(raster);
@@ -376,16 +376,17 @@ export async function getDatasets(inputs, scenarioId) {
 			console.log(e);
 		}
 	}
-	// await run_analysis("eai");
-	await setTimeout(() => {}, 200)
-	await run_analysis("ani", scenarioId);
+
 	window.supplyData = await run_analysis("supply", scenarioId);
+	await run_analysis("ani", scenarioId);
 	window.demandData = await run_analysis("demand", scenarioId);
 	await run_analysis("eai", scenarioId);
-	// await run_analysis("ani");
 
-	document.getElementById('loading-spinner-0').style.display = 'none';
-	document.getElementById('report-btn').disabled = false;
+	// Wait for seconds
+	setTimeout(() => {
+		document.getElementById('loading-spinner-0').style.display = 'none';
+		document.getElementById('report-btn').disabled = false;
+	}, 500)
 }
 
 window.getDatasets = getDatasets;
