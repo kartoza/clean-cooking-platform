@@ -1,8 +1,13 @@
 import io
 import textwrap
 
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
+
+from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.http import FileResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
@@ -17,10 +22,15 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import registerFontFamily
 
 from core.settings.utils import absolute_path
-from custom.models import Geography, UseCase, Preset, SummaryReportCategory, SummaryReportResult
+from custom.models import (
+    Geography, UseCase, Preset,
+    SummaryReportCategory, SummaryReportResult, Category
+)
+from custom.tools.category import category_from_url
 from custom.views.summary_report import sample_raster_with_vector
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ReportPDFView(View):
 
     image_path = absolute_path(
@@ -54,28 +64,114 @@ class ReportPDFView(View):
     supply_summary = []
     total_population = 'X'
 
+    default_font = 'AktivGroteskCorpMedium'
+    default_font_bold = 'AktivGroteskCorpBold'
+    default_font_light = 'AktivGroteskCorpLight'
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         pdfmetrics.registerFont(
-            TTFont('AktivGroteskCorpMedium',
+            TTFont(self.default_font,
                    absolute_path(
                        'custom',
                        'static/fonts/AktivGroteskCorp-Medium.ttf')))
         pdfmetrics.registerFont(
-            TTFont('AktivGroteskCorpBold',
+            TTFont(self.default_font_bold,
                    absolute_path(
                        'custom',
                        'static/fonts/AktivGroteskCorp-Bold.ttf')))
         pdfmetrics.registerFont(
-            TTFont('AktivGroteskCorpLight',
+            TTFont(self.default_font_light,
                    absolute_path(
                        'custom',
                        'static/fonts/AktivGroteskCorp-Light.ttf')))
         registerFontFamily(
             'AktivGroteskCorp',
-            normal='AktivGroteskCorpMedium',
-            bold='AktivGroteskCorpBold',
-            italic='AktivGroteskCorpLight')
+            normal=self.default_font,
+            bold=self.default_font_bold,
+            italic=self.default_font_light)
+
+    def _draw_supply_demand_table(self, canvas):
+        data = {
+            'demand': [],
+            'supply': [],
+            'other': []
+        }
+
+        parsed_url = urlparse(self.preset.permalink)
+        captured_value = parse_qs(parsed_url.query)['inputs'][0]
+        categories = category_from_url(captured_value.split(','))
+        population_added = False
+
+        for category in categories:
+            if 'population' in category.name_long.lower():
+                population_added = True
+            if category.demand_index:
+                data['demand'].append(category.name_long)
+            if category.supply_index:
+                data['supply'].append(category.name_long)
+            if not category.demand_index and not category.supply_index:
+                data['other'].append(category.name_long)
+
+        if not population_added:
+            data['demand'].append('Population')
+
+        table_data = [
+            ['Supply', 'Demand'],
+        ]
+
+        for supply in data['supply']:
+            table_data.append([supply, ''])
+
+        demand_index = 1
+        for demand in data['demand']:
+            if len(table_data) > demand_index:
+                table_data[demand_index][1] = demand
+            else:
+                table_data.append(['', demand])
+            demand_index += 1
+
+        other_first_index = None
+        if 'other' in data:
+            if demand_index-1 > len(data['supply']):
+                table_data[len(data['supply']) + 1][0] = 'Other'
+            else:
+                table_data.append(['Other', ''])
+            other_first_index = len(data['supply']) + 1
+            other_index = other_first_index + 1
+            for other in data['other']:
+                if len(table_data) > other_index:
+                    table_data[other_index][0] = other
+                else:
+                    table_data.append([other, ''])
+                other_index += 1
+
+        table_width = 2000
+        table_height = 200
+        table_x = 80
+        table_y = 100
+
+        table_style = [
+            ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('FONTNAME', (0, 0), (1, 0), self.default_font_bold),
+            ('BACKGROUND', (0, 0), (1, -1), colors.white),
+            ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
+                red=29 / 255, green=63 / 255, blue=116 / 255)),
+            ('FONTSIZE', (0, 0), (1, -1), 23),
+            ('RIGHTPADDING', (0, 0), (1, -1), 50),
+            ('LEFTPADDING', (0, 0), (1, -1), 20),
+            ('BOTTOMPADDING', (0, 0), (1, -1), 30),
+        ]
+
+        if other_first_index:
+            table_style.append(
+                ('FONTNAME', (0, other_first_index), (0, other_first_index), self.default_font_bold),
+            )
+
+        table = Table(table_data, colWidths=[8*inch,8*inch])
+        table.setStyle(TableStyle(table_style))
+        table.wrapOn(canvas, table_width, table_height)
+        table.drawOn(canvas, table_x, table_y)
 
     def _draw_wrapped_line(self, canvas, text, length, x_pos, y_pos, y_offset):
         """
@@ -103,7 +199,7 @@ class ReportPDFView(View):
                   stroke=0, fill=1)
 
         page.setFillColorRGB(0.459, 0.714, 0.831)
-        page.setFont("AktivGroteskCorpLight", 25)
+        page.setFont(self.default_font_light, 25)
         page.drawString(self.page_width - 420,
                         self.navbar_height - 35,
                         "CLEAN COOKING ALLIANCE  —  {}".format(
@@ -124,10 +220,10 @@ class ReportPDFView(View):
     def _draw_title(self, page, title, sub_title):
         # Add title
         page.setFillColorRGB(29 / 255, 63 / 255, 116 / 255)
-        page.setFont("AktivGroteskCorpMedium", 40)
+        page.setFont(self.default_font, 40)
         page.drawString(
             75, self.page_height - 100, title)
-        page.setFont("AktivGroteskCorpBold", 50)
+        page.setFont(self.default_font_bold, 50)
         page.drawString(
             75, self.page_height - 150, sub_title)
         page.setLineWidth(inch * 0.08)
@@ -140,10 +236,11 @@ class ReportPDFView(View):
             self.page_height - 165
         )
 
-    def _draw_map(self, page, map_image, legend_path = None, img_width = 650):
+    def _draw_map(self, page, map_image, legend_path = None, img_width = 650, x = None, y = 0):
         img = ImageReader(map_image)
+        x_pos = x if x else (self.sidebar_x / 2) - (img_width / 2)
         page.drawImage(
-            img, (self.sidebar_x / 2) - (img_width / 2), 0,
+            img, x_pos, y,
             width=img_width,
             height=self.page_height,
             preserveAspectRatio=True,
@@ -158,7 +255,6 @@ class ReportPDFView(View):
                 mask='auto')
 
     def _draw_summary(self, page, summary_data):
-
         y_pos = self.page_height - 250
         x_pos = self.sidebar_x + 50
         page.setFillColorRGB(1, 1, 1)
@@ -172,7 +268,7 @@ class ReportPDFView(View):
         )
         y_pos -= 50
         for summary in summary_data:
-            page.setFont("AktivGroteskCorpLight", 30)
+            page.setFont(self.default_font_light, 30)
             prev_y_pos = y_pos
             y_pos = self._draw_wrapped_line(
                 page,
@@ -182,7 +278,7 @@ class ReportPDFView(View):
                 y_pos,
                 35
             )
-            page.setFont("AktivGroteskCorpBold", 70)
+            page.setFont(self.default_font_bold, 70)
             page.drawRightString(
                 x_pos + 250,
                 prev_y_pos - ((prev_y_pos-y_pos)/2) - 10,
@@ -202,12 +298,12 @@ class ReportPDFView(View):
                     height=self.page_height,
                     preserveAspectRatio=True)
         page.setFillColorRGB(1, 1, 1)
-        page.setFont("AktivGroteskCorpBold", 110)
+        page.setFont(self.default_font_bold, 110)
         page.drawString(50, 600, "Clean Cooking")
         page.drawString(50, 500, "Explorer")
 
         page.setFillColorRGB(0.470, 0.714, 0.824)
-        page.setFont("AktivGroteskCorpMedium", 60)
+        page.setFont(self.default_font, 60)
         if self.geography:
             page.drawString(50, 420, "Regional Report for {}, {}".format(
                 self.subregion,
@@ -217,15 +313,14 @@ class ReportPDFView(View):
 
 
     def draw_page_two(self, page):
-
         self._draw_sidebar(page)
         self._draw_footer(page, 2)
-        self._draw_map(page, self.map_image, None, 900)
+        self._draw_map(page, self.map_image, None, 800, 80, 60)
         self._draw_title(page, 'Regional Summary', self.subregion)
 
         # Add sidebar title
         page.setFillColorRGB(1, 1, 1)
-        page.setFont("AktivGroteskCorpBold", 65)
+        page.setFont(self.default_font_bold, 65)
         page.drawString(
             self.sidebar_x + self.sidebar_x_padding,
             self.page_height - 100, "Snapshot")
@@ -241,7 +336,7 @@ class ReportPDFView(View):
 
         # Draw description
         page.setFillColorRGB(1, 1, 1)
-        page.setFont("AktivGroteskCorpLight", 30)
+        page.setFont(self.default_font_light, 30)
 
         y_pos = self._draw_wrapped_line(
             page,
@@ -278,28 +373,31 @@ class ReportPDFView(View):
         table.wrapOn(page, table_width, table_height)
         table.drawOn(page, table_x, table_y)
 
+        self._draw_supply_demand_table(page)
+
         page.showPage()
 
     def draw_page_three(self, page):
         if not self.demand_image:
             return
 
-        for summary_category in self.summary_categories:
-            summary_result, _ = SummaryReportResult.objects.get_or_create(
-                summary_report_category=summary_category,
-                category='demand'
-            )
-            summary_result.raster_file = self.demand_tiff_file
-            summary_result.save()
-            summary_result_data = sample_raster_with_vector(
-                summary_result
-            )
-            self.demand_summary.append({
-                'desc': 'Number of {} within areas of high demand index'.format(
-                    summary_category.name
-                ),
-                'value': '{}'.format(summary_result_data['total_high'])
-            })
+        if self.demand_tiff_file:
+            for summary_category in self.summary_categories:
+                summary_result, _ = SummaryReportResult.objects.get_or_create(
+                    summary_report_category=summary_category,
+                    category='demand'
+                )
+                summary_result.raster_file = self.demand_tiff_file
+                summary_result.save()
+                summary_result_data = sample_raster_with_vector(
+                    summary_result
+                )
+                self.demand_summary.append({
+                    'desc': 'Number of {} within areas of high demand index'.format(
+                        summary_category.name
+                    ),
+                    'value': '{}'.format(summary_result_data['total_high'])
+                })
 
         self._draw_sidebar(page, (0.459, 0.714, 0.831))
         self._draw_footer(page, 3)
@@ -308,7 +406,7 @@ class ReportPDFView(View):
         self._draw_summary(page, self.demand_summary)
 
         page.setFillColorRGB(0, 0, 0)
-        page.setFont("AktivGroteskCorpLight", 25)
+        page.setFont(self.default_font_light, 25)
         self._draw_wrapped_line(
             page,
             'This index helps us understand where there is high demand in the '
@@ -323,22 +421,23 @@ class ReportPDFView(View):
         if not self.supply_image:
             return
 
-        for summary_category in self.summary_categories:
-            summary_result, _ = SummaryReportResult.objects.get_or_create(
-                summary_report_category=summary_category,
-                category='supply'
-            )
-            summary_result.raster_file = self.supply_tiff_file
-            summary_result.save()
-            summary_result_data = sample_raster_with_vector(
-                summary_result
-            )
-            self.supply_summary.append({
-                'desc': 'Number of {} close to supply'.format(
-                    summary_category.name
-                ),
-                'value': '{}'.format(summary_result_data['total_high'])
-            })
+        if self.supply_tiff_file:
+            for summary_category in self.summary_categories:
+                summary_result, _ = SummaryReportResult.objects.get_or_create(
+                    summary_report_category=summary_category,
+                    category='supply'
+                )
+                summary_result.raster_file = self.supply_tiff_file
+                summary_result.save()
+                summary_result_data = sample_raster_with_vector(
+                    summary_result
+                )
+                self.supply_summary.append({
+                    'desc': 'Number of {} close to supply'.format(
+                        summary_category.name
+                    ),
+                    'value': '{}'.format(summary_result_data['total_high'])
+                })
 
         self._draw_sidebar(page)
         self._draw_footer(page, 4)
@@ -347,7 +446,7 @@ class ReportPDFView(View):
         self._draw_summary(page, self.supply_summary)
 
         page.setFillColorRGB(0, 0, 0)
-        page.setFont("AktivGroteskCorpLight", 25)
+        page.setFont(self.default_font_light, 25)
         self._draw_wrapped_line(
             page,
             'This index helps us understand where there is high '
