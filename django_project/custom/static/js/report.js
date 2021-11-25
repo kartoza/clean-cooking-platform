@@ -141,7 +141,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         selectedScenario = e.target.options[e.target.selectedIndex];
         selectedLayers = JSON.parse(selectedScenario.dataset.layers);
         let datasetUrl = selectedScenario.dataset.url;
-        let inputString = new URL(datasetUrl).searchParams.get('inputs')
+        let inputString = new URL(datasetUrl).searchParams.get('inputs').replace(/ *\([^)]*\) */g, "");
         let inputs = inputString.split(',')
 
         if (selectedLayers.length > 0) {
