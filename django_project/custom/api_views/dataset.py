@@ -10,6 +10,7 @@ from custom.serializers.dataset_serializer import (
     BoundaryGeographySerializer,
     DatasetSerializer
 )
+from custom.tools.category import category_from_url
 from custom.utils.cache import get_cache_dataset, set_cache_dataset
 
 
@@ -47,7 +48,11 @@ class DatasetList(APIView):
             inputs = inputs.split(',')
 
         if cached is None or not isinstance(cached, list):
-            datasets = Category.objects.filter(
+            if inputs:
+                datasets = category_from_url(inputs)
+            else:
+                datasets = Category.objects.all()
+            datasets = datasets.filter(
                 ~Q(datasetfile__endpoint='') |
                 Q(datasetfile__geonode_layer__isnull=False),
                 geography_id=geography_id,
@@ -55,17 +60,6 @@ class DatasetList(APIView):
             ).exclude(
                 boundary_layer=True,
             ).distinct()
-            if inputs:
-                name_filter = '('
-                for input_name in inputs:
-                    input_name = input_name.lower()
-                    if input_name != 'population-density':
-                        input_name = input_name.replace('-', ' ')
-                    name_filter += input_name + '|'
-                name_filter = name_filter[:-1] + ')'
-                datasets = datasets.filter(
-                    name_long__iregex=r'{}'.format(name_filter)
-                )
 
             cached = set_cache_dataset(dataset_key, DatasetSerializer(
                 datasets, many=True, context={
