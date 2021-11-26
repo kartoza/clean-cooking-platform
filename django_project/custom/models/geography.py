@@ -120,6 +120,14 @@ class Geography(models.Model):
         help_text='Field to get value from cooking percentage layer'
     )
 
+    wealth_index_layer = models.ForeignKey(
+        Layer,
+        null=True,
+        blank=True,
+        related_name='wealth_index_layer',
+        on_delete=models.SET_NULL
+    )
+
     configuration = JSONField(
         null=True,
         blank=True
