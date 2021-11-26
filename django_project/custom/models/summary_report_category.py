@@ -18,6 +18,12 @@ class SummaryReportCategory(models.Model):
         on_delete=models.CASCADE
     )
 
+    boundary_uuid = models.CharField(
+        max_length=255,
+        default='',
+        blank=True
+    )
+
     preset = models.ForeignKey(
         Preset,
         null=False,

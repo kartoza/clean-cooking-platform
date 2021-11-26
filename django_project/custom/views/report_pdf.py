@@ -27,7 +27,7 @@ from custom.models import (
     Geography, UseCase, Preset,
     SummaryReportCategory, SummaryReportResult, Category
 )
-from custom.tools.calculate_household import calculate_household
+from custom.tools.report_calculation import calculate_household, calculate_urban
 from custom.tools.category import category_from_url
 from custom.views.summary_report import sample_raster_with_vector
 
@@ -65,6 +65,7 @@ class ReportPDFView(View):
     demand_summary = []
     supply_summary = []
     total_population = '0'
+    total_urban_population = 0
     total_household = 0
 
     default_font = 'AktivGroteskCorpMedium'
@@ -349,12 +350,14 @@ class ReportPDFView(View):
             self.page_height - 190,
             35
         )
+        self.total_population = int(self.total_population)
+        urban_ratio = self.total_urban_population / self.total_population * 100
 
         table_data = [
             ['', self.subregion],
-            ['Population', "{:,}".format(int(self.total_population))],
-            ['Households', "{:,}".format(math.trunc(self.total_household))],
-            ['Urban ratio', 'X%']
+            ['Population', '{:,}'.format(self.total_population)],
+            ['Households', '{:,}'.format(math.trunc(self.total_household))],
+            ['Urban ratio', '{:,.2f}%'.format(urban_ratio)]
         ]
 
         table_width = self.sidebar_width
@@ -504,6 +507,19 @@ class ReportPDFView(View):
             )
             if household_result:
                 self.total_household = household_result['total_household']
+
+        if self.geography.urban_layer:
+            try:
+                urban_result = calculate_urban(
+                    self.geography,
+                    boundary_id
+                )
+            except:  # noqa
+                urban_result = None
+            if urban_result:
+                if urban_result['success']:
+                    self.total_urban_population = urban_result['total_urban_population']
+
 
         self.summary_categories = SummaryReportCategory.objects.filter(
             preset_id=preset_id

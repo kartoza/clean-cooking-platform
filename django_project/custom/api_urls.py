@@ -7,7 +7,7 @@ from custom.api_views import (
     DatasetList,
     GeographyRasterMask
 )
-from custom.api_views.household import CalculateHousehold
+from custom.api_views.household import CalculateReport
 from custom.api_views.subregion import (
     SubregionListAPI,
     ClipLayerByRegion
@@ -33,6 +33,6 @@ urlpatterns = [
         ClipLayerByRegion.as_view()),
     url(r'^style-api/$',
         StyleApiView.as_view()),
-    url(r'^calculate-household/$',
-        CalculateHousehold.as_view())
+    url(r'^calculate-report/$',
+        CalculateReport.as_view())
 ]
