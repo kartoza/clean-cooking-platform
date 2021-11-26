@@ -55,6 +55,49 @@ def calculate_household(geography: Geography, boundary_id: str):
     }
 
 
+def calculate_cooking_with_traditional(geography: Geography, boundary_id: str):
+    import geopandas as gpd
+
+    start_time = time.time()
+
+    if boundary_id:
+        clipped_layer, created = ClippedLayer.objects.get_or_create(
+            layer=geography.cooking_percentage_layer,
+            boundary_uuid=boundary_id
+        )
+        if created or not clipped_layer.clipped_file:
+            clipped_layer = clip_layer_by_region(
+                clipped_layer.id
+            )
+        vector_file = clipped_layer.clipped_file
+    else:
+        try:
+            base_file = geography.cooking_percentage_layer.get_base_file()[0].file
+        except:  # noqa
+            base_file = (
+                geography.cooking_percentage_layer.upload_session.layerfile_set.all(
+                ).filter(
+                    file__icontains='shp'
+                ).first().file
+            )
+        vector_file = base_file
+
+    features = gpd.read_file(vector_file.path)
+    if boundary_id:
+        features.sort_values(by='geometry', inplace=True,
+                             key=lambda col: np.array([x.area for x in col]))
+        percentage = features[geography.cooking_percentage_layer_field].iloc[-1]
+    else:
+        percentage =  features.mean()[geography.cooking_percentage_layer_field]
+
+    return {
+        'layer': vector_file.url,
+        'success': True,
+        'execution_time': time.time() - start_time,
+        'percentage': percentage
+    }
+
+
 def calculate_urban(geography: Geography, boundary_id: str):
     import rasterio
     import subprocess

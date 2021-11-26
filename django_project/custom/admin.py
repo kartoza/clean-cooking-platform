@@ -39,6 +39,9 @@ class GeographyAdmin(admin.ModelAdmin):
         fields.JSONField: {'widget': JSONEditorWidget},
     }
 
+    autocomplete_fields = [
+        'household_layer', 'urban_layer', 'cooking_percentage_layer']
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(GeographyAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['vector_boundary_layer'].queryset = (
@@ -187,6 +190,7 @@ class SummaryReportResultAdmin(admin.ModelAdmin):
 
 
 class SummaryReportCategoryAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['vector_layer', ]
     list_display = (
        'name', 'vector_layer', 'preset'
     )

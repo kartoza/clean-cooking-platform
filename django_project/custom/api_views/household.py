@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from custom.models.geography import Geography
 from custom.tools.report_calculation import (
     calculate_household,
-    calculate_urban
+    calculate_urban, calculate_cooking_with_traditional
 )
 
 
@@ -21,5 +21,7 @@ class CalculateReport(APIView):
             result = calculate_household(geography, boundary)
         elif calculation == 'urban':
             result = calculate_urban(geography, boundary)
+        elif calculation == 'traditional':
+            result = calculate_cooking_with_traditional(geography, boundary)
 
         return Response(result)
