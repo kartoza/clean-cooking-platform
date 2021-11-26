@@ -6,6 +6,7 @@ import requests
 import zipfile
 
 from django.conf import settings
+from django.core.files import File
 from django.db.models import Q
 
 from custom.celery import app
@@ -171,10 +172,12 @@ def clip_layer_by_region(self, clipped_layer_id):
                 raster_boundary_file=raster_boundary_file)
 
     if output:
-        clipped_layer.clipped_file.name = output.replace(
-            settings.MEDIA_ROOT,
-            ''
-        )
+        with open(output, 'rb') as fi:
+            paths = fi.name.split('/')
+            clipped_layer.clipped_file = File(
+                fi, name='/'.join(paths[-2:]))
+            clipped_layer.save()
+
     logger.info('Finish clipping layer')
     logger.info('Output {}'.format(output))
     clipped_layer.save()

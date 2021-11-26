@@ -38,6 +38,34 @@ def clip_vector_layer(
         layer_vector_file])
 
 
+def resize_raster_layer(
+        input_layer, boundary_layer, output, srs=None, keep_resized_name=False):
+    raster_boundary = gdal.Open(boundary_layer, gdal.GA_ReadOnly)
+
+    if not srs:
+        dataset = gdal.Open(input_layer, gdal.GA_ReadOnly)
+        projection = dataset.GetProjection()
+
+        srs = osr.SpatialReference()
+        srs.ImportFromWkt(projection)
+
+    if os.path.exists(output):
+        os.remove(output)
+    subprocess.run([
+        'gdalwarp',
+        '-of',
+        'GTiff',
+        '-s_srs',
+        f'{srs.GetAuthorityName(None)}:{srs.GetAuthorityCode(None)}',
+        '-t_srs',
+        'epsg:4326',
+        '-ts',
+        f'{raster_boundary.RasterXSize}',
+        f'{raster_boundary.RasterYSize}',
+        input_layer,
+        output])
+
+
 def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path, raster_boundary_file = None):
     # Taken and slightly modified from https://gis.stackexchange.com/a/200753
     # Get coords for bounding box
