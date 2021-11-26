@@ -27,7 +27,9 @@ from custom.models import (
     Geography, UseCase, Preset,
     SummaryReportCategory, SummaryReportResult, Category
 )
-from custom.tools.report_calculation import calculate_household, calculate_urban
+from custom.tools.report_calculation import (
+    calculate_household, calculate_urban, calculate_cooking_with_traditional
+)
 from custom.tools.category import category_from_url
 from custom.views.summary_report import sample_raster_with_vector
 
@@ -67,6 +69,7 @@ class ReportPDFView(View):
     total_population = '0'
     total_urban_population = 0
     total_household = 0
+    total_cooking_percentage = 0
 
     default_font = 'AktivGroteskCorpMedium'
     default_font_bold = 'AktivGroteskCorpBold'
@@ -357,13 +360,16 @@ class ReportPDFView(View):
             ['', self.subregion],
             ['Population', '{:,}'.format(self.total_population)],
             ['Households', '{:,}'.format(math.trunc(self.total_household))],
-            ['Urban ratio', '{:,.2f}%'.format(urban_ratio)]
+            ['Urban ratio', '{:,.2f}%'.format(urban_ratio)],
+            ['% of population\n\nrelying on polluting\n\nfuels and technologies',
+             '{:,.2f}%'.format(self.total_cooking_percentage)]
         ]
 
         table_width = self.sidebar_width
         table_height = 1000
         table_x = self.sidebar_x + self.sidebar_x_padding
-        table_y = y_pos - 250
+        table_x = self.sidebar_x + self.sidebar_x_padding
+        table_y = y_pos - 300
 
         table_style = [
             ('GRID', (0, 0), (-1, -1), 0.25, colors.Color(
@@ -385,7 +391,7 @@ class ReportPDFView(View):
             ('BOTTOMPADDING', (0, 0), (1, -1), 30),
         ]
 
-        table = Table(table_data, colWidths=[4.2*inch,4.2*inch])
+        table = Table(table_data, colWidths=[4.8*inch,3.8*inch])
         table.setStyle(TableStyle(table_style))
         table.wrapOn(page, table_width, table_height)
         table.drawOn(page, table_x, table_y)
@@ -519,6 +525,21 @@ class ReportPDFView(View):
             if urban_result:
                 if urban_result['success']:
                     self.total_urban_population = urban_result['total_urban_population']
+
+
+        if self.geography.cooking_percentage_layer:
+            try:
+                cooking_percentage_result = calculate_cooking_with_traditional(
+                    self.geography,
+                    boundary_id
+                )
+            except:  # noqa
+                cooking_percentage_result = None
+            if cooking_percentage_result:
+                if cooking_percentage_result['success']:
+                    self.total_cooking_percentage = (
+                        cooking_percentage_result['percentage']
+                    )
 
 
         self.summary_categories = SummaryReportCategory.objects.filter(
