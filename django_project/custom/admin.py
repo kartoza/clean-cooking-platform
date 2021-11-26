@@ -40,7 +40,8 @@ class GeographyAdmin(admin.ModelAdmin):
     }
 
     autocomplete_fields = [
-        'household_layer', 'urban_layer', 'cooking_percentage_layer']
+        'household_layer', 'urban_layer', 'cooking_percentage_layer',
+        'wealth_index_layer']
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(GeographyAdmin, self).get_form(request, obj, **kwargs)

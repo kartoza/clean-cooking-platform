@@ -1,5 +1,6 @@
 import os.path
 import time
+from datetime import datetime
 
 import numpy as np
 from django.conf import settings
@@ -98,12 +99,10 @@ def calculate_cooking_with_traditional(geography: Geography, boundary_id: str):
     }
 
 
-def calculate_urban(geography: Geography, boundary_id: str):
+def _calculate_weight_average(boundary_id, input_layer, calculation='',
+                              calculate_population=False):
     import rasterio
     import subprocess
-
-    start_time = time.time()
-
     # Get population-density layer
     category = Category.objects.filter(
         name_long__icontains='population'
@@ -118,7 +117,7 @@ def calculate_urban(geography: Geography, boundary_id: str):
 
     if boundary_id:
         clipped_layer, created = ClippedLayer.objects.get_or_create(
-            layer=geography.urban_layer,
+            layer=input_layer,
             boundary_uuid=boundary_id
         )
         if created or not clipped_layer.clipped_file:
@@ -137,15 +136,14 @@ def calculate_urban(geography: Geography, boundary_id: str):
                 'success': False,
                 'message': 'Missing population layer'
             }
-
         population_raster_file = population_clipped.clipped_file.path
 
     else:
         try:
-            base_file = geography.urban_layer.get_base_file()[0].file
+            base_file = input_layer.get_base_file()[0].file
         except:  # noqa
             base_file = (
-                geography.urban_layer.upload_session.layerfile_set.all(
+                input_layer.upload_session.layerfile_set.all(
                 ).filter(
                     file__icontains='tif'
                 ).first().file
@@ -172,7 +170,8 @@ def calculate_urban(geography: Geography, boundary_id: str):
 
     output = os.path.join(
         settings.MEDIA_ROOT,
-        f'{boundary_id}_{category.geography.id}.tif'
+        f'{boundary_id}_{category.geography.id}_'
+        f'{str(datetime.now().timestamp())}.tif'
     )
 
     command_output = subprocess.check_output([
@@ -184,24 +183,59 @@ def calculate_urban(geography: Geography, boundary_id: str):
         '--outfile',
         output,
         '--calc',
-        'B*logical_and(A>20,A<40)',
+        calculation,
         '--NoDataValue',
         '0',
         '--overwrite',
     ], stderr=subprocess.STDOUT)
 
     total = 0
+    total_population = 0
     if os.path.exists(output):
         src = rasterio.open(output)
         arr = src.read()
-        total = np.count_nonzero(~np.isnan(arr))
-        os.remove(output)
+        arr[np.isnan(arr)] = 0
+        total = arr.sum()
 
+    if calculate_population:
+        if os.path.exists(population_raster_file):
+            src = rasterio.open(population_raster_file)
+            arr = src.read()
+            arr[np.isnan(arr)] = 0
+            total_population = arr.sum()
+
+    return total, total_population, command_output
+
+
+def calculate_urban(geography: Geography, boundary_id: str):
+    start_time = time.time()
+    total, total_population, command_output = _calculate_weight_average(
+        boundary_id,
+        geography.urban_layer,
+        'B*logical_and(A>20,A<40)',
+        True
+    )
     return {
-        'layer': raster_file,
+        'calculation': 'Total Population in Urban Area',
         'execution_time': time.time() - start_time,
-        'category': dataset.geonode_layer.name,
+        'total_population': total_population,
         'total_urban_population': total,
+        'output': command_output,
+        'success': b'Error!' not in command_output
+    }
+
+
+def calculate_poverty(geography: Geography, boundary_id: str):
+    start_time = time.time()
+    total, total_population, command_output = _calculate_weight_average(
+        boundary_id,
+        geography.wealth_index_layer,
+        'B*logical_and(A>0,A<50)',
+    )
+    return {
+        'calculation': 'Total Population in Poverty Area',
+        'execution_time': time.time() - start_time,
+        'total_poverty_population': total,
         'output': command_output,
         'success': b'Error!' not in command_output
     }

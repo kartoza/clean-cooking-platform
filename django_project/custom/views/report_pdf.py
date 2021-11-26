@@ -28,7 +28,8 @@ from custom.models import (
     SummaryReportCategory, SummaryReportResult, Category
 )
 from custom.tools.report_calculation import (
-    calculate_household, calculate_urban, calculate_cooking_with_traditional
+    calculate_household, calculate_urban, calculate_cooking_with_traditional,
+    calculate_poverty
 )
 from custom.tools.category import category_from_url
 from custom.views.summary_report import sample_raster_with_vector
@@ -66,10 +67,11 @@ class ReportPDFView(View):
     preset = None
     demand_summary = []
     supply_summary = []
-    total_population = '0'
+    total_population = 0
     total_urban_population = 0
     total_household = 0
     total_cooking_percentage = 0
+    total_poverty = 0
 
     default_font = 'AktivGroteskCorpMedium'
     default_font_bold = 'AktivGroteskCorpBold'
@@ -353,23 +355,25 @@ class ReportPDFView(View):
             self.page_height - 190,
             35
         )
-        self.total_population = int(self.total_population)
         urban_ratio = self.total_urban_population / self.total_population * 100
+        poverty_percentage = self.total_poverty / self.total_population * 100
 
         table_data = [
             ['', self.subregion],
-            ['Population', '{:,}'.format(self.total_population)],
+            ['Population', '{:,}'.format(math.trunc(self.total_population))],
             ['Households', '{:,}'.format(math.trunc(self.total_household))],
             ['Urban ratio', '{:,.2f}%'.format(urban_ratio)],
-            ['% of population\n\nrelying on polluting\n\nfuels and technologies',
-             '{:,.2f}%'.format(self.total_cooking_percentage)]
+            ['% of population\n\n\nrelying on polluting\n\n\nfuels and technologies',
+             '{:,.2f}%'.format(self.total_cooking_percentage)],
+            ['Portion under the \n\n\npoverty line',
+             '{:,.2f}%'.format(poverty_percentage)]
         ]
 
         table_width = self.sidebar_width
         table_height = 1000
         table_x = self.sidebar_x + self.sidebar_x_padding
         table_x = self.sidebar_x + self.sidebar_x_padding
-        table_y = y_pos - 300
+        table_y = y_pos - 400
 
         table_style = [
             ('GRID', (0, 0), (-1, -1), 0.25, colors.Color(
@@ -501,7 +505,7 @@ class ReportPDFView(View):
             request.POST.get('supplyDataHighPercentage', '')
         )
 
-        self.total_population = (
+        self.total_population = int(
             request.POST.get('totalPopulation', '')
         )
         self.geography = Geography.objects.get(id=geo_id)
@@ -525,6 +529,7 @@ class ReportPDFView(View):
             if urban_result:
                 if urban_result['success']:
                     self.total_urban_population = urban_result['total_urban_population']
+                    self.total_population = int(urban_result['total_population'])
 
 
         if self.geography.cooking_percentage_layer:
@@ -539,6 +544,20 @@ class ReportPDFView(View):
                 if cooking_percentage_result['success']:
                     self.total_cooking_percentage = (
                         cooking_percentage_result['percentage']
+                    )
+
+        if self.geography.wealth_index_layer:
+            try:
+                poverty_result = calculate_poverty(
+                    self.geography,
+                    boundary_id
+                )
+            except:  # noqa
+                poverty_result = None
+            if poverty_result:
+                if poverty_result['success']:
+                    self.total_poverty = (
+                        poverty_result['total_poverty_population']
                     )
 
 
