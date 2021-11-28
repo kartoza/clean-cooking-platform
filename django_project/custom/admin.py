@@ -6,7 +6,7 @@ from preferences.admin import PreferencesAdmin
 from adminsortable2.admin import SortableAdminMixin
 from geonode.layers.models import Layer
 
-from .models import SummaryReportResult, SummaryReportCategory
+from .models import SummaryReportResult, SummaryReportCategory, SummaryReportDataset
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
@@ -186,7 +186,8 @@ class ClippedLayerAdmin(admin.ModelAdmin):
 
 class SummaryReportResultAdmin(admin.ModelAdmin):
     list_display = (
-       'category', 'created_at', 'raster_file'
+       'summary_report_category', 'analysis', 'boundary_uuid',
+       'created_at', 'dataset_file'
     )
 
 
@@ -208,3 +209,4 @@ admin.site.register(UseCase, UseCaseAdmin)
 admin.site.register(ClippedLayer, ClippedLayerAdmin)
 admin.site.register(SummaryReportResult, SummaryReportResultAdmin)
 admin.site.register(SummaryReportCategory, SummaryReportCategoryAdmin)
+admin.site.register(SummaryReportDataset)

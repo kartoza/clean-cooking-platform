@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from custom.models.summary_report_category import SummaryReportCategory
+from custom.models.summary_report_dataset import SummaryReportDataset
 
 
 class SummaryReportResult(models.Model):
@@ -12,13 +13,20 @@ class SummaryReportResult(models.Model):
         on_delete=models.CASCADE
     )
 
-    raster_file = models.FileField(
+    dataset_file = models.ForeignKey(
+        SummaryReportDataset,
         null=True,
         blank=True,
-        upload_to="summary_raster_file/"
+        on_delete=models.CASCADE
     )
 
-    category = models.CharField(
+    boundary_uuid = models.CharField(
+        max_length=255,
+        default='',
+        blank=True
+    )
+
+    analysis = models.CharField(
         max_length=100,
         blank=True,
         default=''
