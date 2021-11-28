@@ -52,5 +52,6 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    path('summary-report/', SummaryReportView.as_view(), name='summary-report-view'),
     path('summary-report/<int:pk>/', SummaryReportView.as_view(), name='summary-report-view'),
 ]

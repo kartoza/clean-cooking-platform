@@ -25,7 +25,7 @@ from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from core.settings.utils import absolute_path
 from custom.models import (
     Geography, UseCase, Preset,
-    SummaryReportCategory, SummaryReportResult, Category
+    SummaryReportCategory, SummaryReportResult, SummaryReportDataset
 )
 from custom.tools.report_calculation import (
     calculate_household, calculate_urban, calculate_cooking_with_traditional,
@@ -67,11 +67,13 @@ class ReportPDFView(View):
     preset = None
     demand_summary = []
     supply_summary = []
+    table_summary_data = []
     total_population = 0
     total_urban_population = 0
     total_household = 0
     total_cooking_percentage = 0
     total_poverty = 0
+    boundary = ''
 
     default_font = 'AktivGroteskCorpMedium'
     default_font_bold = 'AktivGroteskCorpBold'
@@ -174,7 +176,8 @@ class ReportPDFView(View):
 
         if other_first_index:
             table_style.append(
-                ('FONTNAME', (0, other_first_index), (0, other_first_index), self.default_font_bold),
+                ('FONTNAME', (0, other_first_index), (0, other_first_index),
+                 self.default_font_bold),
             )
 
         table = Table(table_data, colWidths=[8*inch,8*inch])
@@ -245,7 +248,8 @@ class ReportPDFView(View):
             self.page_height - 165
         )
 
-    def _draw_map(self, page, map_image, legend_path = None, img_width = 650, x = None, y = 0):
+    def _draw_map(self, page, map_image, legend_path = None, img_width = 650,
+                  x = None, y = 0):
         img = ImageReader(map_image)
         x_pos = x if x else (self.sidebar_x / 2) - (img_width / 2)
         page.drawImage(
@@ -300,6 +304,33 @@ class ReportPDFView(View):
                 y_pos
             )
             y_pos -= 50
+
+    def _calculate_demand_supply(self, raster_file, analysis):
+        result = []
+        if raster_file:
+            for summary_category in self.summary_categories:
+                summary_result, _ = SummaryReportResult.objects.get_or_create(
+                    summary_report_category=summary_category,
+                    analysis=analysis,
+                    boundary_uuid=self.boundary
+                )
+                dataset_file, created = (
+                    SummaryReportDataset.get_or_create_dataset_file(
+                        self.boundary,
+                        raster_file
+                    )
+                )
+                if summary_result.dataset_file != dataset_file:
+                    summary_result.result = {}
+                    summary_result.dataset_file = dataset_file
+                    summary_result.save()
+
+                summary_result_data = sample_raster_with_vector(
+                    summary_result
+                )
+                summary_result_data['category'] = summary_category.name
+                result.append(summary_result_data)
+        return result
 
     def draw_page_one(self, page):
         page.drawImage(self.image_path, 0, 0,
@@ -363,17 +394,21 @@ class ReportPDFView(View):
             ['Population', '{:,}'.format(math.trunc(self.total_population))],
             ['Households', '{:,}'.format(math.trunc(self.total_household))],
             ['Urban ratio', '{:,.2f}%'.format(urban_ratio)],
-            ['% of population\n\n\nrelying on polluting\n\n\nfuels and technologies',
+            ['% of population\n\n\nrelying on polluting\n\n\nfuels and '
+             'technologies',
              '{:,.2f}%'.format(self.total_cooking_percentage)],
             ['Portion under the \n\n\npoverty line',
              '{:,.2f}%'.format(poverty_percentage)]
         ]
 
+        for table_summary_data in self.table_summary_data:
+            table_data.append(table_summary_data)
+
         table_width = self.sidebar_width
         table_height = 1000
         table_x = self.sidebar_x + self.sidebar_x_padding
         table_x = self.sidebar_x + self.sidebar_x_padding
-        table_y = y_pos - 400
+        table_y = y_pos - 560
 
         table_style = [
             ('GRID', (0, 0), (-1, -1), 0.25, colors.Color(
@@ -408,24 +443,6 @@ class ReportPDFView(View):
         if not self.demand_image:
             return
 
-        if self.demand_tiff_file:
-            for summary_category in self.summary_categories:
-                summary_result, _ = SummaryReportResult.objects.get_or_create(
-                    summary_report_category=summary_category,
-                    category='demand'
-                )
-                summary_result.raster_file = self.demand_tiff_file
-                summary_result.save()
-                summary_result_data = sample_raster_with_vector(
-                    summary_result
-                )
-                self.demand_summary.append({
-                    'desc': 'Number of {} within areas of high demand index'.format(
-                        summary_category.name
-                    ),
-                    'value': '{}'.format(summary_result_data['total_high'])
-                })
-
         self._draw_sidebar(page, (0.459, 0.714, 0.831))
         self._draw_footer(page, 3)
         self._draw_title(page, 'Analysis', 'Demand index')
@@ -447,24 +464,6 @@ class ReportPDFView(View):
     def draw_page_four(self, page):
         if not self.supply_image:
             return
-
-        if self.supply_tiff_file:
-            for summary_category in self.summary_categories:
-                summary_result, _ = SummaryReportResult.objects.get_or_create(
-                    summary_report_category=summary_category,
-                    category='supply'
-                )
-                summary_result.raster_file = self.supply_tiff_file
-                summary_result.save()
-                summary_result_data = sample_raster_with_vector(
-                    summary_result
-                )
-                self.supply_summary.append({
-                    'desc': 'Number of {} close to supply'.format(
-                        summary_category.name
-                    ),
-                    'value': '{}'.format(summary_result_data['total_high'])
-                })
 
         self._draw_sidebar(page)
         self._draw_footer(page, 4)
@@ -491,6 +490,7 @@ class ReportPDFView(View):
         use_case_id = request.POST.get('useCaseId', None)
         preset_id = request.POST.get('scenarioId', None)
         boundary_id = request.POST.get('boundary', None)
+        self.boundary = boundary_id
 
         self.map_image = request.POST.get('mapImage', '')
         self.demand_image = request.POST.get('demandImage', None)
@@ -504,6 +504,55 @@ class ReportPDFView(View):
         self.supply_high_percentage = (
             request.POST.get('supplyDataHighPercentage', '')
         )
+
+        self.summary_categories = SummaryReportCategory.objects.filter(
+            preset_id=preset_id
+        )
+
+        self.demand_summary = [
+            {
+                'desc': 'Population within areas of high demand index',
+                'value': f'{self.demand_high_percentage}%'
+            }
+        ]
+
+        self.supply_summary = [
+            {
+                'desc': 'Population within areas of high supply index',
+                'value': f'{self.supply_high_percentage}%'
+            }
+        ]
+
+        if self.supply_tiff_file:
+            supply_data = self._calculate_demand_supply(
+                self.supply_tiff_file,
+                'supply'
+            )
+            for supply in supply_data:
+                self.supply_summary.append({
+                    'desc': 'Number of {} close to supply'.format(
+                        supply['category']
+                    ),
+                    'value': '{}'.format(supply['total_high'])
+                })
+                self.table_summary_data.append([
+                    f'Number of\n\n\n{supply["category"]}',
+                    supply['total_in_raster']
+                ])
+
+        if self.demand_tiff_file:
+            demand_data = self._calculate_demand_supply(
+                self.demand_tiff_file,
+                'demand'
+            )
+            for demand in demand_data:
+                self.demand_summary.append({
+                    'desc': 'Number of {} within areas of high '
+                            'demand index'.format(
+                        demand['category']
+                    ),
+                    'value': '{}'.format(demand['total_high'])
+                })
 
         self.total_population = int(
             request.POST.get('totalPopulation', '')
@@ -528,8 +577,12 @@ class ReportPDFView(View):
                 urban_result = None
             if urban_result:
                 if urban_result['success']:
-                    self.total_urban_population = urban_result['total_urban_population']
-                    self.total_population = int(urban_result['total_population'])
+                    self.total_urban_population = (
+                        urban_result['total_urban_population']
+                    )
+                    self.total_population = (
+                        int(urban_result['total_population'])
+                    )
 
 
         if self.geography.cooking_percentage_layer:
@@ -559,25 +612,6 @@ class ReportPDFView(View):
                     self.total_poverty = (
                         poverty_result['total_poverty_population']
                     )
-
-
-        self.summary_categories = SummaryReportCategory.objects.filter(
-            preset_id=preset_id
-        )
-
-        self.demand_summary = [
-            {
-                'desc': 'Population within areas of high demand index',
-                'value': f'{self.demand_high_percentage}%'
-            }
-        ]
-
-        self.supply_summary = [
-            {
-                'desc': 'Population within areas of high supply index',
-                'value': f'{self.supply_high_percentage}%'
-            }
-        ]
 
         if use_case_id:
             try:

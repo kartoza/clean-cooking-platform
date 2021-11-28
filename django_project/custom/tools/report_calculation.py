@@ -196,6 +196,7 @@ def _calculate_weight_average(boundary_id, input_layer, calculation='',
         arr = src.read()
         arr[np.isnan(arr)] = 0
         total = arr.sum()
+        os.remove(output)
 
     if calculate_population:
         if os.path.exists(population_raster_file):
