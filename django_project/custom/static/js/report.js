@@ -19,35 +19,59 @@ const fetchRasterBoundary = async () => {
     )
 }
 
-fetch(geojsonBoundary).then(response => response.json()).then(
-    async data => {
-        MAPBOX.on('load', async () => {
-            MAPBOX.addSource('boundary', {
-                type: 'geojson',
-                data: data
+if (boundary) {
+    fetch(geojsonBoundary).then(response => response.json()).then(
+        async data => {
+            MAPBOX.on('load', async () => {
+                MAPBOX.addSource('boundary', {
+                    type: 'geojson',
+                    data: data
+                });
+                MAPBOX.addLayer({
+                    'id': 'boundary-layer',
+                    'type': 'line',
+                    'source': 'boundary',
+                    'paint': {
+                        'line-width': 2,
+                        'line-color': 'red'
+                    }
+                });
+                bbox = turf.extent(data);
+                const l = bbox[0];
+                const r = bbox[2];
+                const d = bbox[1];
+                const u = bbox[3];
+                coords = [[l, u], [r, u], [r, d], [l, d]];
+                MAPBOX.coords = coords;
+                MAPBOX.fitBounds(bbox, {padding: 20});
+                BBOX = bbox;
+                await fetchRasterBoundary();
             });
-            MAPBOX.addLayer({
-                'id': 'boundary-layer',
-                'type': 'line',
-                'source': 'boundary',
-                'paint': {
-                    'line-width': 2,
-                    'line-color': 'red'
-                }
-            });
-            bbox = turf.extent(data);
-            const l = bbox[0];
-            const r = bbox[2];
-            const d = bbox[1];
-            const u = bbox[3];
-            coords = [[l, u], [r, u], [r, d], [l, d]];
-            MAPBOX.coords = coords;
-            MAPBOX.fitBounds(bbox, {padding: 20});
-            BBOX = bbox;
-            await fetchRasterBoundary();
-        });
+        }
+    )
+} else {
+    const bbox = bboxString.split(',');
+    let bbox_1 = proj4("EPSG:3857", "EPSG:4326").forward([parseFloat(bbox[0]), parseFloat(bbox[1])]);
+    let bbox_2 = proj4("EPSG:3857", "EPSG:4326").forward([parseFloat(bbox[2]), parseFloat(bbox[3])]);
+    if (bbox_1[0] < 1) {
+        bbox_1 = [parseFloat(bbox[0]), parseFloat(bbox[1])];
+        bbox_2 = [parseFloat(bbox[2]), parseFloat(bbox[3])];
     }
-)
+    BBOX = [
+        [bbox_1[0], bbox_1[1]], // southwestern corner of the bounds
+        [bbox_2[0], bbox_2[1]] // northeastern corner of the bounds
+    ]
+    const l = bbox[0];
+    const r = bbox[2];
+    const d = bbox[1];
+    const u = bbox[3];
+    coords = [[l, u], [r, u], [r, d], [l, d]];
+    MAPBOX.coords = coords;
+    MAPBOX.fitBounds([
+        [bbox_1[0], bbox_1[1]], // southwestern corner of the bounds
+        [bbox_2[0], bbox_2[1]] // northeastern corner of the bounds
+    ]);
+}
 
 const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true, currentTry = 0) => {
     return new Promise((resolve, reject) => {
@@ -148,12 +172,15 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
             selectedLayers.reverse();
         }
         const tasks = []
-        for (let i = 0; i < selectedLayers.length; i++) {
-            tasks.push(clipSelectedLayerPromise(boundary, selectedLayers[i], false));
-        }
-        for (let j = 0; j < allLayerIds.length; j++) {
-            if (!selectedLayers.includes(allLayerIds[j])) {
-                tasks.push(clipSelectedLayerPromise(boundary, allLayerIds[j], false));
+
+        if (boundary) {
+            for (let i = 0; i < selectedLayers.length; i++) {
+                tasks.push(clipSelectedLayerPromise(boundary, selectedLayers[i], false));
+            }
+            for (let j = 0; j < allLayerIds.length; j++) {
+                if (!selectedLayers.includes(allLayerIds[j])) {
+                    tasks.push(clipSelectedLayerPromise(boundary, allLayerIds[j], false));
+                }
             }
         }
 

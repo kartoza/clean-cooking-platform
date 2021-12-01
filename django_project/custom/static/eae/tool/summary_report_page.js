@@ -7,6 +7,10 @@ import run, {
 } from "./analysis.js";
 import analyse from './summary.js';
 import * as plot from "./plot.js";
+import {
+	change_theme as mapbox_change_theme,
+	fit as mapbox_fit
+} from "./mapbox";
 const ea_nanny_steps = [];
 const raster_data = {};
 let addedLayers = [];
@@ -120,7 +124,10 @@ export async function init() {
 	}
 	const datasetBoundaries = await api_get(boundary_url)
 	let ds = new DS(datasetBoundaries, false);
-
+	if (!boundary) {
+		await ds.load('vectors');
+		MAPBOX.coords = convertBounds(ds.vectors.bounds);
+	}
 };
 
 async function run_analysis (output, id = "") {
@@ -369,8 +376,10 @@ export async function getDatasets(inputs, scenarioId) {
 	await DST.get('boundaries')._active(true, false);
 	for (let i = 0; i < inputList.length; i++) {
 		try {
-			await DST.get(inputList[i]).active(true, true);
-			addedLayers.push(inputList[i]);
+			if (typeof MAPBOX.getSource(inputList[i]) === 'undefined') {
+				await DST.get(inputList[i]).active(true, true);
+				addedLayers.push(inputList[i]);
+			}
 		} catch (e) {
 			debugger;
 			console.log(e);
@@ -404,7 +413,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 	let request = new XMLHttpRequest();
 	let fd = new FormData();
 
-	MAPBOX.fitBounds(BBOX, {padding: 20, duration: 0});
+	MAPBOX.fitBounds(BBOX, {padding: 40, duration: 0});
 	await new Promise(r => setTimeout(r, 500));
 
 	let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
@@ -481,4 +490,14 @@ document.getElementById('report-btn').onclick = async (e) => {
 	};
 
 	request.send(fd);
+}
+
+export function convertBounds(bounds) {
+
+	const l = bounds[0];
+	const r = bounds[2];
+	const d = bounds[1];
+	const u = bounds[3];
+
+	return [[l,u], [r,u], [r,d], [l,d]];
 }

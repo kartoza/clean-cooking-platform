@@ -273,7 +273,11 @@ This is not fatal but the dataset is now disabled.`
 
 		if (this.source && MAPBOX.getSource(this.id)) return;
 
-		MAPBOX.addSource(this.id, opts);
+		try {
+			MAPBOX.addSource(this.id, opts);
+		} catch (e) {
+			debugger;
+		}
 
 		this.source = MAPBOX.getSource(this.id);
 	};

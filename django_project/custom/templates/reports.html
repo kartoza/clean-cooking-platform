@@ -35,6 +35,7 @@
     <script src="{% static "eae/lib/helpers.js" %}"></script>
 
     <script>
+        const geoserverUrl = '{{ geoserver_url }}';
         let parser = new GeoStylerSLDParser.SldStyleParser();
         let mapboxParser = new GeoStylerMapboxParser.MapboxStyleParser();
         let url = new URL(window.location.href);
@@ -53,6 +54,12 @@
         let rasterBoundary = `/uploaded/rasterized/${boundary}.tif`;
         let bbox = null;
         let coords = [];
+        let layerName = null;
+        let bboxString = '';
+        {% if geo %}
+            layerName = "{{ geo.vector_boundary_layer }}";
+            bboxString = "{{ geo.vector_boundary_layer.bbox_string }}";
+        {% endif %}
 
         BBOX = null;
         GEOGRAPHY = null;
@@ -278,6 +285,7 @@
 
     {% render_bundle 'report_main' %}
 
+    <script src="{% static "proj4-2.7.5/proj4.js" %}" type="text/javascript"></script>
     <script src="{% static "js/report.js" %}" type="text/javascript"></script>
 
     <script src="{% static "js/mapbox-helper/plot.js" %}" type="text/javascript"></script>

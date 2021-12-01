@@ -307,16 +307,19 @@ class ReportPDFView(View):
 
     def _calculate_demand_supply(self, raster_file, analysis):
         result = []
+        boundary = self.boundary
+        if not boundary:
+            boundary = 'All'
         if raster_file:
             for summary_category in self.summary_categories:
                 summary_result, _ = SummaryReportResult.objects.get_or_create(
                     summary_report_category=summary_category,
                     analysis=analysis,
-                    boundary_uuid=self.boundary
+                    boundary_uuid=boundary
                 )
                 dataset_file, created = (
                     SummaryReportDataset.get_or_create_dataset_file(
-                        self.boundary,
+                        boundary,
                         raster_file
                     )
                 )
@@ -490,6 +493,8 @@ class ReportPDFView(View):
         use_case_id = request.POST.get('useCaseId', None)
         preset_id = request.POST.get('scenarioId', None)
         boundary_id = request.POST.get('boundary', None)
+        if boundary_id == 'null':
+            boundary_id = None
         self.boundary = boundary_id
 
         self.map_image = request.POST.get('mapImage', '')
@@ -555,7 +560,7 @@ class ReportPDFView(View):
                 })
 
         self.total_population = int(
-            request.POST.get('totalPopulation', '')
+            request.POST.get('totalPopulation', '0')
         )
         self.geography = Geography.objects.get(id=geo_id)
 
