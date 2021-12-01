@@ -16,6 +16,8 @@ class ReportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReportView, self).get_context_data(**kwargs)
+
+        context['geoserver_url'] = settings.GEOSERVER_PUBLIC_LOCATION
         context['use_case'] = UseCase.objects.get(
             id=self.request.GET.get('useCase')
         )
