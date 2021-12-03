@@ -395,6 +395,7 @@ export async function getDatasets(inputs, scenarioId) {
 	setTimeout(() => {
 		document.getElementById('loading-spinner-0').style.display = 'none';
 		document.getElementById('report-btn').disabled = false;
+		progressBar.style.width = '100%';
 	}, 500)
 }
 
