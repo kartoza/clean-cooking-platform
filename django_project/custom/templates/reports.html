@@ -158,6 +158,13 @@
         .h-10 {
             height: 0.5em !important;
         }
+
+        .preset-desc {
+            text-align: left;
+            font-size: 13pt;
+            padding-left: 5px;
+            padding-right: 10px;
+        }
     </style>
 {% endblock %}
 
@@ -208,9 +215,10 @@
                 </option>
                 {% for preset in presets %}
                     <option value="{{ preset.id }}"
-                            data-url="{{ preset.permalink }}" data-layers="{{ preset.layers }}">{{ preset.name }}</option>
+                            data-url="{{ preset.permalink }}" data-layers="{{ preset.layers }}" data-desc="{{ preset.description }}">{{ preset.name }}</option>
                 {% endfor %}
             </select>
+            <p class="preset-desc" id="preset-desc"></p>
             <div class="row" style="margin-top: 1em">
                 <div class="col-lg-6">
                     <button class="btn btn-scene btn-cca-primary"

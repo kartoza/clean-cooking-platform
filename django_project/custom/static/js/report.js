@@ -2,6 +2,7 @@ let rasterBoundaryLayer = null;
 const loadingSpinner1 = document.getElementById('loading-spinner-1');
 const loadingSpinner0 = document.getElementById('loading-spinner-0');
 const progressBar = document.getElementById('progress-bar');
+const presetDesc = document.getElementById('preset-desc');
 let clippingProgress = 0;
 let doneLayer = 0;
 
@@ -149,9 +150,11 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
     const ccaReportBtn = document.getElementById('report-btn');
     let selectedScenario = null;
     let selectedLayers = null;
+    presetDesc.innerHTML = '';
 
     setTimeout(() => {
         scenarioSelect.selectedIndex = 0;
+        presetDesc.innerHTML = '';
     }, 400)
 
     scenarioSelect.onchange = async (e) => {
@@ -178,6 +181,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         selectedScenario = e.target.options[e.target.selectedIndex];
         selectedLayers = JSON.parse(selectedScenario.dataset.layers);
         let datasetUrl = selectedScenario.dataset.url;
+        presetDesc.innerHTML = selectedScenario.dataset.desc;
         let inputString = new URL(datasetUrl).searchParams.get('inputs').replace(/ *\([^)]*\) */g, "");
         let inputs = inputString.split(',')
 
