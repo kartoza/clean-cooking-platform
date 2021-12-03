@@ -1,6 +1,9 @@
 let rasterBoundaryLayer = null;
 const loadingSpinner1 = document.getElementById('loading-spinner-1');
 const loadingSpinner0 = document.getElementById('loading-spinner-0');
+const progressBar = document.getElementById('progress-bar');
+let clippingProgress = 0;
+let doneLayer = 0;
 
 MAPBOX = new mapboxgl.Map({
     container: 'map', // container ID
@@ -97,8 +100,14 @@ const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true, currentTr
                     resolve(clipSelectedLayerPromise(boundary, layerId, drawToMap, currentTry+=1));
                 }, 1000)
             } else if (data['status'] === 'Success') {
+                doneLayer += 1;
+                progressBar.style.width = `${doneLayer/allLayerIds.length * 90}%`;
+
                 resolve("FINISH")
             } else {
+                doneLayer += 1;
+                progressBar.style.width = `${doneLayer/allLayerIds.length * 90}%`;
+
                 reject('Error clipping layer ' + layerId)
             }
         }).catch((error) => reject(error))
@@ -159,7 +168,11 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         let supplyCanvas = document.getElementById('supply-output');
         supplyCanvas.getContext('2d').clearRect(0, 0, supplyCanvas.width, supplyCanvas.height);
 
+        doneLayer = 0;
+        progressBar.style.width = `0%`;
+
         ccaToolBtn.disabled = true;
+        ccaReportBtn.disabled = true;
         loadingSpinner1.style.display = "block";
         loadingSpinner0.style.display = "block";
         selectedScenario = e.target.options[e.target.selectedIndex];
