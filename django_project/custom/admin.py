@@ -192,9 +192,9 @@ class SummaryReportResultAdmin(admin.ModelAdmin):
 
 
 class SummaryReportCategoryAdmin(admin.ModelAdmin):
-    autocomplete_fields = ['vector_layer', ]
+    autocomplete_fields = ['vector_layer', 'supply_layer', ]
     list_display = (
-       'name', 'vector_layer', 'preset'
+       'name', 'vector_layer', 'supply_layer', 'preset', 'analysis'
     )
 
 

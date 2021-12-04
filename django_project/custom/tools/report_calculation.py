@@ -10,6 +10,8 @@ from custom.models.geography import Geography
 from custom.tasks import clip_layer_by_region
 from custom.tools.clip_layer import resize_raster_layer
 
+from geonode.layers.models import Layer
+
 
 def calculate_household(geography: Geography, boundary_id: str):
     import geopandas as gpd
@@ -99,21 +101,31 @@ def calculate_cooking_with_traditional(geography: Geography, boundary_id: str):
     }
 
 
-def _calculate_weight_average(boundary_id, input_layer, calculation='',
-                              calculate_population=False):
+def _calculate_weight_average(
+        boundary_id,
+        input_layer,
+        calculation='',
+        calculate_population=False,
+        alternate_populate_layer=None):
     import rasterio
     import subprocess
-    # Get population-density layer
-    category = Category.objects.filter(
-        name_long__icontains='population'
-    ).filter(
-        name_long__icontains='density'
-    ).first()
-    dataset = DatasetFile.objects.filter(
-        category=category,
-        func='raster',
-        geonode_layer__isnull=False
-    ).first()
+
+    if not alternate_populate_layer:
+        # Get population-density layer
+        category = Category.objects.filter(
+            name_long__icontains='population'
+        ).filter(
+            name_long__icontains='density'
+        ).first()
+
+        dataset = DatasetFile.objects.filter(
+            category=category,
+            func='raster',
+            geonode_layer__isnull=False
+        ).first()
+        population_layer = dataset.geonode_layer
+    else:
+        population_layer = alternate_populate_layer
 
     if boundary_id:
         clipped_layer, created = ClippedLayer.objects.get_or_create(
@@ -126,10 +138,15 @@ def _calculate_weight_average(boundary_id, input_layer, calculation='',
             )
         raster_file = clipped_layer.clipped_file.path
 
-        population_clipped = ClippedLayer.objects.filter(
-            layer=dataset.geonode_layer,
+        population_clipped, _created = ClippedLayer.objects.get_or_create(
+            layer=population_layer,
             boundary_uuid=boundary_id
-        ).first()
+        )
+
+        if _created or not population_clipped.clipped_file.path:
+            population_clipped = clip_layer_by_region(
+                population_clipped.id
+            )
 
         if not population_clipped or not raster_file:
             return {
@@ -150,15 +167,15 @@ def _calculate_weight_average(boundary_id, input_layer, calculation='',
             )
         raster_file = base_file.path
         try:
-            population_layer = dataset.geonode_layer.get_base_file()[0].file
+            population_layer_file = population_layer.get_base_file()[0].file
         except:  # noqa
-            population_layer = (
-                dataset.geonode_layer.upload_session.layerfile_set.all(
+            population_layer_file = (
+                population_layer.upload_session.layerfile_set.all(
                 ).filter(
                     file__icontains='tif'
                 ).first().file
             )
-        population_raster_file = population_layer.path
+        population_raster_file = population_layer_file.path
 
     if not boundary_id:
         resized_raster = raster_file.replace('.tif', '_resized.tif')
@@ -170,7 +187,7 @@ def _calculate_weight_average(boundary_id, input_layer, calculation='',
 
     output = os.path.join(
         settings.MEDIA_ROOT,
-        f'{boundary_id}_{category.geography.id}_'
+        f'{boundary_id}_'
         f'{str(datetime.now().timestamp())}.tif'
     )
 
@@ -194,16 +211,16 @@ def _calculate_weight_average(boundary_id, input_layer, calculation='',
     if os.path.exists(output):
         src = rasterio.open(output)
         arr = src.read()
-        arr[np.isnan(arr)] = 0
-        total = arr.sum()
+        arr[np.isinf(arr)] = 0
+        total = np.nansum(arr)
         os.remove(output)
 
     if calculate_population:
         if os.path.exists(population_raster_file):
             src = rasterio.open(population_raster_file)
             arr = src.read()
-            arr[np.isnan(arr)] = 0
-            total_population = arr.sum()
+            arr[np.isinf(arr)] = 0
+            total_population = np.nansum(arr)
 
     return total, total_population, command_output
 
@@ -237,6 +254,66 @@ def calculate_poverty(geography: Geography, boundary_id: str):
         'calculation': 'Total Population in Poverty Area',
         'execution_time': time.time() - start_time,
         'total_poverty_population': total,
+        'output': command_output,
+        'success': b'Error!' not in command_output
+    }
+
+
+def calculate_poverty_supply_layer_distance(
+        geography: Geography,
+        boundary_id: str,
+        supply_layer: Layer,
+        distance=0.2):
+
+    start_time = time.time()
+    from osgeo import gdal
+
+    if boundary_id:
+        clipped_layer, created = ClippedLayer.objects.get_or_create(
+            layer=supply_layer,
+            boundary_uuid=boundary_id
+        )
+        if created or not clipped_layer.clipped_file:
+            clipped_layer = clip_layer_by_region(
+                clipped_layer.id
+            )
+        raster_file = clipped_layer.clipped_file
+    else:
+        try:
+            raster_file = supply_layer.get_base_file()[0].file
+        except:  # noqa
+            raster_file = (
+                supply_layer.upload_session.layerfile_set.all(
+                ).filter(
+                    file__icontains='tif'
+                ).first().file
+            )
+
+    gtif = gdal.Open(raster_file.path)
+    srcband = gtif.GetRasterBand(1)
+
+    # Get raster statistics
+    stats = srcband.GetStatistics(True, True)
+
+    highest = stats[1]
+    min_range = highest * distance
+
+    total, total_population, command_output = _calculate_weight_average(
+        boundary_id,
+        supply_layer,
+        f'B*logical_and(A>0,A<={highest})',
+        False,
+        geography.wealth_index_layer
+    )
+
+    return {
+        'result': "[ STATS ] =  Minimum=%.3f, "
+                   "Maximum=%.3f, Mean=%.3f, StdDev=%.3f" % (
+    stats[0], stats[1], stats[2], stats[3]),
+        'execution_time': time.time() - start_time,
+        'highest_min_range': min_range,
+        'total': total,
+        'total_population': total_population,
         'output': command_output,
         'success': b'Error!' not in command_output
     }

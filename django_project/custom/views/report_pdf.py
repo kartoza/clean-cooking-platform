@@ -312,6 +312,8 @@ class ReportPDFView(View):
             boundary = 'All'
         if raster_file:
             for summary_category in self.summary_categories:
+                if not summary_category.vector_layer:
+                    continue
                 summary_result, _ = SummaryReportResult.objects.get_or_create(
                     summary_report_category=summary_category,
                     analysis=analysis,
@@ -510,8 +512,10 @@ class ReportPDFView(View):
             request.POST.get('supplyDataHighPercentage', '')
         )
 
+        self.preset = Preset.objects.get(id=preset_id)
+
         self.summary_categories = SummaryReportCategory.objects.filter(
-            preset_id=preset_id
+            preset=self.preset
         )
 
         self.demand_summary = [
@@ -535,9 +539,7 @@ class ReportPDFView(View):
             )
             for supply in supply_data:
                 self.supply_summary.append({
-                    'desc': 'Number of {} close to supply'.format(
-                        supply['category']
-                    ),
+                    'desc': supply['category'],
                     'value': '{}'.format(supply['total_high'])
                 })
                 self.table_summary_data.append([
@@ -552,10 +554,7 @@ class ReportPDFView(View):
             )
             for demand in demand_data:
                 self.demand_summary.append({
-                    'desc': 'Number of {} within areas of high '
-                            'demand index'.format(
-                        demand['category']
-                    ),
+                    'desc': demand['category'],
                     'value': '{}'.format(demand['total_high'])
                 })
 
