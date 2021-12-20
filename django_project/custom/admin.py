@@ -192,10 +192,17 @@ class SummaryReportResultAdmin(admin.ModelAdmin):
 
 
 class SummaryReportCategoryAdmin(admin.ModelAdmin):
-    autocomplete_fields = ['vector_layer', 'supply_layer', ]
+    change_form_template = 'admin/custom/summary_report_category/change_form.html'
+    autocomplete_fields = ['vector_layer', ]
     list_display = (
        'name', 'vector_layer', 'supply_layer', 'preset', 'analysis'
     )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(SummaryReportCategoryAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['supply_layer'].queryset = Layer.objects.filter(
+            storeType__contains='coverageStore')
+        return form
 
 
 admin.site.register(Geography, GeographyAdmin)

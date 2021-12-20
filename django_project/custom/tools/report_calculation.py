@@ -273,7 +273,10 @@ def calculate_poverty_supply_layer_distance(
             layer=supply_layer,
             boundary_uuid=boundary_id
         )
-        if created or not clipped_layer.clipped_file:
+        if (
+            created or
+            not clipped_layer.clipped_file or
+            not os.path.exists(clipped_layer.clipped_file.path)):
             clipped_layer = clip_layer_by_region(
                 clipped_layer.id
             )

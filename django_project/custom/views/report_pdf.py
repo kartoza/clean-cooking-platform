@@ -29,7 +29,7 @@ from custom.models import (
 )
 from custom.tools.report_calculation import (
     calculate_household, calculate_urban, calculate_cooking_with_traditional,
-    calculate_poverty
+    calculate_poverty, calculate_poverty_supply_layer_distance
 )
 from custom.tools.category import category_from_url
 from custom.views.summary_report import sample_raster_with_vector
@@ -343,6 +343,18 @@ class ReportPDFView(View):
                 result.append(summary_result_data)
         return result
 
+    def _calculate_ani_data(self, ani_categories):
+        result = []
+        boundary = self.boundary
+        if not boundary:
+            boundary = 'All'
+        for ani_category in ani_categories:
+            summary_result_data = calculate_poverty_supply_layer_distance(
+                self.geography, boundary, ani_category.supply_layer)
+            summary_result_data['category'] = ani_category.name
+            result.append(summary_result_data)
+        return result
+
     def draw_page_one(self, page):
         page.drawImage(self.image_path, 0, 0,
                     width=self.page_width,
@@ -541,6 +553,8 @@ class ReportPDFView(View):
         self.supply_image = request.POST.get('supplyImage', None)
         self.ani_image = request.POST.get('aniImage', None)
         self.subregion = request.POST.get('subRegion', '')
+        self.geography = Geography.objects.get(id=geo_id)
+
         self.demand_high_percentage = (
             request.POST.get('demandDataHighPercentage', '')
         )
@@ -606,11 +620,18 @@ class ReportPDFView(View):
                     'value':  f'{self.ani_med_high_total}'
                 }
             ]
+            ani_summary_data = self._calculate_ani_data(
+                self.summary_categories.filter(analysis='ani')
+            )
+            for ani in ani_summary_data:
+                self.ani_summary.append({
+                    'desc': ani['category'],
+                    'value': '{:,.0f}'.format(ani['total'])
+                })
 
         self.total_population = int(
             request.POST.get('totalPopulation', '0')
         )
-        self.geography = Geography.objects.get(id=geo_id)
 
         if self.geography.household_layer:
             household_result = calculate_household(
