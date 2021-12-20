@@ -47,26 +47,44 @@ const UProxyHandler = {
 
 		case "inputs": {
 			if (!i || i === "") v = [];
-			else v = i.split(',').filter(e => o.params.inputs.indexOf(e.replace(/ *\([^)]*\) */g, "")) > -1);
+			else v = i.split(',').filter(e => o.params.inputs.indexOf(e.replace(/ *\([^)]*\) */g, "").replace(/ *\[[^)]*] */g, "")) > -1);
 			if (v.length > 0) {
 				for (let j=0; j<v.length;j++) {
-					if (v[j].includes('(')) {
+					if (v[j].includes('(') || v[j].includes('[')) {
 						let value = v[j].replace(/ *\([^)]*\) */g, "");
-						let matches = v[j].match(/ *\([^)]*\) */g);
+						value = value.replace(/ *\[[^)]*] */g, "");
+
+						let domainMatches = v[j].match(/ *\([^)]*\) */g);
+						let weightMatches = v[j].match(/ *\[[^)]*] */g);
 
 						if (DOMAIN_DATA.length === 0 || DOMAIN_DATA.find(o => o.name !== value)) {
 							let domain = '';
-							if (matches) {
-									domain = matches[0].replace('(', '').replace(')', '').split(':');
+							if (domainMatches) {
+									domain = domainMatches[0].replace('(', '').replace(')', '').split(':');
 									domain = {
 										'min': domain[0],
 										'max': domain[1]
 									}
 							}
-							DOMAIN_DATA.push({
-								'name': value,
-								'domain': domain
-							})
+							if (domain) {
+								DOMAIN_DATA.push({
+									'name': value,
+									'domain': domain
+								})
+							}
+						}
+
+						if (WEIGHT_DATA.length === 0 || WEIGHT_DATA.find(o => o.name !== value)) {
+							let weight = '';
+							if (weightMatches) {
+								weight = weightMatches[0].replace('[', '').replace(']', '');
+							}
+							if (weight) {
+								WEIGHT_DATA.push({
+									'name': value,
+									'weight': weight
+								})
+							}
 						}
 
 						v[j] = value;
@@ -108,10 +126,16 @@ const UProxyHandler = {
 
 		case "inputs": {
 			for (let i=0; i < v.length; i++) {
-				let domain_data = DOMAIN_DATA.find(o => o.name === v[i]);
+				let domain_data = DOMAIN_DATA.find(o => o.name === v[i].replace(/ *\[[^)]*] */g, ""));
 				if (domain_data) {
 					if (domain_data.domain) {
 						v[i] += `(${domain_data.domain.min}:${domain_data.domain.max})`
+					}
+				}
+				let weight_data = WEIGHT_DATA.find(o => o.name === v[i].replace(/ *\([^)]*\) */g, ""));
+				if (weight_data) {
+					if (weight_data.weight) {
+						v[i] += `[${weight_data.weight}]`
 					}
 				}
 			}
@@ -274,6 +298,7 @@ export async function init() {
 	const id = url.searchParams.get('geo') || DEFAULT_GEO_ID;
 
 	DOMAIN_DATA = [];
+	WEIGHT_DATA = [];
 
 	SIDEBAR = {
 		sort_subbranches: [],
@@ -607,6 +632,11 @@ async function dsinit(id, inputs, pack, callback) {
 			let domain_data = DOMAIN_DATA.find(o => o.name === data);
 			if (domain_data) {
 				ds._domain = domain_data.domain;
+			}
+			let weight_data = WEIGHT_DATA.find(o => o.name === data);
+			if (weight_data && weight_data.weight) {
+				ds.weight = parseInt(weight_data.weight);
+				ds.controls.weight_group.change({'min': 1, 'max': ds.weight });
 			}
 		})
 	}
