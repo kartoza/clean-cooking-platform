@@ -144,7 +144,7 @@ async function run_analysis (output, id = "") {
 	return data;
 }
 
-export async function getDatasets(inputs, scenarioId) {
+export async function getDatasets(inputs, scenarioId, analysisType = []) {
 
 	let datasets_url = `/api/datasets/?geography=${geoId}`;
 	if (boundary) {
@@ -386,10 +386,15 @@ export async function getDatasets(inputs, scenarioId) {
 		}
 	}
 
-	window.supplyData = await run_analysis("supply", scenarioId);
-	await run_analysis("ani", scenarioId);
-	window.demandData = await run_analysis("demand", scenarioId);
-	await run_analysis("eai", scenarioId);
+	if (analysisType.includes('ccp')) {
+		window.demandData = await run_analysis("demand", scenarioId);
+	}
+	if (analysisType.includes('ani')) {
+		window.aniData = await run_analysis("ani", scenarioId);
+	}
+	if (analysisType.includes('supply')) {
+		window.supplyData = await run_analysis("supply", scenarioId);
+	}
 
 	// Wait for seconds
 	setTimeout(() => {
@@ -433,31 +438,55 @@ document.getElementById('report-btn').onclick = async (e) => {
 		width, height
 	);
 	let mapImage = canvas.toDataURL('image/png', 1.0);
+	let totalPopulation = null;
 
-	let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
-	let supplyImage = document.getElementById('supply-output').toDataURL('image/png', 1.0);
-	let demandRaster = await raster_to_tiff('demand', raster_data['demand' + scenarioSelect.selectedIndex]);
-	let supplyRaster = await raster_to_tiff('supply', raster_data['supply' + scenarioSelect.selectedIndex]);
+	if (window.demandData) {
+		let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
+		let demandRaster = await raster_to_tiff('demand', raster_data['demand' + scenarioSelect.selectedIndex]);
+		fd.append('demandImage', demandImage);
+		fd.append('demandTiff', new Blob([demandRaster], { type: 'application/octet-stream;charset=utf-8' }), `demand_${boundary}_${geoId}_${subRegion}.tiff`);
+		try {
+			fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
+			totalPopulation = Math.round(window.demandData['population-density']['total']);
+		} catch (e) {}
+	}
 
+	if (window.supplyData) {
+		let supplyImage = document.getElementById('supply-output').toDataURL('image/png', 1.0);
+		let supplyRaster = await raster_to_tiff('supply', raster_data['supply' + scenarioSelect.selectedIndex]);
+		fd.append('supplyTiff', new Blob([supplyRaster], { type: 'application/octet-stream;charset=utf-8' }), `supply_${boundary}_${geoId}_${subRegion}.tiff`);
+		fd.append('supplyImage', supplyImage);
+
+		try {
+			fd.append('supplyDataHighPercentage', (window.supplyData['population-density']['distribution'][4] * 100).toFixed(2))
+			if (!totalPopulation) {
+				fd.append('totalPopulation', Math.round(window.supplyData['population-density']['total']))
+			}
+		} catch (e) {}
+	}
+
+	if (window.aniData) {
+		let aniImage = document.getElementById('ani-output').toDataURL('image/png', 1.0);
+		let aniRaster = await raster_to_tiff('ani', raster_data['ani' + scenarioSelect.selectedIndex]);
+		fd.append('aniTiff', new Blob([aniRaster], { type: 'application/octet-stream;charset=utf-8' }), `ani_${boundary}_${geoId}_${subRegion}.tiff`);
+		fd.append('aniImage', aniImage);
+
+		try {
+			fd.append('aniDataMedToHigh', window.aniData['population-density']['amounts'].slice(-3).reduce((acc, val) => acc + val).toFixed(0))
+			if (!totalPopulation) {
+				fd.append('totalPopulation', Math.round(window.aniData['population-density']['total']))
+			}
+		} catch (e) {}
+	}
+
+
+	fd.append('totalPopulation', totalPopulation | 0)
 	fd.append('geoId', geoId);
 	fd.append('subRegion', subRegion);
 	fd.append('mapImage', mapImage);
-	fd.append('demandImage', demandImage);
-	fd.append('demandTiff', new Blob([demandRaster], { type: 'application/octet-stream;charset=utf-8' }), `demand_${boundary}_${geoId}_${subRegion}.tiff`);
-	fd.append('supplyTiff', new Blob([supplyRaster], { type: 'application/octet-stream;charset=utf-8' }), `supply_${boundary}_${geoId}_${subRegion}.tiff`);
-	fd.append('supplyImage', supplyImage);
 	fd.append('useCaseId', useCaseId);
 	fd.append('scenarioId', scenarioSelect.value);
 	fd.append('boundary', boundary);
-
-	try {
-		fd.append('supplyDataHighPercentage', (window.supplyData['population-density']['distribution'][4] * 100).toFixed(2))
-		fd.append('totalPopulation', Math.round(window.supplyData['population-density']['total']))
-	} catch (e) {}
-
-	try {
-		fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
-	} catch (e) {}
 
 	request.open('POST', url, true);
 	request.setRequestHeader('X-CSRFToken', csrfToken);

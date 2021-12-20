@@ -2,6 +2,12 @@ from django.db import models
 from geonode.layers.models import Layer
 from custom.models.preset import Preset
 
+ANALYSIS_CHOICES = (
+    ('ani', 'ANI'),
+    ('ccp', 'CCP'),
+    ('supply', 'Supply'),
+)
+
 
 class SummaryReportCategory(models.Model):
 
@@ -11,10 +17,24 @@ class SummaryReportCategory(models.Model):
         blank=False
     )
 
+    category = models.CharField(
+        max_length=255,
+        default='',
+        blank=True
+    )
+
     vector_layer = models.ForeignKey(
         Layer,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
+
+    supply_layer = models.ForeignKey(
+        Layer,
+        related_name='supply_layer',
+        null=True,
+        blank=True,
         on_delete=models.CASCADE
     )
 
@@ -23,6 +43,13 @@ class SummaryReportCategory(models.Model):
         null=False,
         blank=False,
         on_delete=models.CASCADE
+    )
+
+    analysis = models.CharField(
+        choices=ANALYSIS_CHOICES,
+        max_length=100,
+        default='',
+        blank=True,
     )
 
     def __str__(self):

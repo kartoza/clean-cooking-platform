@@ -150,6 +150,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
     const ccaReportBtn = document.getElementById('report-btn');
     let selectedScenario = null;
     let selectedLayers = null;
+    let analysisType = null;
     presetDesc.innerHTML = '';
 
     setTimeout(() => {
@@ -174,11 +175,17 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         doneLayer = 0;
         progressBar.style.width = `0%`;
 
+        window.demandData = null;
+        window.supplyData = null;
+        window.aniData = null;
+
         ccaToolBtn.disabled = true;
         ccaReportBtn.disabled = true;
         loadingSpinner1.style.display = "block";
         loadingSpinner0.style.display = "block";
         selectedScenario = e.target.options[e.target.selectedIndex];
+        analysisType = selectedScenario.dataset.analysisType.split(',');
+
         selectedLayers = JSON.parse(selectedScenario.dataset.layers);
         let datasetUrl = selectedScenario.dataset.url;
         presetDesc.innerHTML = selectedScenario.dataset.desc;
@@ -206,7 +213,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
                 results.forEach((result) => console.log(result))
                 loadingSpinner1.style.display = "none";
                 ccaToolBtn.disabled = false;
-                window.getDatasets(inputString, scenarioSelect.selectedIndex);
+                window.getDatasets(inputString, scenarioSelect.selectedIndex, analysisType);
             });
     }
 

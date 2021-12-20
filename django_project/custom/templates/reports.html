@@ -215,7 +215,7 @@
                 </option>
                 {% for preset in presets %}
                     <option value="{{ preset.id }}"
-                            data-url="{{ preset.permalink }}" data-layers="{{ preset.layers }}" data-desc="{{ preset.description }}">{{ preset.name }}</option>
+                            data-url="{{ preset.permalink }}" data-layers="{{ preset.layers }}" data-desc="{{ preset.description }}" data-analysis-type="{{ preset.analysis }}">{{ preset.name }}</option>
                 {% endfor %}
             </select>
             <p class="preset-desc" id="preset-desc"></p>
