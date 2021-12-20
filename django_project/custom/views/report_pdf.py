@@ -49,6 +49,9 @@ class ReportPDFView(View):
     supply_legend_path = absolute_path(
         'custom', 'static', 'img', 'supply_legend.png'
     )
+    ani_legend_path = absolute_path(
+        'custom', 'static', 'img', 'ani_legend.png'
+    )
     page_width = 2000
     page_height = 1125
     sidebar_width = 700
@@ -59,14 +62,17 @@ class ReportPDFView(View):
     summary_categories = None
     demand_tiff_file = None
     supply_tiff_file = None
+    ani_tiff_file = None
     subregion = ''
     map_image = ''
     demand_image = None
     supply_image = None
+    ani_image = None
     use_case = None
     preset = None
     demand_summary = []
     supply_summary = []
+    ani_summary = []
     table_summary_data = []
     total_population = 0
     total_urban_population = 0
@@ -286,7 +292,7 @@ class ReportPDFView(View):
             y_pos = self._draw_wrapped_line(
                 page,
                 summary['desc'],
-                25,
+                20,
                 x_pos + 300,
                 y_pos,
                 35
@@ -444,7 +450,7 @@ class ReportPDFView(View):
 
         page.showPage()
 
-    def draw_page_three(self, page):
+    def draw_ccp_page(self, page):
         if not self.demand_image:
             return
 
@@ -466,7 +472,7 @@ class ReportPDFView(View):
 
         page.showPage()
 
-    def draw_page_four(self, page):
+    def draw_supply_page(self, page):
         if not self.supply_image:
             return
 
@@ -488,6 +494,34 @@ class ReportPDFView(View):
 
         page.showPage()
 
+
+    def draw_ani_page(self, page):
+        if not self.ani_image:
+            return
+
+        self._draw_sidebar(page)
+        self._draw_footer(page, 4)
+        self._draw_title(page, 'Analysis', 'Assistance Needed index')
+        self._draw_map(page, self.ani_image, self.ani_legend_path)
+        self._draw_summary(page, self.ani_summary)
+
+        page.setFillColorRGB(0, 0, 0)
+        page.setFont(self.default_font_light, 25)
+        self._draw_wrapped_line(
+            page,
+            'This index is an aggregated and weighted measure of '
+            'selected datasets '
+            'under both the Demand and Supply categories '
+            'indicating existing or '
+            'potential energy demand, low economic activity, '
+            'and low access to '
+            'infrastructure and resources.',
+            100,
+            75, 150, 40
+        )
+
+        page.showPage()
+
     def post(self, request, *args, **kwargs):
         # Create a file-like buffer to receive PDF data.
         buffer = io.BytesIO()
@@ -503,13 +537,18 @@ class ReportPDFView(View):
         self.demand_image = request.POST.get('demandImage', None)
         self.demand_tiff_file = request.FILES.get('demandTiff', None)
         self.supply_tiff_file = request.FILES.get('supplyTiff', None)
+        self.ani_tiff_file = request.FILES.get('aniTiff', None)
         self.supply_image = request.POST.get('supplyImage', None)
+        self.ani_image = request.POST.get('aniImage', None)
         self.subregion = request.POST.get('subRegion', '')
         self.demand_high_percentage = (
             request.POST.get('demandDataHighPercentage', '')
         )
         self.supply_high_percentage = (
             request.POST.get('supplyDataHighPercentage', '')
+        )
+        self.ani_med_high_total = (
+            request.POST.get('aniDataMedToHigh', '')
         )
 
         self.preset = Preset.objects.get(id=preset_id)
@@ -518,45 +557,55 @@ class ReportPDFView(View):
             preset=self.preset
         )
 
-        self.demand_summary = [
-            {
-                'desc': 'Population within areas of high demand index',
-                'value': f'{self.demand_high_percentage}%'
-            }
-        ]
+        if self.summary_categories.filter(analysis='ccp').exists():
+            self.demand_summary = [
+                {
+                    'desc': 'Population within areas of high demand index',
+                    'value': f'{self.demand_high_percentage}%'
+                }
+            ]
+            if self.demand_tiff_file:
+                demand_data = self._calculate_demand_supply(
+                    self.demand_tiff_file,
+                    'demand'
+                )
+                for demand in demand_data:
+                    self.demand_summary.append({
+                        'desc': demand['category'],
+                        'value': '{}'.format(demand['total_high'])
+                    })
 
-        self.supply_summary = [
-            {
-                'desc': 'Population within areas of high supply index',
-                'value': f'{self.supply_high_percentage}%'
-            }
-        ]
+        if self.summary_categories.filter(analysis='supply').exists():
+            self.supply_summary = [
+                {
+                    'desc': 'Population within areas of high supply index',
+                    'value': f'{self.supply_high_percentage}%'
+                }
+            ]
 
-        if self.supply_tiff_file:
-            supply_data = self._calculate_demand_supply(
-                self.supply_tiff_file,
-                'supply'
-            )
-            for supply in supply_data:
-                self.supply_summary.append({
-                    'desc': supply['category'],
-                    'value': '{}'.format(supply['total_high'])
-                })
-                self.table_summary_data.append([
-                    f'Number of\n\n\n{supply["category"]}',
-                    supply['total_in_raster']
-                ])
+            if self.supply_tiff_file:
+                supply_data = self._calculate_demand_supply(
+                    self.supply_tiff_file,
+                    'supply'
+                )
+                for supply in supply_data:
+                    self.supply_summary.append({
+                        'desc': supply['category'],
+                        'value': '{}'.format(supply['total_high'])
+                    })
+                    self.table_summary_data.append([
+                        f'Number of\n\n\n{supply["category"]}',
+                        supply['total_in_raster']
+                    ])
 
-        if self.demand_tiff_file:
-            demand_data = self._calculate_demand_supply(
-                self.demand_tiff_file,
-                'demand'
-            )
-            for demand in demand_data:
-                self.demand_summary.append({
-                    'desc': demand['category'],
-                    'value': '{}'.format(demand['total_high'])
-                })
+        if self.summary_categories.filter(analysis='ani').exists():
+            self.ani_summary = [
+                {
+                    'desc': 'Population with medium to high '
+                            'Assistance Needed Index',
+                    'value':  f'{self.ani_med_high_total}'
+                }
+            ]
 
         self.total_population = int(
             request.POST.get('totalPopulation', '0')
@@ -637,10 +686,18 @@ class ReportPDFView(View):
         PageBreak()
         self.draw_page_two(p)
         PageBreak()
-        self.draw_page_three(p)
-        PageBreak()
-        self.draw_page_four(p)
-        PageBreak()
+
+        if self.demand_summary:
+            self.draw_ccp_page(p)
+            PageBreak()
+
+        if self.supply_summary:
+            self.draw_supply_page(p)
+            PageBreak()
+
+        if self.ani_summary:
+            self.draw_ani_page(p)
+            PageBreak()
 
         p.save()
 

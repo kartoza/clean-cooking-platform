@@ -106,11 +106,11 @@ def _calculate_weight_average(
         input_layer,
         calculation='',
         calculate_population=False,
-        alternate_populate_layer=None):
+        alternate_population_layer=None):
     import rasterio
     import subprocess
 
-    if not alternate_populate_layer:
+    if not alternate_population_layer:
         # Get population-density layer
         category = Category.objects.filter(
             name_long__icontains='population'
@@ -125,7 +125,7 @@ def _calculate_weight_average(
         ).first()
         population_layer = dataset.geonode_layer
     else:
-        population_layer = alternate_populate_layer
+        population_layer = alternate_population_layer
 
     if boundary_id:
         clipped_layer, created = ClippedLayer.objects.get_or_create(
@@ -262,8 +262,8 @@ def calculate_poverty(geography: Geography, boundary_id: str):
 def calculate_poverty_supply_layer_distance(
         geography: Geography,
         boundary_id: str,
-        supply_layer: Layer,
-        distance=0.2):
+        supply_layer: Layer):
+    """Calculate total population under poverty line close to supply layer"""
 
     start_time = time.time()
     from osgeo import gdal
@@ -296,12 +296,12 @@ def calculate_poverty_supply_layer_distance(
     stats = srcband.GetStatistics(True, True)
 
     highest = stats[1]
-    min_range = highest * distance
+    min_range = ( highest / 5 ) * 4
 
-    total, total_population, command_output = _calculate_weight_average(
+    total, _, command_output = _calculate_weight_average(
         boundary_id,
         supply_layer,
-        f'B*logical_and(A>0,A<={highest})',
+        f'B*logical_and(A>{min_range},A<={highest})',
         False,
         geography.wealth_index_layer
     )
@@ -313,7 +313,6 @@ def calculate_poverty_supply_layer_distance(
         'execution_time': time.time() - start_time,
         'highest_min_range': min_range,
         'total': total,
-        'total_population': total_population,
         'output': command_output,
         'success': b'Error!' not in command_output
     }

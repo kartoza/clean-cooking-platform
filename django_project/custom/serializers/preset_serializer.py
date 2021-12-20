@@ -7,6 +7,14 @@ from custom.models.category import Category
 
 class PresetSerializer(serializers.ModelSerializer):
     layers = serializers.SerializerMethodField()
+    analysis = serializers.SerializerMethodField()
+
+    def get_analysis(self, obj):
+        return ','.join(
+            obj.summaryreportcategory_set.values_list(
+                'analysis',
+                flat=True).distinct()
+        )
 
     def get_layers(self, obj):
         permalink = obj.permalink
@@ -25,5 +33,6 @@ class PresetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Preset
-        fields = ['id', 'name', 'description', 'layers', 'permalink']
+        fields = ['id', 'name', 'description', 'layers', 'permalink',
+                  'analysis']
 

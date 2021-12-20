@@ -3,9 +3,9 @@ from geonode.layers.models import Layer
 from custom.models.preset import Preset
 
 ANALYSIS_CHOICES = (
-    ('ANI', 'ani'),
-    ('CCP', 'ccp'),
-    ('Supply', 'supply'),
+    ('ani', 'ANI'),
+    ('ccp', 'CCP'),
+    ('supply', 'Supply'),
 )
 
 
