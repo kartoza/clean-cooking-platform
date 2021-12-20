@@ -17,6 +17,12 @@ class SummaryReportCategory(models.Model):
         blank=False
     )
 
+    category = models.CharField(
+        max_length=255,
+        default='',
+        blank=True
+    )
+
     vector_layer = models.ForeignKey(
         Layer,
         null=True,

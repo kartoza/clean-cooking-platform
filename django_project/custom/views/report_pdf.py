@@ -317,7 +317,9 @@ class ReportPDFView(View):
         if not boundary:
             boundary = 'All'
         if raster_file:
-            for summary_category in self.summary_categories:
+            for summary_category in self.summary_categories.filter(
+                analysis=analysis
+            ):
                 if not summary_category.vector_layer:
                     continue
                 summary_result, _ = SummaryReportResult.objects.get_or_create(
@@ -339,7 +341,8 @@ class ReportPDFView(View):
                 summary_result_data = sample_raster_with_vector(
                     summary_result
                 )
-                summary_result_data['category'] = summary_category.name
+                summary_result_data['label'] = summary_category.name
+                summary_result_data['category'] = summary_category.category
                 result.append(summary_result_data)
         return result
 
@@ -351,7 +354,8 @@ class ReportPDFView(View):
         for ani_category in ani_categories:
             summary_result_data = calculate_poverty_supply_layer_distance(
                 self.geography, boundary, ani_category.supply_layer)
-            summary_result_data['category'] = ani_category.name
+            summary_result_data['label'] = ani_category.name
+            summary_result_data['category'] = ani_category.category
             result.append(summary_result_data)
         return result
 
@@ -564,6 +568,10 @@ class ReportPDFView(View):
         self.ani_med_high_total = (
             request.POST.get('aniDataMedToHigh', '')
         )
+        if self.ani_med_high_total:
+            self.ani_med_high_total = int(self.ani_med_high_total)
+        else:
+            self.ani_med_high_total = 0
 
         self.preset = Preset.objects.get(id=preset_id)
 
@@ -581,11 +589,11 @@ class ReportPDFView(View):
             if self.demand_tiff_file:
                 demand_data = self._calculate_demand_supply(
                     self.demand_tiff_file,
-                    'demand'
+                    'ccp'
                 )
                 for demand in demand_data:
                     self.demand_summary.append({
-                        'desc': demand['category'],
+                        'desc': demand['label'],
                         'value': '{}'.format(demand['total_high'])
                     })
 
@@ -604,7 +612,7 @@ class ReportPDFView(View):
                 )
                 for supply in supply_data:
                     self.supply_summary.append({
-                        'desc': supply['category'],
+                        'desc': supply['label'],
                         'value': '{}'.format(supply['total_high'])
                     })
                     self.table_summary_data.append([
@@ -617,7 +625,7 @@ class ReportPDFView(View):
                 {
                     'desc': 'Population with medium to high '
                             'Assistance Needed Index',
-                    'value':  f'{self.ani_med_high_total}'
+                    'value':  '{:,.0f}'.format(self.ani_med_high_total)
                 }
             ]
             ani_summary_data = self._calculate_ani_data(
@@ -625,7 +633,7 @@ class ReportPDFView(View):
             )
             for ani in ani_summary_data:
                 self.ani_summary.append({
-                    'desc': ani['category'],
+                    'desc': ani['label'],
                     'value': '{:,.0f}'.format(ani['total'])
                 })
 
