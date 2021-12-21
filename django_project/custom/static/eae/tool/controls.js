@@ -24,6 +24,8 @@ export default class dscontrols extends HTMLElement {
 
 		this.show_advanced = false;
 
+		this.inject();
+
 		this.init();
 
 		this.render();
@@ -135,8 +137,6 @@ export default class dscontrols extends HTMLElement {
 			"collection-list": this.collection_list,
 			"weight-slider": maybe(this.weight_group, 'el'),
 		});
-
-		this.inject();
 
 		return this;
 	};
@@ -442,8 +442,7 @@ function range(opts = {}) {
 	l.className = 'ramp';
 	l.append(v1, ce('div', opts.ramp || 'range', { class: "unit-ramp" }), v2);
 
-	if (!slider_width)
-		slider_width = Math.max(coalesce(maybe(contents_el, 'clientWidth'), 0) - 64, 256);
+	slider_width = coalesce(maybe(contents_el, 'clientWidth'), 0) - 60;
 
 	const r = ea_svg_interval({
 		sliders: opts.sliders,
@@ -477,9 +476,7 @@ function weight() {
 		ce('div', weights[weights.length - 1] + "")
 	);
 
-	if (!slider_width)
-		slider_width = Math.max(coalesce(maybe(contents_el, 'clientWidth'), 0) - 200, 256);
-
+	slider_width = coalesce(maybe(contents_el, 'clientWidth'), 0) - 60;
 
 	const w = ea_svg_interval({
 		sliders: "single",

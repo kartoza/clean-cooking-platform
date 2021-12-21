@@ -6,13 +6,30 @@ const tabs_el = qs('#controls-tabs');
 
 let root, input;
 
-function openall() {
+export function openall() {
 	input.dispatchEvent(new Event('input'));
 	select_tab(qs('#controls-tab-all'), "all");
 	for (let sb of qsa('.controls-container')) {
 		elem_collapse(sb, sb.previousSibling, "open");
 	}
 };
+
+export function openactive(inputs) {
+	input.dispatchEvent(new Event('input'));
+	select_tab(qs('#controls-tab-all'), "all");
+	for (let sb of qsa('.controls-container')) {
+		let names =  sb.querySelectorAll('[slot="name"]');
+		for (let i = 0; i < names.length; i++) {
+			let name = names[i].innerHTML.toLowerCase()
+             .replace(/ /g, '-')
+             .replace(/[^\w-]+/g, '');
+			if (inputs.includes(name)) {
+				elem_collapse(sb, sb.previousSibling, "open");
+				break;
+			}
+		}
+	}
+}
 
 function sort_datasets(config) {
 	const {sort_datasets, sort_subbranches, sort_branches} = config;
@@ -92,8 +109,6 @@ export function init() {
 	if (GEOGRAPHY.icon) {
 		input.style.background = `url('${GEOGRAPHY.icon}') no-repeat scroll 0.4em 0.4em`;
 		input.style.backgroundSize = "auto 2.45em";
-		console.log(input);
-		console.log(GEOGRAPHY.icon);
 	}
 
 	input.onfocus = function(_) {
