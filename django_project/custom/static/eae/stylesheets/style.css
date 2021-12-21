@@ -262,9 +262,10 @@ section .flex-center{
   bottom: 0;
   right: 0;
   color: white;
-  background-color: #00689c;
+  background-color: #042549;
   border-top-left-radius: 1em;
   display: flex;
+  text-decoration: underline;
 }
 
 .github-box img {
