@@ -10,6 +10,7 @@ from slugify import slugify
 from custom.models.category import Category
 from custom.models.geography import Geography
 from custom.models.dataset_file import DatasetFile
+from custom.models.clipped_layer import ClippedLayer
 from geonode.base.models import Link
 
 from custom.tools.simplify_layer import simplify_layer
@@ -188,25 +189,32 @@ class DatasetFileSerializer(serializers.ModelSerializer):
 
         layer_file = None
         if clipped_boundary:
-            clipped_layer_directory = os.path.join(
-                settings.MEDIA_ROOT,
-                'clipped',
-                f'{obj.geonode_layer.typename}:{clipped_boundary}'
-            )
-            if os.path.exists(clipped_layer_directory):
-                for clipped_file in os.listdir(clipped_layer_directory):
-                    if '.json' or '.tif' in clipped_file:
-                        layer_file = os.path.join(
-                            clipped_layer_directory,
-                            clipped_file
-                        )
-                        if os.path.exists(layer_file):
-                            layer_file = (
-                                layer_file.replace(
-                                    settings.MEDIA_ROOT, settings.MEDIA_URL)
+            clipped_layer = ClippedLayer.objects.filter(
+                layer=obj.geonode_layer,
+                boundary_uuid=clipped_boundary).first()
+            if clipped_layer:
+                layer_file = clipped_layer.clipped_file.url
+            else:
+                clipped_layer_directory = os.path.join(
+                    settings.MEDIA_ROOT,
+                    'clipped_layers',
+                    f'{obj.geonode_layer.typename}:{clipped_boundary}'
+                )
+                if os.path.exists(clipped_layer_directory):
+                    for clipped_file in os.listdir(clipped_layer_directory):
+                        if '.json' or '.tif' in clipped_file:
+                            layer_file = os.path.join(
+                                clipped_layer_directory,
+                                clipped_file
                             )
-                        else:
-                            layer_file = None
+                            if os.path.exists(layer_file):
+                                layer_file = (
+                                    layer_file.replace(
+                                        settings.MEDIA_ROOT,
+                                        settings.MEDIA_URL)
+                                )
+                            else:
+                                layer_file = None
         if obj.use_geonode_layer and obj.geonode_layer:
             geonode_layer, style = geonode_layer_links(
                 obj.geonode_layer,
