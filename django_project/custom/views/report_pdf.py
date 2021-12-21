@@ -40,6 +40,8 @@ class ReportPDFView(View):
 
     image_path = absolute_path(
         'custom', 'static', 'report', 'report_template_1.png')
+    image_path_end = absolute_path(
+        'custom', 'static', 'report', 'report_template_end.png')
     cca_logo_path = absolute_path(
         'custom', 'static', 'img', 'cca_logo_transparent.png'
     )
@@ -376,6 +378,59 @@ class ReportPDFView(View):
                 self.subregion,
                 self.geography.name
             ))
+        page.showPage()
+
+    def draw_page_end(self, page):
+        page.drawImage(self.image_path_end, 0, 0,
+                    width=self.page_width,
+                    height=self.page_height,
+                    preserveAspectRatio=True)
+        page.setFillColorRGB(1, 1, 1)
+        page.setFont(self.default_font_bold, 100)
+        page.drawString(1030, 570, "Supported by")
+
+        cca_logo = absolute_path(
+            'custom', 'static', 'img', 'cca.png')
+        page.drawImage(cca_logo, 1030, 400,
+                       height=100,
+                       width=239,
+                       preserveAspectRatio=True)
+
+        aepc_logo = absolute_path(
+            'custom', 'static', 'img', 'aepc.png')
+        page.drawImage(aepc_logo, 1030, 255,
+                       height=100,
+                       width=605,
+                       preserveAspectRatio=True)
+
+        kartoza_logo = absolute_path(
+            'custom', 'static', 'img', 'kartoza.png')
+        page.drawImage(kartoza_logo, 1030, 105,
+                       height=100,
+                       width=322,
+                       preserveAspectRatio=True)
+
+        wri_logo = absolute_path(
+            'custom', 'static', 'img', 'wri.png')
+        page.drawImage(wri_logo, 1670, 400,
+                       height=100,
+                       width=240,
+                       preserveAspectRatio=True)
+
+        nou_logo = absolute_path(
+            'custom', 'static', 'img', 'nou.png')
+        page.drawImage(nou_logo, 1670, 255,
+                       height=100,
+                       width=100,
+                       preserveAspectRatio=True)
+
+        kth_logo = absolute_path(
+            'custom', 'static', 'img', 'kth-240-white.png')
+        page.drawImage(kth_logo, 1670, 105,
+                       height=100,
+                       width=100,
+                       preserveAspectRatio=True)
+
         page.showPage()
 
 
@@ -727,6 +782,9 @@ class ReportPDFView(View):
         if self.ani_summary:
             self.draw_ani_page(p)
             PageBreak()
+
+        self.draw_page_end(p)
+        PageBreak()
 
         p.save()
 
