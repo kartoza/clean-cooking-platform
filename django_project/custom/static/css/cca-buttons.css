@@ -1,25 +1,34 @@
 .btn-cca-primary {
-    color: white;
+    color: #00689C;
     display: flex;
-    background: #0280BF;
-    border-color: #0280BF;
+    border-color: #00689C;
     border-radius: 6px !important;
+    box-shadow: 0 0.375em 0 currentColor;
+    border-width: 2px;
 }
 
 .btn-cca-primary:hover {
-    background: #1191ce;
-    border-color: #1191ce;
-    color: white;
+    -webkit-transition: background 0.3s; /* For Safari */
+    transition: background 0.3s; /* For modern browsers */
+    border-color: #00689C;
+    color: #00689C;
+    box-shadow: 0 0.375em 0 currentColor;
+}
+
+.btn-cca-primary:disabled {
+    box-shadow: 0 0.375em 0 currentColor;
 }
 
 .btn-cca-primary:disabled:hover {
     background: white;
     border-color: #e0e0e0;
     color: #969393;
+    opacity: 1;
 }
 
 .btn-cca-primary:active, .btn-cca-primary:focus {
     background: #0479b1 !important;
     border-color: #0479b1 !important;
-    color: white !important;
+    color: #d2d2d2 !important;
+    box-shadow: 0 0.375em 0 currentColor;
 }
