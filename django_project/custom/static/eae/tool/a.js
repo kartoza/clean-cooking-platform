@@ -32,6 +32,7 @@ import {
 import DS from './ds.js';
 
 import Overlord from './overlord.js';
+import {openactive} from "./controls-search.js";
 
 
 const UProxyHandler = {
@@ -345,6 +346,10 @@ export async function init() {
 	if (GEOGRAPHY.timeline) timeline_init();
 
 	if (!MOBILE && !GEOGRAPHY.timeline) nanny_init();
+
+	setTimeout(() => {
+		controlssearch.openactive(U.inputs);
+	}, 100)
 
 	ea_loading(false);
 };
