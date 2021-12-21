@@ -477,9 +477,13 @@ function weight() {
 		ce('div', weights[weights.length - 1] + "")
 	);
 
+	if (!slider_width)
+		slider_width = Math.max(coalesce(maybe(contents_el, 'clientWidth'), 0) - 200, 256);
+
+
 	const w = ea_svg_interval({
 		sliders: "single",
-		init: [1, this.weight],
+		init: {'min': 1, 'max': this.weight},
 		domain: [1, 5],
 		steps: weights,
 		width: slider_width,

@@ -55,7 +55,17 @@ export default class Overlord {
 		}
 
 		case "weight": {
+			let weight_data = WEIGHT_DATA.find(o => o.name === ds.id);
+			if (!weight_data) {
+				WEIGHT_DATA.push({
+					'name': ds.id,
+					'weight': data
+				})
+			} else {
+				weight_data.weight = data;
+			}
 			ds.weight = data;
+			O.datasets = U.inputs;
 			break;
 		}
 
