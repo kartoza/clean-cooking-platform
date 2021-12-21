@@ -104,6 +104,8 @@ class UseCaseAdmin(SortableAdminMixin, admin.ModelAdmin):
 class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('order', 'name_long', 'sidebar_sub_menu_obj', 'dataset', 'online')
 
+    search_fields = ('name_long', )
+
     autocomplete_fields = ['unit_object', 'sidebar_sub_menu_obj' ]
 
     list_display_links = ('name_long', )
@@ -179,6 +181,8 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 
 class ClippedLayerAdmin(admin.ModelAdmin):
+    list_filter = ('layer_type', )
+    search_fields = ('boundary_uuid', 'layer__name')
     list_display = (
         'layer', 'boundary_uuid', 'created_date',
         'layer_type', 'process_state')
@@ -196,6 +200,15 @@ class SummaryReportCategoryAdmin(admin.ModelAdmin):
     autocomplete_fields = ['vector_layer', ]
     list_display = (
        'name', 'vector_layer', 'supply_layer', 'preset', 'analysis'
+    )
+    list_filter = (
+        'analysis',
+        'preset'
+    )
+    search_fields = (
+        'name',
+        'analysis',
+        'preset__name'
     )
 
     def get_form(self, request, obj=None, **kwargs):
