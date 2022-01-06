@@ -133,7 +133,7 @@ export async function init() {
 async function run_analysis (output, id = "") {
 	const key = `${output}${id}`;
 	let raster;
-	if (raster_data.hasOwnProperty(key)) {
+	if (raster_data.hasOwnProperty(key) && raster_data[key].length > 0) {
 		raster = raster_data[key]
 	} else {
 		raster = await run(output, true);
@@ -406,6 +406,12 @@ export async function getDatasets(inputs, scenarioId, analysisType = []) {
 
 window.getDatasets = getDatasets;
 
+function isCanvasBlank(canvas) {
+  return !canvas.getContext('2d')
+    .getImageData(0, 0, canvas.width, canvas.height).data
+    .some(channel => channel !== 0);
+}
+
 document.getElementById('report-btn').onclick = async (e) => {
 	e.preventDefault();
 
@@ -440,7 +446,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 	let mapImage = canvas.toDataURL('image/png', 1.0);
 	let totalPopulation = null;
 
-	if (window.demandData) {
+	if (window.demandData && !isCanvasBlank(document.getElementById('demand-output'))) {
 		let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
 		let demandRaster = await raster_to_tiff('demand', raster_data['demand' + scenarioSelect.selectedIndex]);
 		fd.append('demandImage', demandImage);
@@ -451,7 +457,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 		} catch (e) {}
 	}
 
-	if (window.supplyData) {
+	if (window.supplyData && !isCanvasBlank(document.getElementById('supply-output'))) {
 		let supplyImage = document.getElementById('supply-output').toDataURL('image/png', 1.0);
 		let supplyRaster = await raster_to_tiff('supply', raster_data['supply' + scenarioSelect.selectedIndex]);
 		fd.append('supplyTiff', new Blob([supplyRaster], { type: 'application/octet-stream;charset=utf-8' }), `supply_${boundary}_${geoId}_${subRegion}.tiff`);
@@ -465,7 +471,7 @@ document.getElementById('report-btn').onclick = async (e) => {
 		} catch (e) {}
 	}
 
-	if (window.aniData) {
+	if (window.aniData && !isCanvasBlank(document.getElementById('ani-output'))) {
 		let aniImage = document.getElementById('ani-output').toDataURL('image/png', 1.0);
 		let aniRaster = await raster_to_tiff('ani', raster_data['ani' + scenarioSelect.selectedIndex]);
 		fd.append('aniTiff', new Blob([aniRaster], { type: 'application/octet-stream;charset=utf-8' }), `ani_${boundary}_${geoId}_${subRegion}.tiff`);
