@@ -522,6 +522,8 @@ canvas.mapboxgl-canvas {
   white-space: nowrap;
 }
 #indexes-pane {
+  display: block !important;
+  overflow-y: auto;
   background-color: var(--the-white);
   color: var(--the-color);
   fill: var(--the-color);
@@ -691,15 +693,17 @@ ul#filtered-subgeographies {
 .svg-pie {
   filter: drop-shadow( 0px 1px 1px rgba(0, 0, 0, .3));
 }
+
+#summary-button-container {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding-top: 10px;
+}
+
 #summary-button {
-  text-align: center;
-  font-size: 1.2em;
-  display: block;
-  white-space: nowrap;
-  padding: 0.7em 1em;
   cursor: pointer;
-  border-top: 1px solid lightgray;
-  border-bottom: 1px solid lightgray;
 }
 
 #summary-graphs {

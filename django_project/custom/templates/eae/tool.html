@@ -35,6 +35,7 @@
 
     <link href="{% static "eae/stylesheets/style.css" %}" rel="stylesheet" />
     <link href="{% static "eae/stylesheets/nav.css" %}" rel="stylesheet" />
+    <link href="{% static "css/cca-buttons.css" %}" rel="stylesheet" />
 
     <link href="{% static "eae/lib/mapbox-gl.css" %}" rel="stylesheet" />
     <link href="{% static "eae/tool/main.css" %}" rel="stylesheet" />
@@ -56,6 +57,14 @@
           }
           #ea-modal .page-header {
               display: none;
+          }
+
+          .btn-cca-primary {
+              padding: 10px;
+              margin-left: auto;
+              margin-right: auto;
+              padding-left: 40px;
+              padding-right: 40px;
           }
       </style>
 
@@ -182,7 +191,11 @@
 
           <ul id="indexes-list"></ul>
 
-          <div id="summary-button" class="up-title" ripple>Snapshot</div>
+          <div id="summary-button-container">
+              <button  id="summary-button" class="btn btn-cca-primary">
+                  View Snapshot
+              </button>
+          </div>
         </div>
 
         <div id="drawer-right-pane">
