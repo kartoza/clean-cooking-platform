@@ -2,6 +2,7 @@
     color: #00689C;
     display: flex;
     border-color: #00689C;
+    border-style: solid !important;
     border-radius: 6px !important;
     box-shadow: 0 0.375em 0 currentColor;
     border-width: 2px;
