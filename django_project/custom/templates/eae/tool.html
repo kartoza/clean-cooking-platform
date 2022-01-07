@@ -19,6 +19,7 @@
           const DEFAULT_GEO_ID = "{{ DEFAULT_GEO_ID }}";
           let url = new URL(window.location.href);
           let boundary = url.searchParams.get('boundary');
+          let geojsonBoundary = `/uploaded/rasterized/${boundary}.json`;
           let geoId = url.searchParams.get('geoId');
           let csrfToken = '{{ csrf_token }}';
           const geoserverUrl = '{{ geoserver_url }}';
