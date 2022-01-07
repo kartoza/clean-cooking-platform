@@ -316,6 +316,27 @@ function sidebarCollapseClicked() {
 	}, 300)
 }
 
+function showBoundary() {
+	 fetch(geojsonBoundary).then(response => response.json()).then(
+		 data => {
+			 MAPBOX.addSource('boundary-border', {
+				 type: 'geojson',
+				 data: data
+			 });
+			 MAPBOX.addLayer({
+				 'id': 'boundary-layer',
+				 'type': 'line',
+				 'source': 'boundary-border',
+				 'paint': {
+					 'line-width': 2,
+					 'line-color': 'red'
+				 }
+			 });
+			MAPBOX.setLayoutProperty('boundary-layer', 'visibility', 'visible');
+		 }
+	 )
+}
+
 export async function init() {
 	const url = new URL(location);
 	const id = url.searchParams.get('geo') || DEFAULT_GEO_ID;
@@ -351,7 +372,13 @@ export async function init() {
 			mapbox_change_theme(ea_settings.mapbox_theme);
 
 			let sidebarCollapse = qs('#sidebarCollapse', this);
+
 			sidebarCollapse.onclick = sidebarCollapseClicked;
+			if (boundary) {
+				setTimeout(() => {
+					showBoundary();
+				}, 500);
+			}
 
 		});
 	} catch (err) {
@@ -409,6 +436,9 @@ async function dsinit(id, inputs, pack, callback) {
 	// await ds.load('csv');
 	await ds.load('vectors');
 	await ds.load('raster');
+	//
+	// ds.add_layer()
+
 	if (!(bounds = ds.vectors.bounds)) throw `'boundaries' dataset has no vectors.bounds`;
 	const c = ds.config;
 	if (c.column_name) {
