@@ -213,7 +213,7 @@ body {
 }
 
 #left-pane {
-  min-width: 36em; /* 40em */
+  /*min-width: 36em; !* 40em *!*/
   display: flex;
   flex-flow: column wrap;
   flex: 0;
@@ -239,6 +239,11 @@ body {
   flex: 1;
   overflow: hidden;
   width: 36em;
+
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 #visual {
@@ -417,9 +422,9 @@ canvas#output {
 }
 
 .controls-branch-tab {
-  font-size: 1.14em;
+  font-size: 1.1em;
   line-height: 2em;
-  padding: 0.4em 2em;
+  padding: 0.4em 1em;
   white-space: nowrap;
   text-align: left;
   font-weight: normal;
@@ -851,4 +856,30 @@ table.summary .index-name {
 
 .hover-button:hover {
     cursor: pointer;
+}
+
+#left-pane .sidebar-menu {
+  display: inline-block;
+  position: absolute;
+  left: 500px;
+  margin-right: -20px;
+  -webkit-transition: .3s;
+  -o-transition: .3s;
+  transition: .3s;
+  z-index: 999;
+}
+
+#left-pane .sidebar-menu .btn.btn-primary {
+  background: #0280BF;
+  border-color: #0280BF;
+}
+
+#left-pane .sidebar-menu .btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 15px;
+  color: white;
+  font-weight: bold;
 }

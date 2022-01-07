@@ -294,6 +294,28 @@ function mobile() {
 	map.click();
 };
 
+function sidebarCollapseClicked() {
+	let sidebarCollapse = document.getElementById('controls');
+	let btn = document.getElementById('sidebarCollapseContainer');
+
+	if (sidebarCollapse.style.marginLeft === "-550px") {
+		sidebarCollapse.style.display = 'flex';
+		setTimeout(() => {
+    	sidebarCollapse.style.marginLeft = '0px';
+			btn.style.left = '500px';
+		}, 50)
+  } else {
+    sidebarCollapse.style.marginLeft = '-' + 550 + 'px';
+		btn.style.left = '15px';
+		setTimeout(() => {
+    	sidebarCollapse.style.display = 'none';
+		}, 300)
+  }
+	setTimeout(() => {
+		MAPBOX.resize();
+	}, 300)
+}
+
 export async function init() {
 	const url = new URL(location);
 	const id = url.searchParams.get('geo') || DEFAULT_GEO_ID;
@@ -327,6 +349,10 @@ export async function init() {
 		await dsinit(GEOGRAPHY.id, U.inputs, U.pack, bounds => {
 			MAPBOX.coords = mapbox_fit(bounds);
 			mapbox_change_theme(ea_settings.mapbox_theme);
+
+			let sidebarCollapse = qs('#sidebarCollapse', this);
+			sidebarCollapse.onclick = sidebarCollapseClicked;
+
 		});
 	} catch (err) {
 		console.log(err)
