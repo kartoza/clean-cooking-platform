@@ -1,5 +1,7 @@
 import os.path
 import time
+import json
+from pandas import json_normalize
 from datetime import datetime
 
 import numpy as np
@@ -13,8 +15,16 @@ from custom.tools.clip_layer import resize_raster_layer
 from geonode.layers.models import Layer
 
 
+def read_json(geojson_file):
+    df = None
+    if os.path.exists(geojson_file):
+        with open(geojson_file) as f:
+            data = json.load(f)
+            df = json_normalize(data['features'])
+    return df
+
+
 def calculate_household(geography: Geography, boundary_id: str):
-    import geopandas as gpd
 
     if not geography:
         return None
@@ -23,6 +33,7 @@ def calculate_household(geography: Geography, boundary_id: str):
         return None
 
     start_time = time.time()
+    total_household = 0
 
     if boundary_id:
         clipped_layer, created = ClippedLayer.objects.get_or_create(
@@ -48,8 +59,10 @@ def calculate_household(geography: Geography, boundary_id: str):
                 ).first().file
             )
         vector_file = base_file.path
-    features = gpd.read_file(vector_file)
-    total_household = features.sum()[geography.household_layer_field]
+    features = read_json(vector_file)
+    if not features.empty:
+        total_household = features.sum()['properties.{}'.format(
+            geography.household_layer_field)]
 
     return {
         'layer': vector_file,
@@ -59,9 +72,9 @@ def calculate_household(geography: Geography, boundary_id: str):
 
 
 def calculate_cooking_with_traditional(geography: Geography, boundary_id: str):
-    import geopandas as gpd
 
     start_time = time.time()
+    percentage = 0
 
     if boundary_id:
         clipped_layer, created = ClippedLayer.objects.get_or_create(
@@ -85,13 +98,22 @@ def calculate_cooking_with_traditional(geography: Geography, boundary_id: str):
             )
         vector_file = base_file
 
-    features = gpd.read_file(vector_file.path)
-    if boundary_id:
-        features.sort_values(by='geometry', inplace=True,
-                             key=lambda col: np.array([x.area for x in col]))
-        percentage = features[geography.cooking_percentage_layer_field].iloc[-1]
-    else:
-        percentage =  features.mean()[geography.cooking_percentage_layer_field]
+    features = read_json(vector_file.path)
+    if not features.empty:
+        if boundary_id:
+            # todo: get the largest area
+            # features.sort_values(by='geometry', inplace=True,
+            #                      key=lambda col: np.array(
+            #                          [x.area for x in col]))
+            percentage = features[
+                'properties.{}'.format(
+                    geography.cooking_percentage_layer_field
+                )].iloc[-1]
+        else:
+            percentage =  features.mean()[
+                'properties.{}'.format(
+                    geography.cooking_percentage_layer_field
+                )]
 
     return {
         'layer': vector_file.url,
