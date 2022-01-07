@@ -436,8 +436,6 @@ async function dsinit(id, inputs, pack, callback) {
 	// await ds.load('csv');
 	await ds.load('vectors');
 	await ds.load('raster');
-	//
-	// ds.add_layer()
 
 	if (!(bounds = ds.vectors.bounds)) throw `'boundaries' dataset has no vectors.bounds`;
 	const c = ds.config;
