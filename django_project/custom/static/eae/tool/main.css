@@ -883,3 +883,57 @@ table.summary .index-name {
   color: white;
   font-weight: bold;
 }
+
+.info-container {
+  display: none;
+  border-radius: 8px;
+  position: absolute;
+  z-index: 999;
+  background-color: rgba(87, 140, 67, 0.80);
+  bottom: 36px;
+  max-width: 20em;
+  color: white;
+  -webkit-transition: .3s;
+  -o-transition: .3s;
+  transition: .3s;
+  box-shadow: 0px 1px 5px rgb(0 0 0 / 30%);
+  margin-left: 530px;
+}
+
+.info-container #showInfoBtn {
+  padding: 8px;
+  cursor: pointer;
+  display: none;
+}
+
+.info-container #showInfoBtn img {
+  filter: invert(100%);
+  width: 25px;
+}
+
+.info-container #infoBox {
+  padding: 10px;
+  min-width: 15em;
+}
+
+.info-container .info-panel {
+  padding-top: 5px;
+  padding-bottom: 3px;
+}
+
+.info-container .info-panel-title {
+  font-size: 13pt;
+  font-weight: bold;
+  line-height: 20px;
+}
+
+.info-container .info-panel-desc {
+  font-size: 9pt;
+  line-height: 18px;
+}
+
+.info-container #close-info-container span {
+  cursor: pointer;
+  float: right;
+  filter: invert(100%)
+}

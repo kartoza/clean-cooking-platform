@@ -1,8 +1,7 @@
 from django.conf import settings
-from django.shortcuts import redirect
 from django.views.generic import TemplateView
 
-from custom.models import Geography
+from custom.models import Geography, UseCase, Preset
 
 
 class ToolView(TemplateView):
@@ -23,6 +22,20 @@ class ToolView(TemplateView):
         context['MAPBOX_TOKEN'] = settings.MAPBOX_TOKEN
         context['MAPBOX_THEME'] = settings.MAPBOX_THEME
         context['geoserver_url'] = settings.GEOSERVER_PUBLIC_LOCATION
+        if self.request.GET.get('useCase'):
+            try:
+                context['use_case'] = UseCase.objects.get(
+                    id=self.request.GET.get('useCase')
+                )
+            except UseCase.DoesNotExist:
+                context['use_case'] = ''
+        if self.request.GET.get('preset'):
+            try:
+                context['preset'] = Preset.objects.get(
+                    id=self.request.GET.get('preset')
+                )
+            except Preset.DoesNotExist:
+                context['preset'] = ''
         geo = Geography.objects.filter(
             online=True
         )

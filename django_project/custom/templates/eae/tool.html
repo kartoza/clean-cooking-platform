@@ -19,6 +19,7 @@
           const DEFAULT_GEO_ID = "{{ DEFAULT_GEO_ID }}";
           let url = new URL(window.location.href);
           let boundary = url.searchParams.get('boundary');
+          let subRegion = url.searchParams.get('subRegion');
           let geojsonBoundary = `/uploaded/rasterized/${boundary}.json`;
           let geoId = url.searchParams.get('geoId');
           let csrfToken = '{{ csrf_token }}';
@@ -225,6 +226,39 @@
           </div>
         </div>
       </div>
+
+        <div class="info-container">
+            <div class="info-open-icon" id="showInfoBtn">
+                <img src="/static/img/tab_icon.png"/>
+            </div>
+            <div id="infoBox">
+                <div layout="close-info-container">
+                    <slot name="close-info-container"
+                          id="close-info-container"><span
+                            slot="close-info-container"><svg
+                            width="22"
+                            height="22"
+                            viewBox="0 0 24 24">
+                  <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path>
+                </svg></span></slot>
+                </div>
+                <div class="info-panel">
+                    <div class="info-panel-desc">REGION</div>
+                    <div class="info-panel-title" id="info-panel-region">-</div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-panel-desc">USE CASE</div>
+                    <div class="info-panel-title">{% if use_case %}{{ use_case }}{% else %}-{% endif %}
+                    </div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-panel-desc">SCENARIO</div>
+                    <div class="info-panel-title">{% if preset %}{{ preset }}{% else %}-{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div id="app-loading" class="loading">
