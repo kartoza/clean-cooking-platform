@@ -295,18 +295,22 @@ function mobile() {
 };
 
 function sidebarCollapseClicked() {
-	let sidebarCollapse = document.getElementById('controls');
-	let btn = document.getElementById('sidebarCollapseContainer');
+	let leftPane = document.getElementById('left-pane');
+	let sidebarCollapse = qs('#controls', leftPane);
+	let btn = qs('#sidebarCollapseContainer', leftPane);
+	let infoContainer = qs('.info-container');
 
 	if (sidebarCollapse.style.marginLeft === "-550px") {
 		sidebarCollapse.style.display = 'flex';
 		setTimeout(() => {
     	sidebarCollapse.style.marginLeft = '0px';
 			btn.style.left = '500px';
+			infoContainer.style.marginLeft = '530px';
 		}, 50)
   } else {
     sidebarCollapse.style.marginLeft = '-' + 550 + 'px';
 		btn.style.left = '15px';
+		infoContainer.style.marginLeft = '8px';
 		setTimeout(() => {
     	sidebarCollapse.style.display = 'none';
 		}, 300)
@@ -405,6 +409,27 @@ export async function init() {
 	}, 100)
 
 	ea_loading(false);
+
+	if (boundary) {
+		qs('.info-container').style.display = 'block';
+		let closeInfoBtn = qs('#close-info-container', this);
+		let showInfoBtn = qs('#showInfoBtn', this);
+		let infoBox = qs('#infoBox', this);
+
+		if (subRegion && subRegion.includes(':')) {
+			qs('#info-panel-region', this).innerHTML = subRegion.split(':')[1];
+		}
+
+		closeInfoBtn.addEventListener('click', () => {
+			infoBox.style.display = 'none';
+			showInfoBtn.style.display = 'block';
+		})
+		showInfoBtn.addEventListener('click', () => {
+			infoBox.style.display = 'block';
+			showInfoBtn.style.display = 'none';
+		})
+
+	}
 };
 
 /*

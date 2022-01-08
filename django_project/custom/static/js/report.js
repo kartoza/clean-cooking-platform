@@ -213,12 +213,11 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
                 results.forEach((result) => console.log(result))
                 loadingSpinner1.style.display = "none";
                 ccaToolBtn.disabled = false;
-                window.getDatasets(inputString, scenarioSelect.selectedIndex, analysisType);
+                window.getDatasets(inputString, scenarioSelect.value, analysisType);
             });
     }
 
     ccaToolBtn.onclick = (e) => {
-        e.preventDefault();
-        window.location.href = selectedScenario.dataset.url + '&boundary=' + boundary + '&geoId=' + geoId;
+        e.preventDefault();window.location.href = selectedScenario.dataset.url + '&boundary=' + boundary + '&geoId=' + geoId + '&useCase=' + useCaseId + '&subRegion=' + subRegionUrl + '&preset=' + scenarioSelect.value;
     }
 })()
