@@ -301,7 +301,12 @@ class ReportPDFView(View):
                 y_pos,
                 35
             )
-            page.setFont(self.default_font_bold, 70)
+            summary_value_length = len(str(summary['value']))
+            if summary_value_length > 7:
+                page.setFont(self.default_font_bold,
+                             70 - (math.sqrt(summary_value_length - 7) * 12))
+            else:
+                page.setFont(self.default_font_bold, 70)
             page.drawRightString(
                 x_pos + 250,
                 prev_y_pos - ((prev_y_pos-y_pos)/2) - 10,
