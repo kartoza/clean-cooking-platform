@@ -199,7 +199,7 @@ class SummaryReportCategoryAdmin(admin.ModelAdmin):
     change_form_template = 'admin/custom/summary_report_category/change_form.html'
     autocomplete_fields = ['vector_layer', ]
     list_display = (
-       'name', 'vector_layer', 'supply_layer', 'preset', 'analysis'
+       'name', 'analysis', 'preset', 'vector_layer', 'supply_layer',
     )
     list_filter = (
         'analysis',
@@ -210,6 +210,9 @@ class SummaryReportCategoryAdmin(admin.ModelAdmin):
         'analysis',
         'preset__name'
     )
+
+    class Media:
+        js = ('/static/admin/js/summary_report_category.js', )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(SummaryReportCategoryAdmin, self).get_form(request, obj, **kwargs)
