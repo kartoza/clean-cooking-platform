@@ -6,6 +6,7 @@ ANALYSIS_CHOICES = (
     ('ani', 'ANI'),
     ('ccp', 'CCP'),
     ('supply', 'Supply'),
+    ('supply_demand', 'Supply and Demand'),
 )
 
 
