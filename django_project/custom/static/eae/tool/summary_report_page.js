@@ -386,13 +386,13 @@ export async function getDatasets(inputs, scenarioId, analysisType = []) {
 		}
 	}
 
-	if (analysisType.includes('ccp')) {
+	if (analysisType.includes('ccp') || analysisType.includes('supply_demand')) {
 		window.demandData = await run_analysis("demand", scenarioId);
 	}
 	if (analysisType.includes('ani')) {
 		window.aniData = await run_analysis("ani", scenarioId);
 	}
-	if (analysisType.includes('supply')) {
+	if (analysisType.includes('supply') || analysisType.includes('supply_demand')) {
 		window.supplyData = await run_analysis("supply", scenarioId);
 	}
 

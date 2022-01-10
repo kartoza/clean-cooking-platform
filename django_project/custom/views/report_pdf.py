@@ -523,12 +523,12 @@ class ReportPDFView(View):
 
         page.showPage()
 
-    def draw_ccp_page(self, page):
+    def draw_ccp_page(self, page, page_number = 3):
         if not self.demand_image:
             return
 
         self._draw_sidebar(page, (0.459, 0.714, 0.831))
-        self._draw_footer(page, 3)
+        self._draw_footer(page, page_number)
         self._draw_title(page, 'Analysis', 'Demand index')
         self._draw_map(page, self.demand_image, self.demand_legend_path)
         self._draw_summary(page, self.demand_summary)
@@ -545,12 +545,12 @@ class ReportPDFView(View):
 
         page.showPage()
 
-    def draw_supply_page(self, page):
+    def draw_supply_page(self, page, page_number):
         if not self.supply_image:
             return
 
         self._draw_sidebar(page)
-        self._draw_footer(page, 4)
+        self._draw_footer(page, page_number)
         self._draw_title(page, 'Analysis', 'Supply index')
         self._draw_map(page, self.supply_image, self.supply_legend_path)
         self._draw_summary(page, self.supply_summary)
@@ -568,12 +568,12 @@ class ReportPDFView(View):
         page.showPage()
 
 
-    def draw_ani_page(self, page):
+    def draw_ani_page(self, page, page_number = 3):
         if not self.ani_image:
             return
 
         self._draw_sidebar(page)
-        self._draw_footer(page, 4)
+        self._draw_footer(page, page_number)
         self._draw_title(page, 'Analysis', 'Assistance Needed index')
         self._draw_map(page, self.ani_image, self.ani_legend_path)
         self._draw_summary(page, self.ani_summary)
@@ -595,8 +595,8 @@ class ReportPDFView(View):
 
         page.showPage()
 
-    def draw_supply_and_demand(self, page):
-        self._draw_footer(page, 4)
+    def draw_supply_and_demand(self, page, page_number = 3):
+        self._draw_footer(page, page_number)
         self._draw_title(
             page, 'Analysis', 'Demand Index and Supply Index', False)
 
@@ -624,7 +624,7 @@ class ReportPDFView(View):
             'datasets under the Demand category. Identifies areas with '
             'higher energy demand',
             70,
-            75, self.page_height - 850, 40)
+            75, self.page_height - 900, 40)
 
         self._draw_wrapped_line(
             page,
@@ -632,7 +632,7 @@ class ReportPDFView(View):
             'selected datasets under the Supply category. Identifies '
             'areas with potential for clean cooking energy supply',
             70,
-            1100, self.page_height - 850, 40)
+            1100, self.page_height - 900, 40)
 
         page.showPage()
 
@@ -814,22 +814,27 @@ class ReportPDFView(View):
         self.draw_page_two(p)
         PageBreak()
 
+        current_page_number = 3
+
         if self.demand_summary:
-            self.draw_ccp_page(p)
+            self.draw_ccp_page(p, current_page_number)
+            current_page_number += 1
             PageBreak()
 
         if self.supply_summary:
-            self.draw_supply_page(p)
+            self.draw_supply_page(p, current_page_number)
+            current_page_number += 1
             PageBreak()
 
         if self.ani_summary:
-            self.draw_ani_page(p)
+            self.draw_ani_page(p, current_page_number)
+            current_page_number += 1
             PageBreak()
 
         # Check if the preset has supply and demand category
         if self.summary_categories.filter(analysis='supply_demand').exists():
             if self.demand_image and self.supply_image:
-                self.draw_supply_and_demand(p)
+                self.draw_supply_and_demand(p, current_page_number)
                 PageBreak()
 
         self.draw_page_end(p)
