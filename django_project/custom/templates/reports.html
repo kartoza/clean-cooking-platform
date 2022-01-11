@@ -44,7 +44,6 @@
         let subRegionUrl = url.searchParams.get('subRegion');
         let subRegion = '{{ subRegion.1 }}';
         let geographyName = '{{ subRegion.1 }}, {{ geo.name }}';
-        let useCaseName = '{{ use_case.name }}';
         let useCaseId = '{{ use_case.id }}';
         mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
         let mapboxStyle = 'mapbox://styles/{{ MAPBOX_THEME }}';
@@ -76,6 +75,14 @@
         DST = new Map();
         DOMAIN_DATA = [];
         WEIGHT_DATA = [];
+
+        let ANALYSIS_TYPE = [];
+        let PRESET_ID = null;
+        let USE_CASE_ID = null;
+
+        let USE_CASE_NAME = '{{ use_case.name }}';
+        let PRESET_NAME = '';
+        let GEO_NAME = '{{ geo.name }}';
     </script>
 
     <link rel="stylesheet" href="{% static "ol-6.8.1/ol.css" %}">
@@ -135,7 +142,7 @@
             <div class="row" style="margin-top: 1em">
                 <div class="col-lg-6" style="padding-right: 1em">
                     <button class="btn btn-scene btn-cca-primary"
-                            id="report-btn" disabled>
+                            id="summary-button" disabled>
                         <div style="position: absolute; display: none" id="loading-spinner-0" class="loading-spinner-container"><div class="loading-spinner"><div></div></div></div>
                         <i class="fas fa-download download-icon"></i>
                         <span id="report-btn-text">Clean Cooking Access Report</span>
@@ -211,6 +218,7 @@
                  class="bottom-right-container">
                 <select id="canvas-output-select"></select>
                 <canvas id="output"></canvas>
+                <canvas id="output-clone"></canvas>
             </div>
         </template>
 

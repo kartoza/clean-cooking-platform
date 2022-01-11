@@ -11,6 +11,7 @@ import {
 	change_theme as mapbox_change_theme,
 	fit as mapbox_fit
 } from "./mapbox";
+import {downloadReport} from "./download_report";
 const ea_nanny_steps = [];
 const raster_data = {};
 let addedLayers = [];
@@ -129,20 +130,6 @@ export async function init() {
 		MAPBOX.coords = convertBounds(ds.vectors.bounds);
 	}
 };
-
-async function run_analysis (output, id = "") {
-	const key = `${output}${id}`;
-	let raster;
-	if (raster_data.hasOwnProperty(key) && raster_data[key].length > 0) {
-		raster = raster_data[key]
-	} else {
-		raster = await run(output, true);
-		raster_data[key] = raster;
-	}
-	const data = await analyse(raster);
-	plot.outputcanvas(raster, qs(`canvas#${output}-output`));
-	return data;
-}
 
 export async function getDatasets(inputs, scenarioId, analysisType = []) {
 
@@ -386,143 +373,26 @@ export async function getDatasets(inputs, scenarioId, analysisType = []) {
 		}
 	}
 
-	if (analysisType.includes('ccp') || analysisType.includes('supply_demand')) {
-		window.demandData = await run_analysis("demand", scenarioId);
-	}
-	if (analysisType.includes('ani')) {
-		window.aniData = await run_analysis("ani", scenarioId);
-	}
-	if (analysisType.includes('supply') || analysisType.includes('supply_demand')) {
-		window.supplyData = await run_analysis("supply", scenarioId);
-	}
-
 	// Wait for seconds
 	setTimeout(() => {
 		document.getElementById('loading-spinner-0').style.display = 'none';
-		document.getElementById('report-btn').disabled = false;
+		document.getElementById('summary-button').disabled = false;
 		progressBar.style.width = '100%';
 	}, 500)
 }
 
 window.getDatasets = getDatasets;
 
-function isCanvasBlank(canvas) {
-  return !canvas.getContext('2d')
-    .getImageData(0, 0, canvas.width, canvas.height).data
-    .some(channel => channel !== 0);
-}
-
-document.getElementById('report-btn').onclick = async (e) => {
+document.getElementById('summary-button').onclick = async (e) => {
 	e.preventDefault();
 
-	let buttonText = document.getElementById('report-btn-text');
 	const scenarioSelect = document.getElementById('scenarioSelect');
-	let button = document.getElementById('report-btn');
-	button.disabled = true;
-	buttonText.innerHTML = 'Generating...'
 
-	let url = '/generate-report-pdf/';
-	let request = new XMLHttpRequest();
-	let fd = new FormData();
+	PRESET_ID = scenarioSelect.value;
+	USE_CASE_ID = useCaseId;
+	PRESET_NAME = scenarioSelect.options[scenarioSelect.selectedIndex].text;
 
-	MAPBOX.fitBounds(BBOX, {padding: 40, duration: 0});
-	await new Promise(r => setTimeout(r, 500));
-
-	let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
-
-	let width = 800;
-	let height = 600;
-	const canvas = document.getElementById('output');
-	const ctx = canvas.getContext("2d");
-
-	canvas.width = width;
-	canvas.height = height;
-	ctx.drawImage(mapCanvas,
-		(mapCanvas.width / 2) - (width / 2),0,
-		width, height,
-		0,0,
-		width, height
-	);
-	let mapImage = canvas.toDataURL('image/png', 1.0);
-	let totalPopulation = null;
-
-	if (window.demandData && !isCanvasBlank(document.getElementById('demand-output'))) {
-		let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
-		let demandRaster = await raster_to_tiff('demand', raster_data['demand' + scenarioSelect.selectedIndex]);
-		fd.append('demandImage', demandImage);
-		fd.append('demandTiff', new Blob([demandRaster], { type: 'application/octet-stream;charset=utf-8' }), `demand_${boundary}_${geoId}_${subRegion}.tiff`);
-		try {
-			fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
-			totalPopulation = Math.round(window.demandData['population-density']['total']);
-		} catch (e) {}
-	}
-
-	if (window.supplyData && !isCanvasBlank(document.getElementById('supply-output'))) {
-		let supplyImage = document.getElementById('supply-output').toDataURL('image/png', 1.0);
-		let supplyRaster = await raster_to_tiff('supply', raster_data['supply' + scenarioSelect.selectedIndex]);
-		fd.append('supplyTiff', new Blob([supplyRaster], { type: 'application/octet-stream;charset=utf-8' }), `supply_${boundary}_${geoId}_${subRegion}.tiff`);
-		fd.append('supplyImage', supplyImage);
-
-		try {
-			fd.append('supplyDataHighPercentage', (window.supplyData['population-density']['distribution'][4] * 100).toFixed(2))
-			if (!totalPopulation) {
-				fd.append('totalPopulation', Math.round(window.supplyData['population-density']['total']))
-			}
-		} catch (e) {}
-	}
-
-	if (window.aniData && !isCanvasBlank(document.getElementById('ani-output'))) {
-		let aniImage = document.getElementById('ani-output').toDataURL('image/png', 1.0);
-		let aniRaster = await raster_to_tiff('ani', raster_data['ani' + scenarioSelect.selectedIndex]);
-		fd.append('aniTiff', new Blob([aniRaster], { type: 'application/octet-stream;charset=utf-8' }), `ani_${boundary}_${geoId}_${subRegion}.tiff`);
-		fd.append('aniImage', aniImage);
-
-		try {
-			fd.append('aniDataMedToHigh', window.aniData['population-density']['amounts'].slice(-3).reduce((acc, val) => acc + val).toFixed(0))
-			if (!totalPopulation) {
-				fd.append('totalPopulation', Math.round(window.aniData['population-density']['total']))
-			}
-		} catch (e) {}
-	}
-
-
-	fd.append('totalPopulation', totalPopulation | 0)
-	fd.append('geoId', geoId);
-	fd.append('subRegion', subRegion);
-	fd.append('mapImage', mapImage);
-	fd.append('useCaseId', useCaseId);
-	fd.append('scenarioId', scenarioSelect.value);
-	fd.append('boundary', boundary);
-
-	request.open('POST', url, true);
-	request.setRequestHeader('X-CSRFToken', csrfToken);
-	request.responseType = 'blob';
-
-	request.onload = function () {
-		// Only handle status code 200
-		if (request.status === 200) {
-			let presetName = scenarioSelect.options[scenarioSelect.selectedIndex].text;
-
-			let filename = `${useCaseName}-${presetName}-${geographyName}.pdf`
-
-			// The actual download
-			let blob = new Blob([request.response], {type: 'application/pdf'});
-			let link = document.createElement('a');
-			link.href = window.URL.createObjectURL(blob);
-			link.download = filename;
-
-			document.body.appendChild(link);
-
-			link.click();
-
-			document.body.removeChild(link);
-
-			button.disabled = false;
-			buttonText.innerHTML = 'Clean Cooking Access Report'
-		}
-	};
-
-	request.send(fd);
+	await downloadReport(800, 600);
 }
 
 export function convertBounds(bounds) {

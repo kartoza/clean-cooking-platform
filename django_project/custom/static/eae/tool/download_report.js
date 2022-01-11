@@ -24,7 +24,7 @@ async function run_analysis (output, id = "") {
 }
 
 
-export async function downloadReport() {
+export async function downloadReport(mapImageWidth = null, mapImageHeight = null) {
 
 	let buttonText = document.getElementById('report-btn-text');
 	let button = document.getElementById('summary-button');
@@ -37,16 +37,16 @@ export async function downloadReport() {
 	let fd = new FormData();
 
 	MAPBOX.fitBounds(BBOX, {padding: 100, duration: 0});
-	// await new Promise(r => setTimeout(r, 500));
 
-	document.getElementById('view-inputs').click()
-
-	await delay(2);
+	try {
+		document.getElementById('view-inputs').click()
+		await delay(2);
+	} catch (e) {}
 
 	let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
 
-	let width = mapCanvas.clientWidth;
-	let height = mapCanvas.clientHeight;
+	let width = mapImageWidth ? mapImageWidth : mapCanvas.clientWidth;
+	let height = mapImageHeight ? mapImageHeight : mapCanvas.clientHeight;
 
 	const canvas = document.getElementById('output-clone');
 	const ctx = canvas.getContext("2d");
@@ -61,7 +61,9 @@ export async function downloadReport() {
 	);
 	let mapImage = canvas.toDataURL('image/png', 1.0);
 
-	document.getElementById('view-outputs').click()
+	try {
+		document.getElementById('view-outputs').click()
+	} catch (e) {}
 
 	let totalPopulation = null;
 

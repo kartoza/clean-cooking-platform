@@ -661,6 +661,7 @@ class ReportPDFView(View):
         self.ani_image = request.POST.get('aniImage', None)
         self.subregion = request.POST.get('subRegion', '')
         self.geography = Geography.objects.get(id=geo_id)
+        self.table_summary_data = []
 
         self.demand_high_percentage = (
             request.POST.get('demandDataHighPercentage', '')
