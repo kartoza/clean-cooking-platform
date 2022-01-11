@@ -1,10 +1,13 @@
-function _request(method, url) {
+function _request(method, url, data=null) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
         xhr.open(method, url);
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
-                resolve(xhr.response);
+                resolve({
+                    status: this.status,
+                    response: xhr.response
+                });
             } else {
                 reject({
                     status: this.status,
@@ -18,7 +21,11 @@ function _request(method, url) {
                 statusText: xhr.statusText
             });
         };
-        xhr.send();
+        if (data) {
+            xhr.send(data);
+        } else {
+            xhr.send();
+        }
     });
 }
 
@@ -26,7 +33,12 @@ function _get(url) {
     return _request('GET', url)
 }
 
+export async function api_post(url, post_data) {
+    return await _request('POST', url, post_data);
+}
+
+
 export default async function api_get(url) {
-    const data = await _get(url)
-    return JSON.parse(data)
+    const response = await _get(url)
+    return JSON.parse(response.response)
 }

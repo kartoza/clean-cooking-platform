@@ -221,7 +221,11 @@ function wrapper() {
 const summaryButton = qs('#summary-button');
 if (summaryButton) {
 	if (boundary) {
-		summaryButton.onclick = downloadReport;
+		summaryButton.onclick = async () => {
+			ea_loading(true);
+			await downloadReport();
+			ea_loading(false);
+		}
 	} else {
 		summaryButton.onclick = wrapper;
 	}

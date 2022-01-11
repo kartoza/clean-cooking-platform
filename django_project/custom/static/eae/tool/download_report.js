@@ -1,6 +1,7 @@
 import run, {raster_to_tiff} from "./analysis";
 import analyse from "./summary";
 import * as plot from "./plot";
+import {api_post} from "./api";
 let raster_data = {};
 
 function isCanvasBlank(canvas) {
@@ -137,32 +138,23 @@ export async function downloadReport(mapImageWidth = null, mapImageHeight = null
 	fd.append('scenarioId', presetId);
 	fd.append('boundary', boundary);
 
-	request.open('POST', url, true);
-	request.setRequestHeader('X-CSRFToken', csrfToken);
-	request.responseType = 'blob';
+	const api_post_response = await api_post(url, fd);
+	if (api_post_response.status === 200) {
+		let filename = `${USE_CASE_NAME}-${PRESET_NAME}-${GEO_NAME}.pdf`
 
-	request.onload = function () {
-		// Only handle status code 200
-		if (request.status === 200) {
+		// The actual download
+		let blob = new Blob([api_post_response.response], {type: 'application/pdf'});
+		let link = document.createElement('a');
+		link.href = window.URL.createObjectURL(blob);
+		link.download = filename;
 
-			let filename = `${USE_CASE_NAME}-${PRESET_NAME}-${GEO_NAME}.pdf`
+		document.body.appendChild(link);
 
-			// The actual download
-			let blob = new Blob([request.response], {type: 'application/pdf'});
-			let link = document.createElement('a');
-			link.href = window.URL.createObjectURL(blob);
-			link.download = filename;
+		link.click();
 
-			document.body.appendChild(link);
+		document.body.removeChild(link);
 
-			link.click();
-
-			document.body.removeChild(link);
-
-			button.disabled = false;
-			buttonText.innerHTML = 'Clean Cooking Access Report'
-		}
-	};
-
-	request.send(fd);
+		button.disabled = false;
+		buttonText.innerHTML = 'Clean Cooking Access Report'
+	}
 }
