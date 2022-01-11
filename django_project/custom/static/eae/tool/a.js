@@ -372,6 +372,7 @@ export async function init() {
 
 	try {
 		await dsinit(GEOGRAPHY.id, U.inputs, U.pack, bounds => {
+			BBOX = bounds;
 			MAPBOX.coords = mapbox_fit(bounds);
 			mapbox_change_theme(ea_settings.mapbox_theme);
 
@@ -416,8 +417,8 @@ export async function init() {
 		let showInfoBtn = qs('#showInfoBtn', this);
 		let infoBox = qs('#infoBox', this);
 
-		if (subRegion && subRegion.includes(':')) {
-			qs('#info-panel-region', this).innerHTML = subRegion.split(':')[1];
+		if (subRegion) {
+			qs('#info-panel-region', this).innerHTML = subRegion;
 		}
 
 		closeInfoBtn.addEventListener('click', () => {

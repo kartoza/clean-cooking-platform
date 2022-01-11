@@ -44,7 +44,7 @@
     display: none;
 }
 
-#output {
+#output, #output-clone {
     display: none;
 }
 

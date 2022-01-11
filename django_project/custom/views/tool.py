@@ -22,6 +22,7 @@ class ToolView(TemplateView):
         context['MAPBOX_TOKEN'] = settings.MAPBOX_TOKEN
         context['MAPBOX_THEME'] = settings.MAPBOX_THEME
         context['geoserver_url'] = settings.GEOSERVER_PUBLIC_LOCATION
+        context['analysis_type'] = []
         if self.request.GET.get('useCase'):
             try:
                 context['use_case'] = UseCase.objects.get(
@@ -34,12 +35,16 @@ class ToolView(TemplateView):
                 context['preset'] = Preset.objects.get(
                     id=self.request.GET.get('preset')
                 )
+                context['analysis_type'] = list(
+                    context['preset'].summaryreportcategory_set.all(
+                    ).values_list('analysis', flat=True)
+                )
             except Preset.DoesNotExist:
                 context['preset'] = ''
         geo = Geography.objects.filter(
             online=True
         )
         if geo.exists():
-            context['DEFAULT_GEO_ID'] = geo[0].id
+            context['GEO'] = geo[0]
         return context
 

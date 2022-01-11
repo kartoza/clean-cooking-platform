@@ -18,6 +18,8 @@
 
 .btn-cca-primary:disabled {
     box-shadow: 0 0.375em 0 currentColor;
+    color: #969393;
+    border-color: #e0e0e0;
 }
 
 .btn-cca-primary:disabled:hover {

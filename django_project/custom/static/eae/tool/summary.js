@@ -2,6 +2,8 @@ import * as plot from './plot.js';
 
 import * as report from './report.js';
 
+import {downloadReport} from "./download_report";
+
 import ea_analysis from './analysis.js';
 
 /*
@@ -218,5 +220,13 @@ function wrapper() {
 
 const summaryButton = qs('#summary-button');
 if (summaryButton) {
-	summaryButton.onclick = wrapper;
+	if (boundary) {
+		summaryButton.onclick = async () => {
+			ea_loading(true);
+			await downloadReport();
+			ea_loading(false);
+		}
+	} else {
+		summaryButton.onclick = wrapper;
+	}
 }

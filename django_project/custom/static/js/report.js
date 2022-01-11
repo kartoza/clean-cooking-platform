@@ -147,7 +147,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
 (function () {
     const scenarioSelect = document.getElementById('scenarioSelect');
     const ccaToolBtn = document.getElementById('cca-tool-btn');
-    const ccaReportBtn = document.getElementById('report-btn');
+    const ccaReportBtn = document.getElementById('summary-button');
     let selectedScenario = null;
     let selectedLayers = null;
     let analysisType = null;
@@ -185,6 +185,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         loadingSpinner0.style.display = "block";
         selectedScenario = e.target.options[e.target.selectedIndex];
         analysisType = selectedScenario.dataset.analysisType.split(',');
+        ANALYSIS_TYPE = analysisType;
 
         selectedLayers = JSON.parse(selectedScenario.dataset.layers);
         let datasetUrl = selectedScenario.dataset.url;
