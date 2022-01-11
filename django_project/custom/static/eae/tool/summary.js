@@ -2,6 +2,8 @@ import * as plot from './plot.js';
 
 import * as report from './report.js';
 
+import {downloadReport} from "./download_report";
+
 import ea_analysis from './analysis.js';
 
 /*
@@ -218,5 +220,5 @@ function wrapper() {
 
 const summaryButton = qs('#summary-button');
 if (summaryButton) {
-	summaryButton.onclick = wrapper;
+	summaryButton.onclick = downloadReport;
 }

@@ -501,9 +501,6 @@ document.getElementById('report-btn').onclick = async (e) => {
 	request.onload = function () {
 		// Only handle status code 200
 		if (request.status === 200) {
-			// Try to find out the filename from the content disposition `filename` value
-			let disposition = request.getResponseHeader('content-disposition');
-			let matches = /"([^"]*)"/.exec(disposition);
 			let presetName = scenarioSelect.options[scenarioSelect.selectedIndex].text;
 
 			let filename = `${useCaseName}-${presetName}-${geographyName}.pdf`

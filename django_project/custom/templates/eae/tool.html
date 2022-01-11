@@ -12,14 +12,24 @@
 
       <link rel="icon" type="image/png" href="{% static 'eae/images/favicon-32x32.png' %}" sizes="32x32" />
       <link rel="icon" type="image/png" href="{% static 'eae/images/favicon-16x16.png' %}" sizes="16x16" />
+      <link href="{% static "fontawesome/css/all.min.css" %}" rel="stylesheet">
 
       <script>
           const MAPBOX_TOKEN = "{{ MAPBOX_TOKEN }}";
           const MAPBOX_THEME = "{{ MAPBOX_THEME }}";
-          const DEFAULT_GEO_ID = "{{ DEFAULT_GEO_ID }}";
+          const DEFAULT_GEO_ID = "{{ GEO.id }}";
+          const GEO_NAME = "{{ GEO.name }}";
+          const USE_CASE_ID = "{{ use_case.id }}";
+          const USE_CASE_NAME = "{{ use_case.name }}";
+          const PRESET_ID = "{{ preset.id }}";
+          const PRESET_NAME = "{{ preset.name }}";
+          const ANALYSIS_TYPE = {{ analysis_type | safe }};
           let url = new URL(window.location.href);
           let boundary = url.searchParams.get('boundary');
-          let subRegion = url.searchParams.get('subRegion');
+          let subRegion = url.searchParams.get('subRegion').split(':');
+          if (subRegion.length > 1) {
+            subRegion = subRegion[1];
+          }
           let geojsonBoundary = `/uploaded/rasterized/${boundary}.json`;
           let geoId = url.searchParams.get('geoId');
           let csrfToken = '{{ csrf_token }}';
@@ -148,6 +158,20 @@
         </div>
     {% endif %}
     </nav>
+
+    <div>
+        <canvas id="ani-output" style="display: none"></canvas>
+    </div>
+    <div>
+        <canvas id="eai-output" style="display: none"></canvas>
+    </div>
+    <div>
+        <canvas id="supply-output" style="display: none"></canvas>
+    </div>
+    <div>
+        <canvas id="demand-output" style="display: none"></canvas>
+    </div>
+
     <div id="mobile-switcher"></div>
 
     <div id="playground">
@@ -203,7 +227,8 @@
 
           <div id="summary-button-container">
               <button  id="summary-button" class="btn btn-cca-primary">
-                  View Snapshot
+                  <i class="fas fa-download download-icon"></i> &nbsp;
+                  <span id="report-btn-text">Clean Cooking Access Report</span>
               </button>
           </div>
         </div>
@@ -279,6 +304,7 @@
 	SIDEBAR = null;
 	O = null;
 	U = null;
+    BBOX = null;
 	DST = new Map();
     DOMAIN_DATA = [];
     WEIGHT_DATA = [];
@@ -291,6 +317,7 @@
     <div id="bottom-right-container-output" class="bottom-right-container">
   	<select id="canvas-output-select"></select>
   	<canvas id="output"></canvas>
+  	<canvas id="output-clone" style="display: none"></canvas>
     </div>
   </template>
   
