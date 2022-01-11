@@ -26,9 +26,12 @@
           const ANALYSIS_TYPE = {{ analysis_type | safe }};
           let url = new URL(window.location.href);
           let boundary = url.searchParams.get('boundary');
-          let subRegion = url.searchParams.get('subRegion').split(':');
-          if (subRegion.length > 1) {
-            subRegion = subRegion[1];
+          let subRegion = url.searchParams.get('subRegion');
+          if (subRegion) {
+            subRegion = subRegion.split(':');
+            if (subRegion.length > 1) {
+              subRegion = subRegion[1];
+            }
           }
           let geojsonBoundary = `/uploaded/rasterized/${boundary}.json`;
           let geoId = url.searchParams.get('geoId');

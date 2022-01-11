@@ -220,5 +220,9 @@ function wrapper() {
 
 const summaryButton = qs('#summary-button');
 if (summaryButton) {
-	summaryButton.onclick = downloadReport;
+	if (boundary) {
+		summaryButton.onclick = downloadReport;
+	} else {
+		summaryButton.onclick = wrapper;
+	}
 }
