@@ -30,8 +30,13 @@
 }
 
 .btn-cca-primary:active, .btn-cca-primary:focus {
-    background: #0479b1 !important;
+    background: #ffffff !important;
     border-color: #0479b1 !important;
-    color: #d2d2d2 !important;
+    color: #00689C !important;
     box-shadow: 0 0.375em 0 currentColor;
+}
+
+.btn-cca-primary:active {
+    box-shadow: 0 0.20em 0 #105e81;
+    transform: translateY(4px);
 }
