@@ -85,8 +85,13 @@ class CustomIndexDashboard(Dashboard):
             column=2,
             children=[
                 {
-                    'title': _('FileBrowser'),
+                    'title': _('File Browser'),
                     'url': '/admin/filebrowser/browse/',
+                    'external': False,
+                },
+                {
+                    'title': _('Documents'),
+                    'url': '/documents/',
                     'external': False,
                 },
             ]
