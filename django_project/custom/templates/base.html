@@ -277,82 +277,9 @@
 <body class="{% block body_class %}{% endblock %}">
 <!-- Navbar -->
 {% block header %}
-<nav>
-    <input id="toggle"
-           class="no-desktop"
-           type="checkbox">
 
-    <label for="toggle" class="no-desktop">
-        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
-            <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
-        </svg>
-    </label>
+    {% include 'nav_bar.html' %}
 
-    <a id="energy-access-link"
-       href="/">
-        <span class="notranslate">Clean Cooking Explorer</span>
-    </a>
-    {% if not is_restricted or user.is_authenticated %}
-    <div id="navigation-links">
-        <a href="/"
-           class="toggleable">
-            Home
-        </a>
-
-        <a href="/geography/"
-           class="toggleable">
-            CCE tool
-        </a>
-
-        <a href="/maps/"
-           class="toggleable {% if '/maps' in request.path %}
-                active
-            {% endif %}">
-            Maps
-        </a>
-
-        <a href="/methodology"
-           class="toggleable">
-            Methodology
-        </a>
-
-        <a href="/layers"
-           class="toggleable {% if '/layers' in request.path %}
-                active
-            {% endif %}">
-            GIS Data
-        </a>
-
-        <a href="/about-us"
-           class="toggleable">
-            About
-        </a>
-
-        {% if user.is_superuser %}
-            <a href="/admin"
-               class="toggleable">
-              Admin
-            </a>
-        {% endif %}
-        <!--
-        <a href="/faq"
-           class="toggleable">
-          FAQ
-        </a>
-        -->
-    </div>
-    {% else %}
-
-        <div id="navigation-links" class="login-menu-link">
-            <a></a><a></a>
-            <a href="/account/login"
-               class="toggleable">
-                Login
-            </a>
-
-        </div>
-    {% endif %}
-</nav>
 {#<nav class="navbar navbar-fixed-top" role="navigation">#}
 {#    <div class="container" style="width: 100%">#}
 {#        <div class="navbar-header">#}
