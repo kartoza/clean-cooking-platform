@@ -700,11 +700,15 @@ ul#filtered-subgeographies {
 }
 
 #summary-button-container {
-  height: 55px;
+  height: 120px;
   display: flex;
   flex-direction: column;
-  background: white;
+}
+
+#summary-button-wrapper {
   padding-top: 10px;
+  padding-bottom: 15px;
+  background: white;
 }
 
 #summary-button {
