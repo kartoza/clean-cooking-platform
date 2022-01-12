@@ -109,6 +109,11 @@ section > svg.flair-right {
     flex-basis: 30%;
 }
 
+.how-carousel .video-container {
+    max-width: 650px;
+    background-color: #0280bf;
+}
+
 .how-section {
     background-color: #EBF5FA;
     padding-bottom: 3em;

@@ -396,23 +396,28 @@ class ReportPDFView(View):
         page.setFont(self.default_font_bold, 100)
         page.drawString(1030, 570, "Supported by")
 
+        page.roundRect(
+            1030, 60,
+            920,
+            460, 5, stroke=0, fill=1)
+
         cca_logo = absolute_path(
             'custom', 'static', 'img', 'cca.png')
-        page.drawImage(cca_logo, 1030, 400,
+        page.drawImage(cca_logo, 1040, 400,
                        height=100,
                        width=239,
                        preserveAspectRatio=True)
 
         aepc_logo = absolute_path(
             'custom', 'static', 'img', 'aepc.png')
-        page.drawImage(aepc_logo, 1030, 255,
+        page.drawImage(aepc_logo, 1040, 255,
                        height=100,
                        width=605,
                        preserveAspectRatio=True)
 
         kartoza_logo = absolute_path(
             'custom', 'static', 'img', 'kartoza.png')
-        page.drawImage(kartoza_logo, 1030, 105,
+        page.drawImage(kartoza_logo, 1040, 105,
                        height=100,
                        width=322,
                        preserveAspectRatio=True)
