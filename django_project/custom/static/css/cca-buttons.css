@@ -22,21 +22,14 @@
     border-color: #e0e0e0;
 }
 
-.btn-cca-primary:disabled:hover {
-    background: white;
-    border-color: #e0e0e0;
-    color: #969393;
-    opacity: 1;
-}
-
-.btn-cca-primary:active, .btn-cca-primary:focus {
+.btn-cca-primary:not([disabled]):active, .btn-cca-primary:not([disabled]):focus {
     background: #ffffff !important;
     border-color: #0479b1 !important;
     color: #00689C !important;
     box-shadow: 0 0.375em 0 currentColor;
 }
 
-.btn-cca-primary:active {
+.btn-cca-primary:not([disabled]):active {
     box-shadow: 0 0.20em 0 #105e81;
     transform: translateY(4px);
 }
