@@ -15,7 +15,6 @@
     <link href="{% static "eae/stylesheets/style.css" %}" rel="stylesheet"/>
     <link href="{% static "eae/stylesheets/banner.css" %}" rel="stylesheet"/>
     <link href="{% static "eae/stylesheets/main.css" %}" rel="stylesheet"/>
-    <link href="{% static "eae/stylesheets/nav.css" %}" rel="stylesheet"/>
     <link href="{% static "eae/stylesheets/partners-section.css" %}"
           rel="stylesheet"/>
     <link href="{% static "eae/stylesheets/footer.css" %}" rel="stylesheet"/>
@@ -63,97 +62,8 @@
 </head>
 
 <body>
-<nav>
-    <input id="toggle"
-           class="no-desktop"
-           type="checkbox">
 
-    <label for="toggle" class="no-desktop">
-        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
-            <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
-        </svg>
-    </label>
-
-    <a id="energy-access-link"
-       href="/">
-        <span class="notranslate">Clean Cooking Explorer</span>
-    </a>
-    {% if not is_restricted or user.is_authenticated %}
-    <div id="navigation-links">
-        <a href="/"
-           class="toggleable">
-            Home
-        </a>
-
-        <a href="/geography/"
-           class="toggleable">
-            CCE tool
-        </a>
-
-        <a href="/maps/"
-           class="toggleable">
-            Maps
-        </a>
-
-        <a href="/methodology"
-           class="toggleable">
-            Methodology
-        </a>
-
-        <a href="/layers"
-           class="toggleable">
-            GIS Data
-        </a>
-
-        <a href="/about-us"
-           class="toggleable">
-            About
-        </a>
-
-        {% if user.is_superuser %}
-            <a href="/admin"
-               class="toggleable">
-              Admin
-            </a>
-        {% endif %}
-        <!--
-        <a href="/faq"
-           class="toggleable">
-          FAQ
-        </a>
-        -->
-    </div>
-    {% else %}
-
-        <div id="navigation-links" class="login-menu-link">
-            <a></a><a></a>
-            <a href="/account/login"
-               class="toggleable">
-                Login
-            </a>
-
-        </div>
-    {% endif %}
-</nav>
-
-<script>
-    (function () {
-        const links = document.querySelectorAll('nav #navigation-links a');
-        if (!links) return;
-
-        for (var l of links) {
-            let locationPathName = location.pathname;
-            if(locationPathName.substr(-1) === '/') {
-                locationPathName = locationPathName.substr(0, locationPathName.length - 1);
-            }
-            if (l.getAttribute('href') === '/' && locationPathName !== '') {
-              continue;
-            }
-            if (locationPathName.match(new RegExp(l.getAttribute('href').split('/')[1])))
-                l.classList.add("active");
-        }
-    })();
-</script>
+{% include 'nav_bar.html' %}
 
 <main style="min-height: 60%;">
     {% block content %}

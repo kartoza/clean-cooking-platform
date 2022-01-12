@@ -1,0 +1,115 @@
+{% load staticfiles %}
+
+<link href="{% static "eae/stylesheets/nav.css" %}" rel="stylesheet"/>
+<nav>
+    <input id="toggle"
+           class="no-desktop"
+           type="checkbox">
+
+    <label for="toggle" class="no-desktop">
+        <svg style="width:24px;height:24px" viewBox="0 0 24 14">
+            <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
+        </svg>
+    </label>
+
+    <a id="energy-access-link"
+       href="/">
+        <span class="notranslate">Clean Cooking Explorer</span>
+    </a>
+    {% if not is_restricted or user.is_authenticated %}
+
+    <div id="navigation-links">
+        <a href="/"
+           class="toggleable">
+            Home
+        </a>
+
+        <a href="/geography/"
+           class="toggleable">
+            CCE tool
+        </a>
+
+        <a href="/methodology"
+           class="toggleable">
+            Methodology
+        </a>
+
+        <a href="/about-us"
+           class="toggleable">
+            About
+        </a>
+
+        <div class="toggleable dropdown-menu-cca">
+            <a class="toggleable dropbtn" href="#" onclick="openDropdown()"> Data</a>
+            <div id="dropdown1" class="dropdown-content-cca">
+                <a class="toggleable" href="/layers">GIS Layers</a>
+                <a class="toggleable" href="/maps">Maps</a>
+            </div>
+        </div>
+
+        {% if user.is_superuser %}
+            <a href="/admin"
+               class="toggleable">
+              Admin
+            </a>
+        {% endif %}
+        <!--
+        <a href="/faq"
+           class="toggleable">
+          FAQ
+        </a>
+        -->
+    </div>
+    {% else %}
+
+        <div id="navigation-links" class="login-menu-link">
+            <a></a><a></a>
+            <a href="/account/login"
+               class="toggleable">
+                Login
+            </a>
+
+        </div>
+    {% endif %}
+</nav>
+
+<script>
+
+    function openDropdown() {
+      document.getElementById("dropdown1").classList.toggle("show");
+    }
+
+    (function () {
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+          let dropdowns = document.getElementsByClassName("dropdown-content");
+          let i;
+          for (i = 0; i < dropdowns.length; i++) {
+            let openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+          return null
+        }
+      }
+      const links = document.querySelectorAll('nav #navigation-links a');
+      if (!links) return;
+
+      for (let l of links) {
+        let locationPathName = location.pathname;
+        if (locationPathName.substr(-1) === '/') {
+          locationPathName = locationPathName.substr(0, locationPathName.length - 1);
+        }
+        if (l.getAttribute('href') === '#') continue
+        if (l.getAttribute('href') === '/' && locationPathName !== '') {
+          continue;
+        }
+        console.log(locationPathName.match(new RegExp(l.getAttribute('href').split('/')[1])));
+        if (locationPathName.match(new RegExp(l.getAttribute('href').split('/')[1]))) {
+          l.classList.add("active");
+        }
+      }
+    })();
+</script>
