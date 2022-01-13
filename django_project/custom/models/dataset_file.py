@@ -4,6 +4,8 @@
 import re
 
 import os
+import shutil
+
 import requests
 from django.contrib.gis.db import models
 from django.conf import settings
@@ -11,7 +13,7 @@ from django.core.cache import cache
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
-from geonode.layers.models import Layer
+from geonode.layers.models import Layer, Style
 
 
 CSV = 'csv'
@@ -106,11 +108,31 @@ class DatasetFile(models.Model):
 
 
 @receiver(post_save, sender=Layer)
+@receiver(post_save, sender=Style)
 def layer_post_save(sender, instance, **kwargs):
     from custom.models import ClippedLayer
-    cache.delete('style_dataset_{}'.format(instance.id))
+    if isinstance(instance, Style):
+        instance = instance.layer_default_style.first()
+
+    dataset = None
+    try:
+        dataset = instance.datasetfile_set.first()
+    except:  # noqa
+        return
+    finally:
+        if not dataset:
+            return
+
+    cache.delete('style_dataset_{}'.format(dataset.id))
 
     # Remove clipped layers if exist
     clipped_layers = ClippedLayer.objects.filter(layer=instance)
     if clipped_layers.exists():
         clipped_layers.delete()
+
+    # Remove cached style
+    dataset_style_folder = os.path.join(
+        settings.MEDIA_ROOT, 'styles', str(dataset.id))
+
+    if os.path.exists(dataset_style_folder):
+        shutil.rmtree(dataset_style_folder)
