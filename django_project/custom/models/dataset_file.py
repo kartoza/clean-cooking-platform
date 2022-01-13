@@ -107,26 +107,13 @@ class DatasetFile(models.Model):
         verbose_name_plural = 'Dataset Files'
 
 
-@receiver(post_save, sender=Layer)
-@receiver(post_save, sender=Style)
-def layer_post_save(sender, instance, **kwargs):
+def remove_dataset_cache(dataset: DatasetFile, layer: Layer):
     from custom.models import ClippedLayer
-    if isinstance(instance, Style):
-        instance = instance.layer_default_style.first()
-
-    dataset = None
-    try:
-        dataset = instance.datasetfile_set.first()
-    except:  # noqa
-        return
-    finally:
-        if not dataset:
-            return
 
     cache.delete('style_dataset_{}'.format(dataset.id))
 
     # Remove clipped layers if exist
-    clipped_layers = ClippedLayer.objects.filter(layer=instance)
+    clipped_layers = ClippedLayer.objects.filter(layer=layer)
     if clipped_layers.exists():
         clipped_layers.delete()
 
@@ -136,3 +123,21 @@ def layer_post_save(sender, instance, **kwargs):
 
     if os.path.exists(dataset_style_folder):
         shutil.rmtree(dataset_style_folder)
+
+
+@receiver(post_save, sender=Layer)
+@receiver(post_save, sender=Style)
+def layer_post_save(sender, instance, created, **kwargs):
+    if created:
+        return
+    if isinstance(instance, Style):
+        instance = instance.layer_default_style.first()
+    dataset = None
+    try:
+        dataset = instance.datasetfile_set.first()
+    except:  # noqa
+        return
+    finally:
+        if not dataset:
+            return
+    remove_dataset_cache(dataset, instance)
