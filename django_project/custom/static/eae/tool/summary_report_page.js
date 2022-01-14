@@ -392,7 +392,7 @@ document.getElementById('summary-button').onclick = async (e) => {
 	USE_CASE_ID = useCaseId;
 	PRESET_NAME = scenarioSelect.options[scenarioSelect.selectedIndex].text;
 
-	await downloadReport(800, 600);
+	await downloadReport(null, null, 750, 400);
 }
 
 export function convertBounds(bounds) {

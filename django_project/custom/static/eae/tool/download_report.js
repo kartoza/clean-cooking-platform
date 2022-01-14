@@ -24,8 +24,20 @@ async function run_analysis (output, id = "") {
 	return data;
 }
 
+function gcd(x, y) {
+	if (y === 0) {
+		return x
+	}
+	return gcd(y, x % y);
+}
 
-export async function downloadReport(mapImageWidth = null, mapImageHeight = null) {
+function _calculateRatio(x, y) {
+	let gcdValue = gcd(x, y);
+	return [x/gcdValue, y/gcdValue];
+}
+
+
+export async function downloadReport(sourceWidth = null, sourceHeight = null, destinationWidth = null, destinationHeight = null) {
 
 	let buttonText = document.getElementById('report-btn-text');
 	let button = document.getElementById('summary-button');
@@ -42,23 +54,41 @@ export async function downloadReport(mapImageWidth = null, mapImageHeight = null
 	try {
 		document.getElementById('view-inputs').click()
 		await delay(2);
-	} catch (e) {}
+	} catch (e) {
+		await delay(1);
+	}
 
 	let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+	let ratio = null;
 
-	let width = mapImageWidth ? mapImageWidth : mapCanvas.clientWidth;
-	let height = mapImageHeight ? mapImageHeight : mapCanvas.clientHeight;
+	if (destinationWidth !== null && destinationHeight !== null) {
+		ratio = _calculateRatio(destinationWidth, destinationHeight)
+	}
+
+	let width = sourceWidth || mapCanvas.clientWidth;
+	let height = sourceHeight || mapCanvas.clientHeight;
+
+	// Height never changes, so we calculate source size based on height
+	if (ratio) {
+		width = height / ratio[1] * ratio[0]
+	}
+
+	if (!destinationWidth) destinationWidth = width
+	if (!destinationHeight) destinationHeight = height
 
 	const canvas = document.getElementById('output-clone');
 	const ctx = canvas.getContext("2d");
 
-	canvas.width = width;
-	canvas.height = height;
+
+	canvas.width = destinationWidth;
+	canvas.height = destinationHeight;
+	// ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight,
+	// destinationX, destinationY, destinationWidth, destinationHeight);
 	ctx.drawImage(mapCanvas,
-		(mapCanvas.width / 2) - (width / 2),0,
+		(mapCanvas.width / 2) - (width / 2), 0,
 		width, height,
 		0,0,
-		width, height
+		destinationWidth, destinationHeight
 	);
 	let mapImage = canvas.toDataURL('image/png', 1.0);
 

@@ -110,7 +110,7 @@ class ReportPDFView(View):
             bold=self.default_font_bold,
             italic=self.default_font_light)
 
-    def _draw_supply_demand_table(self, canvas):
+    def _draw_supply_demand_table(self, canvas, y_pos):
         data = {
             'demand': [],
             'supply': [],
@@ -121,6 +121,7 @@ class ReportPDFView(View):
         captured_value = parse_qs(parsed_url.query)['inputs'][0]
         categories = category_from_url(captured_value.split(','))
         population_added = False
+        table_y = y_pos - 30
 
         for category in categories:
             if 'population' in category.name_long.lower():
@@ -167,8 +168,7 @@ class ReportPDFView(View):
 
         table_width = 2000
         table_height = 200
-        table_x = 80
-        table_y = 100
+        table_x = 75
 
         table_style = [
             ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
@@ -188,7 +188,9 @@ class ReportPDFView(View):
                  self.default_font_bold),
             )
 
-        table = Table(table_data, colWidths=[8*inch,8*inch])
+        table_y -= len(table_data) * 45
+
+        table = Table(table_data, colWidths=[6.5*inch,6.5*inch])
         table.setStyle(TableStyle(table_style))
         table.wrapOn(canvas, table_width, table_height)
         table.drawOn(canvas, table_x, table_y)
@@ -237,23 +239,31 @@ class ReportPDFView(View):
                        preserveAspectRatio=True,
                        mask='auto')
 
-    def _draw_title(self, page, title, sub_title, sidebar_exists = True):
+    def _draw_title(self,
+                    page,
+                    title,
+                    sub_title,
+                    sidebar_exists = True,
+                    color = (29 / 255, 63 / 255, 116 / 255)):
         # Add title
-        page.setFillColorRGB(29 / 255, 63 / 255, 116 / 255)
-        page.setFont(self.default_font, 40)
-        page.drawString(
-            75, self.page_height - 100, title)
+        page.setFillColorRGB(*color)
+        title_height = 0
+        if title:
+            title_height = 50
+            page.setFont(self.default_font, 40)
+            page.drawString(
+                75, self.page_height - 100, title)
         page.setFont(self.default_font_bold, 50)
         page.drawString(
-            75, self.page_height - 150, sub_title)
+            75, self.page_height - (100 + title_height), sub_title)
         page.setLineWidth(inch * 0.08)
 
-        page.setStrokeColorRGB(29 / 255, 63 / 255, 116 / 255)
+        page.setStrokeColorRGB(*color)
         page.line(
             75,
-            self.page_height - 165,
+            self.page_height - (115 + title_height),
             self.sidebar_x - 100 if sidebar_exists else self.page_width - 100,
-            self.page_height - 165
+            self.page_height - (115 + title_height)
         )
 
     def _draw_map(self, page, map_image, legend_path = None, img_width = 650,
@@ -445,41 +455,36 @@ class ReportPDFView(View):
 
         page.showPage()
 
-
     def draw_page_two(self, page):
-        self._draw_sidebar(page)
-        self._draw_footer(page, 2)
-        self._draw_map(page, self.map_image, None, 800, 80, 60)
-        self._draw_title(page, 'Regional Summary', self.subregion)
+        page.setFillColorRGB(0.349, 0.549, 0.286)
+        page.rect(0,
+                  0, self.page_width, self.page_height, stroke=0, fill=1)
+        self._draw_title(page, '', self.use_case.name, False, (1, 1, 1))
 
-        # Add sidebar title
-        page.setFillColorRGB(1, 1, 1)
-        page.setFont(self.default_font_bold, 65)
-        page.drawString(
-            self.sidebar_x + self.sidebar_x_padding,
-            self.page_height - 100, "Snapshot")
-
-        page.setLineWidth(inch * 0.1)
-        page.setStrokeColorRGB(1, 1, 1)
-        page.line(
-            self.sidebar_x + self.sidebar_x_padding,
-            self.page_height - 130,
-            self.page_width - self.sidebar_x_padding,
-            self.page_height - 130
+        page.setFont(self.default_font_light, 25)
+        y_pos = self._draw_wrapped_line(
+            page,
+            self.use_case.description,
+            160,
+            75,
+            self.page_height - 175,
+            35
         )
+        page.setFont(self.default_font, 30)
+        page.drawString(
+            75, y_pos - 50,
+            f'Scenario : {self.preset.name}')
 
-        # Draw description
-        page.setFillColorRGB(1, 1, 1)
-        page.setFont(self.default_font_light, 30)
-
+        page.setFont(self.default_font_light, 25)
         y_pos = self._draw_wrapped_line(
             page,
             self.preset.description,
-            45,
-            self.sidebar_x + self.sidebar_x_padding,
-            self.page_height - 190,
+            90,
+            75,
+            y_pos - 100,
             35
         )
+
         urban_ratio = self.total_urban_population / self.total_population * 100
         poverty_percentage = self.total_poverty / self.total_population * 100
 
@@ -488,25 +493,26 @@ class ReportPDFView(View):
             ['Population', '{:,}'.format(math.trunc(self.total_population))],
             ['Households', '{:,}'.format(math.trunc(self.total_household))],
             ['Urban ratio', '{:,.2f}%'.format(urban_ratio)],
-            ['% of population\n\n\nrelying on polluting\n\n\nfuels and '
+            ['% of population relying on\n\n\npolluting fuels and '
              'technologies',
              '{:,.2f}%'.format(self.total_cooking_percentage)],
-            ['Portion under the \n\n\npoverty line',
+            ['Portion under the poverty line',
              '{:,.2f}%'.format(poverty_percentage)]
         ]
 
+        table_y = y_pos - 100
+
         for table_summary_data in self.table_summary_data:
             table_data.append(table_summary_data)
+            table_y -= (50 * table_summary_data[0].count('\n\n\n')) + 50
 
-        table_width = self.sidebar_width
+        table_width = 1200
+        table_x = 1100
         table_height = 1000
-        table_x = self.sidebar_x + self.sidebar_x_padding
-        table_x = self.sidebar_x + self.sidebar_x_padding
-        table_y = y_pos - 560
 
         table_style = [
             ('GRID', (0, 0), (-1, -1), 0.25, colors.Color(
-                red=220/255,green=220/255,blue=220/255)),
+                red=220 / 255, green=220 / 255, blue=220 / 255)),
             ('INNERGRID', (0, 0), (0, 1), 0.25, colors.Color(
                 0.341, 0.553, 0.267
             )),
@@ -517,19 +523,37 @@ class ReportPDFView(View):
             ('FONTNAME', (0, 0), (0, -1), self.default_font_bold),
             ('BACKGROUND', (0, 0), (1, -1), colors.white),
             ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
-                red=29/255,green=63/255,blue=116/255)),
+                red=29 / 255, green=63 / 255, blue=116 / 255)),
             ('FONTSIZE', (0, 0), (1, -1), 28),
             ('RIGHTPADDING', (0, 0), (1, -1), 50),
             ('LEFTPADDING', (0, 0), (1, -1), 20),
             ('BOTTOMPADDING', (0, 0), (1, -1), 30),
         ]
 
-        table = Table(table_data, colWidths=[4.8*inch,3.8*inch])
+        table = Table(table_data, colWidths=[6.4 * inch, 4 * inch])
         table.setStyle(TableStyle(table_style))
         table.wrapOn(page, table_width, table_height)
         table.drawOn(page, table_x, table_y)
 
-        self._draw_supply_demand_table(page)
+        self._draw_supply_demand_table(page, y_pos)
+
+        self._draw_footer(page, 2)
+        page.showPage()
+
+    def draw_page_three(self, page):
+        page.drawImage(
+            self.map_image, 75, 30,
+            width=1825,
+            height=975,
+            preserveAspectRatio=True,
+            mask='auto')
+
+        page.setFillColorRGB(1, 1, 1)
+        page.rect(0, 0, self.page_width, self.navbar_height + 5,
+                  stroke=0, fill=1)
+        self._draw_footer(page, 3)
+        self._draw_title(page, '', self.subregion, False)
+
 
         page.showPage()
 
@@ -824,8 +848,10 @@ class ReportPDFView(View):
         PageBreak()
         self.draw_page_two(p)
         PageBreak()
+        self.draw_page_three(p)
+        PageBreak()
 
-        current_page_number = 3
+        current_page_number = 4
 
         if self.demand_summary:
             self.draw_ccp_page(p, current_page_number)

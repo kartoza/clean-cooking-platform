@@ -223,7 +223,7 @@ if (summaryButton) {
 	if (boundary) {
 		summaryButton.onclick = async () => {
 			ea_loading(true);
-			await downloadReport();
+			await downloadReport(null, null, 750, 400);
 			ea_loading(false);
 		}
 	} else {
