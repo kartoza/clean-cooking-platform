@@ -93,14 +93,14 @@ const clipSelectedLayerPromise = (boundary, layerId, drawToMap = true, currentTr
                 layer_id: layerId
             })
         }).then((response) => response.json()).then(async data => {
-            if (data['status'] === 'Pending') {
-                setTimeout(async () => {
-                    if (currentTry === 25) {
-                        reject('Error clipping layer ' + layerId)
-                    }
+            if (data['status'] === 'pending') {
+                await delay(2);
+                if (currentTry === 100) {
+                    reject('Error clipping layer ' + layerId)
+                } else {
                     resolve(clipSelectedLayerPromise(boundary, layerId, drawToMap, currentTry+=1));
-                }, 1000)
-            } else if (data['status'] === 'Success') {
+                }
+            } else if (data['status'] === 'success') {
                 doneLayer += 1;
                 progressBar.style.width = `${doneLayer/allLayerIds.length * 90}%`;
 

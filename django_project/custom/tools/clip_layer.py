@@ -1,9 +1,14 @@
+import json
+import time
 import os
+import logging
 import shutil
 
 from osgeo import gdal, ogr, osr
 import subprocess
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 # Enable GDAL/OGR exceptions
 gdal.UseExceptions()
@@ -11,6 +16,25 @@ gdal.UseExceptions()
 # GDAL & OGR memory drivers
 GDAL_MEMORY_DRIVER = gdal.GetDriverByName('MEM')
 OGR_MEMORY_DRIVER = ogr.GetDriverByName('Memory')
+MAX_VALIDATE_TRY = 100
+
+
+def validate_json_file(json_file_path, current_try=1):
+    if not os.path.exists(json_file_path):
+        return False
+    json_file = open(json_file_path)
+    logger.info(f'Validating {json_file_path} : {current_try}')
+    try:
+        json.load(json_file)
+        json_file.close()
+        return True
+    except ValueError:
+        time.sleep(1)
+        json_file.close()
+        current_try += 1
+        if current_try >= MAX_VALIDATE_TRY:
+            return False
+        return validate_json_file(json_file_path, current_try)
 
 
 def clip_vector_layer(
@@ -18,6 +42,7 @@ def clip_vector_layer(
         boundary_layer_file = '',
         output_path = ''):
 
+    validated = True
     output_path = output_path.replace('shp', 'json')
 
     if os.path.exists(output_path):
@@ -36,6 +61,12 @@ def clip_vector_layer(
         boundary_layer_file,
         output_path,
         layer_vector_file])
+
+    # validated = validate_json_file(
+    #     output_path
+    # )
+
+    return validated
 
 
 def resize_raster_layer(

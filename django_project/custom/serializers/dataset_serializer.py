@@ -192,7 +192,7 @@ class DatasetFileSerializer(serializers.ModelSerializer):
             clipped_layer = ClippedLayer.objects.filter(
                 layer=obj.geonode_layer,
                 boundary_uuid=clipped_boundary).first()
-            if clipped_layer:
+            if clipped_layer and clipped_layer.clipped_file:
                 layer_file = clipped_layer.clipped_file.url
             else:
                 clipped_layer_directory = os.path.join(
@@ -215,6 +215,7 @@ class DatasetFileSerializer(serializers.ModelSerializer):
                                 )
                             else:
                                 layer_file = None
+                                geonode_layer = None
         if obj.use_geonode_layer and obj.geonode_layer:
             geonode_layer, style = geonode_layer_links(
                 obj.geonode_layer,

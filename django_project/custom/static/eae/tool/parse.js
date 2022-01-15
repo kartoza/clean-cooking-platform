@@ -178,6 +178,7 @@ export function raster() {
 };
 
 function geojson() {
+	let that = this;
 	if (this.vectors.features)
 		return Whatever;
 	let endpoint = this.vectors.endpoint
@@ -189,6 +190,10 @@ function geojson() {
 		.then(r => {
 			this.vectors.features = r;
 			if (this.id === 'boundaries') this.vectors.bounds = geojsonExtent(r);
+		}).catch(e => {
+			console.log(e);
+			fail.call(that, '')
+			debugger;
 		});
 };
 

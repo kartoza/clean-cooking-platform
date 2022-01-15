@@ -6,13 +6,12 @@ from celery.result import AsyncResult
 import requests
 import xml.etree.ElementTree as ET
 
-import zipfile
 from django.http.response import Http404
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from custom.models import Geography, ClippedLayer
+from custom.models import Geography, ClippedLayer, SUCCESS, PENDING, FAILED
 from geonode.layers.models import Layer
 
 
@@ -101,7 +100,7 @@ class ClipLayerByRegion(APIView):
             raise Http404
 
         layer_id = self.request.data.get('layer_id', None)
-        task_running = False
+        response_status = ''
 
         try:
             layer = Layer.objects.get(id=layer_id)
@@ -114,34 +113,49 @@ class ClipLayerByRegion(APIView):
                 boundary_uuid=boundary_uuid,
             )
         except ClippedLayer.MultipleObjectsReturned:
-            clipped_layers = ClippedLayer.objects.filter(layer=layer, boundary_uuid=boundary_uuid)
+            clipped_layers = ClippedLayer.objects.filter(
+                layer=layer, boundary_uuid=boundary_uuid)
             created = False
             clipped_layer = clipped_layers.last()
             clipped_layers.exclude(id=clipped_layer.id).delete()
 
-        if not created:
-            if clipped_layer.process_state and not clipped_layer.clipped_file:
-                res = AsyncResult(clipped_layer.process_state)
-                if res.ready():
-                    return Response({
-                        'status': 'Failed'
-                    })
-            if clipped_layer.clipped_file:
-                try:
-                    style_url = layer.default_style.sld_url
-                except AttributeError:
-                    style_url = ''
-                return Response({
-                    'status': 'Success',
-                    'output': f'{settings.MEDIA_URL}{clipped_layer.clipped_file.name}',
-                    'style_url': style_url
-                })
+        try:
+            style_url = layer.default_style.sld_url
+        except AttributeError:
+            style_url = ''
 
-        if not task_running:
+        if not created:
+            if clipped_layer.failed:
+                response_status = FAILED
+            elif clipped_layer.successful:
+                response_status = SUCCESS
+            elif clipped_layer.pending:
+                res = AsyncResult(clipped_layer.process_state)
+                if res.ready(): # Task already finished
+                    if clipped_layer.clipped_file:
+                        clipped_layer.state = SUCCESS
+                        clipped_layer.save()
+                        response_status = SUCCESS
+                else:
+                    response_status = PENDING
+
+        if not response_status:
+            clipped_layer.state = PENDING
+            clipped_layer.save()
+            response_status = PENDING
             clip_layer_by_region.delay(
                 clipped_layer.id
             )
 
+        response_data = {}
+        if response_status == SUCCESS:
+            response_data = {
+                'output': f'{settings.MEDIA_URL}'
+                          f'{clipped_layer.clipped_file.name}',
+                'style_url': style_url
+            }
+
         return Response({
-            'status': 'Pending'
+            'status': response_status,
+            **response_data
         })
