@@ -23,6 +23,13 @@ class UseCase(models.Model):
         null=False
     )
 
+    geography = models.ForeignKey(
+        'custom.Geography',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
+
     class Meta:
         verbose_name_plural = 'Use Cases'
         ordering = ['order']

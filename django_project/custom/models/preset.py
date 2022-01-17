@@ -31,21 +31,6 @@ class Preset(models.Model):
         null=False
     )
 
-    ccp_use = models.BooleanField(
-        default=False,
-        verbose_name='Use Clean Cooking Potential Index'
-    )
-
-    supply_index = models.BooleanField(
-        default=False,
-        verbose_name='Use Supply Index'
-    )
-
-    ani_index = models.BooleanField(
-        default=False,
-        verbose_name='Use Assistance Need Index'
-    )
-
     class Meta:
         verbose_name_plural = 'Presets'
         ordering = ['order']

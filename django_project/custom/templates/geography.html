@@ -108,9 +108,10 @@
                         <div style="font-size: 1.4em; font-weight: bold;">{{ geography.0.name }}</div>
                     {% else %}
                         <select class="form-control" id="countrySelect">
-                            <option value="-">Choose a country</option>
+                            <option value="-" >Choose a country</option>
                             {% for geo in geography %}
                                 <option value="{{ geo.id }}"
+                                        data-bbox="{{ geo.bbox | safe }}"
                                         data-province="{{ geo.province_selector }}"
                                         data-district="{{ geo.district_selector }}"
                                         data-municipal="{{ geo.municipal_selector }}"
@@ -191,6 +192,22 @@
 
     {% if geography|length == 1 %}
         selectCountry(selectedGeo);
+    {% else %}
+        document.getElementById('loading-spinner-1').style.display = 'none';
+        document.getElementById('countrySelect').addEventListener('change', function() {
+          let _geo = this.options[this.selectedIndex];
+          selectedGeo = {
+            value: _geo.value,
+            dataset: {
+              layerName: _geo.dataset.layerName,
+              bbox: _geo.dataset.bbox,
+              province: _geo.dataset.province,
+              district: _geo.dataset.district,
+              municipal: _geo.dataset.municipal
+            }
+          }
+          selectCountry(this.options[this.selectedIndex]);
+        });
     {% endif %}
 
     </script>

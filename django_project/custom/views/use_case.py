@@ -8,7 +8,9 @@ class UseCaseView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(UseCaseView, self).get_context_data(**kwargs)
-        context['use_cases'] = UseCase.objects.all()
+        context['use_cases'] = UseCase.objects.filter(
+            geography=self.request.GET.get('geoId')
+        )
         context['geo'] = Geography.objects.get(
             id=self.request.GET.get('geoId')
         )

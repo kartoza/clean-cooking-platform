@@ -97,8 +97,9 @@ class PresetAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 
 class UseCaseAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('name', 'description')
-    search_fields = ('name', )
+    list_display = ('name', 'geography', 'description')
+    search_fields = ('name', 'geography')
+    list_filter = ('geography', )
 
 
 class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
