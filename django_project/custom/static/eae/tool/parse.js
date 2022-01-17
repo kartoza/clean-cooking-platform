@@ -193,7 +193,6 @@ function geojson() {
 		}).catch(e => {
 			console.log(e);
 			fail.call(that, '')
-			debugger;
 		});
 };
 
