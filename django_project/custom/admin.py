@@ -185,7 +185,7 @@ class ClippedLayerAdmin(admin.ModelAdmin):
     search_fields = ('boundary_uuid', 'layer__name')
     list_display = (
         'layer', 'boundary_uuid', 'created_date',
-        'layer_type', 'process_state')
+        'layer_type', 'state')
 
 
 class SummaryReportResultAdmin(admin.ModelAdmin):

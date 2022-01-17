@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 @app.task(bind=True, name='custom.tasks.clip_layer_by_region', queue='update')
 def clip_layer_by_region(self, clipped_layer_id):
-    from custom.models.clipped_layer import ClippedLayer
+    from custom.models.clipped_layer import ClippedLayer, SUCCESS
 
     clipped_layer = ClippedLayer.objects.get(
         id=clipped_layer_id
@@ -40,7 +40,7 @@ def clip_layer_by_region(self, clipped_layer_id):
 
     output_folder = os.path.join(
         settings.MEDIA_ROOT,
-        'clipped'
+        'clipped_temp'
     )
 
     output = None
@@ -180,5 +180,7 @@ def clip_layer_by_region(self, clipped_layer_id):
 
     logger.info('Finish clipping layer')
     logger.info('Output {}'.format(output))
+    clipped_layer.state = SUCCESS
     clipped_layer.save()
+
     return clipped_layer

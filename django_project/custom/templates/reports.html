@@ -34,57 +34,6 @@
     <script src="{% static "eae/tool/main.js" %}"></script>
     <script src="{% static "eae/lib/helpers.js" %}"></script>
 
-    <script>
-        const geoserverUrl = '{{ geoserver_url }}';
-        let parser = new GeoStylerSLDParser.SldStyleParser();
-        let mapboxParser = new GeoStylerMapboxParser.MapboxStyleParser();
-        let url = new URL(window.location.href);
-        let boundary = url.searchParams.get('boundary');
-        let geoId = url.searchParams.get('geoId');
-        let subRegionUrl = url.searchParams.get('subRegion');
-        let subRegion = '{{ subRegion.1 }}';
-        let geographyName = '{{ subRegion.1 }}, {{ geo.name }}';
-        let useCaseId = '{{ use_case.id }}';
-        mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
-        let mapboxStyle = 'mapbox://styles/{{ MAPBOX_THEME }}';
-        let allLayerIds = {{ all_layer_ids }};
-        if (allLayerIds) {
-            allLayerIds = [...new Set(allLayerIds)];
-        }
-
-        let csrfToken = '{{ csrf_token }}';
-        let geojsonBoundary = `/uploaded/rasterized/${boundary}.json`;
-        let rasterBoundary = `/uploaded/rasterized/${boundary}.tif`;
-        let bbox = null;
-        let coords = [];
-        let layerName = null;
-        let bboxString = '';
-        {% if geo %}
-            layerName = "{{ geo.vector_boundary_layer }}";
-            bboxString = "{{ geo.vector_boundary_layer.bbox_string }}";
-        {% endif %}
-
-        BBOX = null;
-        GEOGRAPHY = null;
-        MAPBOX = null;
-        INFOMODE = false;
-        MOBILE = false;
-        SIDEBAR = null;
-        O = null;
-        U = null;
-        DST = new Map();
-        DOMAIN_DATA = [];
-        WEIGHT_DATA = [];
-
-        let ANALYSIS_TYPE = [];
-        let PRESET_ID = null;
-        let USE_CASE_ID = null;
-
-        let USE_CASE_NAME = '{{ use_case.name }}';
-        let PRESET_NAME = '';
-        let GEO_NAME = '{{ geo.name }}';
-    </script>
-
     <link rel="stylesheet" href="{% static "ol-6.8.1/ol.css" %}">
     <link rel="stylesheet" href="{% static "css/report.css" %}">
 {% endblock %}
@@ -240,6 +189,59 @@
 {% endblock %}
 
 {% block footer_js %}
+
+    <script>
+	    ea_flash = new flash();
+        const geoserverUrl = '{{ geoserver_url }}';
+        let parser = new GeoStylerSLDParser.SldStyleParser();
+        let mapboxParser = new GeoStylerMapboxParser.MapboxStyleParser();
+        let url = new URL(window.location.href);
+        let boundary = url.searchParams.get('boundary');
+        let geoId = url.searchParams.get('geoId');
+        let subRegionUrl = url.searchParams.get('subRegion');
+        let subRegion = '{{ subRegion.1 }}';
+        let geographyName = '{{ subRegion.1 }}, {{ geo.name }}';
+        let useCaseId = '{{ use_case.id }}';
+        mapboxgl.accessToken = '{{ MAPBOX_TOKEN }}';
+        let mapboxStyle = 'mapbox://styles/{{ MAPBOX_THEME }}';
+        let allLayerIds = {{ all_layer_ids }};
+        if (allLayerIds) {
+            allLayerIds = [...new Set(allLayerIds)];
+        }
+
+        let csrfToken = '{{ csrf_token }}';
+        let geojsonBoundary = `/uploaded/rasterized/${boundary}.json`;
+        let rasterBoundary = `/uploaded/rasterized/${boundary}.tif`;
+        let bbox = null;
+        let coords = [];
+        let layerName = null;
+        let bboxString = '';
+        {% if geo %}
+            layerName = "{{ geo.vector_boundary_layer }}";
+            bboxString = "{{ geo.vector_boundary_layer.bbox_string }}";
+        {% endif %}
+
+        BBOX = null;
+        GEOGRAPHY = null;
+        MAPBOX = null;
+        INFOMODE = false;
+        MOBILE = false;
+        SIDEBAR = null;
+        O = null;
+        U = null;
+        DST = new Map();
+        DOMAIN_DATA = [];
+        WEIGHT_DATA = [];
+
+        let ANALYSIS_TYPE = [];
+        let PRESET_ID = null;
+        let USE_CASE_ID = null;
+
+        let USE_CASE_NAME = '{{ use_case.name }}';
+        let PRESET_NAME = '';
+        let GEO_NAME = '{{ geo.name }}';
+    </script>
+
     <script src="{% static "halfmoon-1.1.1/js/halfmoon.min.js" %}"
             type="text/javascript"></script>
 
