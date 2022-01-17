@@ -16,8 +16,7 @@ from geonode.base.models import Link
 from custom.tools.simplify_layer import simplify_layer
 
 
-def geonode_layer_links(geonode_layer, geography,
-                        default_styles_geoserver = None):
+def geonode_layer_links(geonode_layer, geography):
     """
     Return links for layer and the style
     """
@@ -42,18 +41,32 @@ def geonode_layer_links(geonode_layer, geography,
             y=y
         )
 
-    style_url = ''
-    if default_styles_geoserver:
-        for default_style in default_styles_geoserver:
-            if default_style['name'] == geonode_layer.name:
-                style_url = default_style['href'].replace(
-                    '.json', '.sld'
-                )
+    try:
+        style_url = geonode_layer.default_style.sld_url
+    except AttributeError:
+        style_url = ''
+
     if not style_url:
+        default_styles_geoserver = None
         try:
-            style_url = geonode_layer.default_style.sld_url
-        except AttributeError:
-            style_url = ''
+            url = (
+                f'{settings.GEOSERVER_PUBLIC_LOCATION}/'
+                f'rest/workspaces/geonode/styles.json'
+            )
+            r = requests.get(url)
+            if r.status_code == 200:
+                default_styles_geoserver = (
+                    r.json()['styles']['style']
+                )
+        except KeyError:
+            pass
+
+        if default_styles_geoserver:
+            for default_style in default_styles_geoserver:
+                if default_style['name'] == geonode_layer.name:
+                    style_url = default_style['href'].replace(
+                        '.json', '.sld'
+                    )
 
     current_site = Site.objects.get_current()
     if 'example' not in current_site.domain:
@@ -173,21 +186,8 @@ class DatasetFileSerializer(serializers.ModelSerializer):
         geonode_layer = None
         style = None
         clipped_boundary = self.context.get('clipped_boundary', None)
-        default_styles_geoserver = self.context.get('default_styles_geoserver', None)
-        self.context['default_styles_geoserver'] = {}
-
-        if not default_styles_geoserver:
-            try:
-                url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/rest/workspaces/geonode/styles.json'
-                r = requests.get(url)
-                if r.status_code == 200:
-                    self.context['default_styles_geoserver'] = (
-                        r.json()['styles']['style']
-                    )
-            except KeyError:
-                self.context['default_styles_geoserver'] = {}
-
         layer_file = None
+
         if clipped_boundary:
             clipped_layer = ClippedLayer.objects.filter(
                 layer=obj.geonode_layer,
@@ -219,8 +219,7 @@ class DatasetFileSerializer(serializers.ModelSerializer):
         if obj.use_geonode_layer and obj.geonode_layer:
             geonode_layer, style = geonode_layer_links(
                 obj.geonode_layer,
-                obj.category.geography,
-                self.context['default_styles_geoserver']
+                obj.category.geography
             )
         if layer_file:
             geonode_layer = layer_file
