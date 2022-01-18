@@ -1,7 +1,9 @@
 import os.path
 import time
 import json
-from pandas import json_normalize
+
+import requests
+from pandas import json_normalize, DataFrame
 from datetime import datetime
 
 import numpy as np
@@ -19,10 +21,36 @@ def read_json(geojson_file):
     df = None
     if os.path.exists(geojson_file):
         with open(geojson_file) as f:
-            data = json.load(f)
-            df = json_normalize(data['features'])
+            try:
+                data = json.load(f)
+                df = json_normalize(data['features'])
+            except UnicodeDecodeError:
+                pass
     return df
 
+
+def get_geojson_from_geoserver(layer: Layer):
+    geojson_link = layer.link_set.filter(
+        name__icontains='geojson').first()
+
+    geojson_layer_dir = os.path.join(
+        settings.MEDIA_ROOT,
+        'geojson_layers'
+    )
+    if not os.path.exists(geojson_layer_dir):
+        os.mkdir(geojson_layer_dir)
+
+    geojson_file_path = os.path.join(
+        geojson_layer_dir,
+        f'{layer.name}.json'
+    )
+
+    if not os.path.exists(geojson_file_path):
+        r = requests.get(url=geojson_link.url)
+        with open(geojson_file_path, 'wb') as outfile:
+            outfile.write(r.content)
+
+    return geojson_file_path
 
 def calculate_household(geography: Geography, boundary_id: str):
 
@@ -49,20 +77,14 @@ def calculate_household(geography: Geography, boundary_id: str):
         except:  # noqa
             vector_file = settings.MEDIA_ROOT + str(clipped_layer.clipped_file)
     else:
-        try:
-            base_file = geography.household_layer.get_base_file()[0].file
-        except:  # noqa
-            base_file = (
-                geography.household_layer.upload_session.layerfile_set.all(
-                ).filter(
-                    file__icontains='shp'
-                ).first().file
-            )
-        vector_file = base_file.path
-    features = read_json(vector_file)
-    if not features.empty:
-        total_household = features.sum()['properties.{}'.format(
-            geography.household_layer_field)]
+        # find json file
+        vector_file = get_geojson_from_geoserver(geography.household_layer)
+
+    if 'json' in vector_file:
+        features = read_json(vector_file)
+        if isinstance(features, DataFrame) and not features.empty:
+            total_household = features.sum()['properties.{}'.format(
+                geography.household_layer_field)]
 
     return {
         'layer': vector_file,
@@ -85,20 +107,12 @@ def calculate_cooking_with_traditional(geography: Geography, boundary_id: str):
             clipped_layer = clip_layer_by_region(
                 clipped_layer.id
             )
-        vector_file = clipped_layer.clipped_file
+        vector_file = clipped_layer.clipped_file.path
     else:
-        try:
-            base_file = geography.cooking_percentage_layer.get_base_file()[0].file
-        except:  # noqa
-            base_file = (
-                geography.cooking_percentage_layer.upload_session.layerfile_set.all(
-                ).filter(
-                    file__icontains='shp'
-                ).first().file
-            )
-        vector_file = base_file
+        vector_file = get_geojson_from_geoserver(
+            geography.cooking_percentage_layer)
 
-    features = read_json(vector_file.path)
+    features = read_json(vector_file)
     if not features.empty:
         if boundary_id:
             # todo: get the largest area
@@ -116,7 +130,7 @@ def calculate_cooking_with_traditional(geography: Geography, boundary_id: str):
                 )]
 
     return {
-        'layer': vector_file.url,
+        'layer': vector_file,
         'success': True,
         'execution_time': time.time() - start_time,
         'percentage': percentage
