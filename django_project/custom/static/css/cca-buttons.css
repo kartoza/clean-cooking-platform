@@ -1,4 +1,4 @@
-.btn-cca-primary {
+.btn-cca-primary, .btn-cca-secondary     {
     color: #00689C;
     display: flex;
     border-color: #00689C;
@@ -6,9 +6,16 @@
     border-radius: 6px !important;
     box-shadow: 0 0.375em 0 currentColor;
     border-width: 2px;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
 }
 
-.btn-cca-primary:hover {
+.btn-cca-secondary {
+    color: #356635;
+    border-color: #356635;
+}
+
+.btn-cca-primary:hover, .btn-cca-secondary:hover {
     -webkit-transition: background 0.3s; /* For Safari */
     transition: background 0.3s; /* For modern browsers */
     border-color: #00689C;
@@ -16,7 +23,12 @@
     box-shadow: 0 0.375em 0 currentColor;
 }
 
-.btn-cca-primary:disabled {
+.btn-cca-secondary:hover {
+    color: #356635;
+    border-color: #356635;
+}
+
+.btn-cca-primary:disabled, .btn-cca-secondary:disabled {
     box-shadow: 0 0.375em 0 currentColor;
     color: #969393;
     border-color: #e0e0e0;
@@ -29,7 +41,19 @@
     box-shadow: 0 0.375em 0 currentColor;
 }
 
+.btn-cca-secondary:not([disabled]):active, .btn-cca-secondary:not([disabled]):focus {
+    background: #ffffff !important;
+    color: #356635;
+    border-color: #356635;
+    box-shadow: 0 0.375em 0 currentColor;
+}
+
 .btn-cca-primary:not([disabled]):active {
     box-shadow: 0 0.20em 0 #105e81;
+    transform: translateY(4px);
+}
+
+.btn-cca-secondary:not([disabled]):active {
+    box-shadow: 0 0.20em 0 #356635;
     transform: translateY(4px);
 }
