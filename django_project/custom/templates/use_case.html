@@ -8,9 +8,11 @@
           rel="stylesheet">
     <link href="{% static "css/loading.css" %}" rel="stylesheet"/>
     <link href="{% static "css/breadcrumb.css" %}" rel="stylesheet"/>
+    <link href="{% static "css/cca-buttons.css" %}" rel="stylesheet"/>
     <style>
         .card {
-            margin: 0 !important;
+            margin: 0 0 10px 0 !important;
+            border: 3px solid #00689c;
         }
         h3 {
             font-size: 2.5rem !important;
@@ -19,6 +21,9 @@
             font-size: 0.8em;
             margin-bottom: -10px;
             margin-top: -10px;
+        }
+        .btn {
+            margin-left: auto;
         }
     </style>
 {% endblock %}
@@ -67,7 +72,7 @@
 
                 <div class="text-right">
                     <!-- text-right = text-align: right -->
-                    <button onclick="exploreScenario(this)" data-id="{{ preset.id }}" class="btn">Explore Scenarios</button>
+                    <button  onclick="exploreScenario(this)" data-id="{{ preset.id }}" class="btn btn-cca-primary">Explore Scenarios</button>
                 </div>
             </div>
         {% endfor %}

@@ -225,7 +225,7 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
     const geoId = selectedGeo.value;
     const subRegionSelector = selectedGeo.dataset[subregionSelect.value];
     const subRegionValue = subregionPropertySelect.value;
-    if (subRegionSelector && subRegionValue) {
+    if (subRegionSelector && subRegionValue !== '-') {
       discoverBtn.querySelector('.text').innerHTML = 'Generating raster';
       discoverBtn.disabled = true;
     } else {
