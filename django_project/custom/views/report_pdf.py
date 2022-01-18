@@ -490,8 +490,10 @@ class ReportPDFView(View):
 
         table_data = [
             ['', self.subregion],
-            ['Population', '{:,}'.format(math.trunc(self.total_population))],
-            ['Households', '{:,}'.format(math.trunc(self.total_household))],
+            ['Population', '{:,}'.format(
+                math.trunc(float(self.total_population)))],
+            ['Households', '{:,}'.format(
+                math.trunc(float(self.total_household)))],
             ['Urban ratio', '{:,.2f}%'.format(urban_ratio)],
             ['% of population relying on\n\n\npolluting fuels and '
              'technologies',
