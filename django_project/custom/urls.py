@@ -6,8 +6,8 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from custom.proxy import proxy_request
 from custom.views import HomeView, map_view_with_slug, ToolView, GeographyView
-from custom.views.preset import UseCaseView
-from custom.views.report import ReportView
+from custom.views.use_case import UseCaseView
+from custom.views.scenario import ScenarioView
 from custom.views.summary_report import SummaryReportView
 from custom.views.report_pdf import ReportPDFView
 
@@ -46,7 +46,7 @@ urlpatterns = [
         view=UseCaseView.as_view(),
         name='use-case-selection'),
     url(r'^scenario/$',
-        view=ReportView.as_view(),
+        view=ScenarioView.as_view(),
         name='scenario'),
     url(r'^generate-report-pdf/$', view=ReportPDFView.as_view())
 ]

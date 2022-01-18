@@ -1,21 +1,16 @@
-import io
-
 from django.conf import settings
 from django.views.generic import TemplateView
-from django.http import FileResponse
-
-from reportlab.pdfgen import canvas
 
 from custom.models import Geography, Category
 from custom.models.use_case import UseCase
 from custom.serializers.preset_serializer import PresetSerializer
 
 
-class ReportView(TemplateView):
+class ScenarioView(TemplateView):
     template_name = 'reports.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ReportView, self).get_context_data(**kwargs)
+        context = super(ScenarioView, self).get_context_data(**kwargs)
 
         context['geoserver_url'] = settings.GEOSERVER_PUBLIC_LOCATION
         context['use_case'] = UseCase.objects.get(
