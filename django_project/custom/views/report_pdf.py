@@ -368,8 +368,6 @@ class ReportPDFView(View):
     def _calculate_ani_data(self, ani_categories):
         result = []
         boundary = self.boundary
-        if not boundary:
-            boundary = 'All'
         for ani_category in ani_categories:
             summary_result_data = calculate_poverty_supply_layer_distance(
                 self.geography, boundary, ani_category.supply_layer)
