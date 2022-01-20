@@ -36,37 +36,11 @@ function _calculateRatio(x, y) {
 	return [x/gcdValue, y/gcdValue];
 }
 
-
-export async function downloadReport(sourceWidth = null, sourceHeight = null, destinationWidth = null, destinationHeight = null) {
-
-	let buttonText = document.getElementById('report-btn-text');
-	let button = document.getElementById('summary-button');
-
-	button.disabled = true;
-	buttonText.innerHTML = 'Generating...'
-
-	let url = '/generate-report-pdf/';
-	let request = new XMLHttpRequest();
-	let fd = new FormData();
-
-	MAPBOX.fitBounds(BBOX, {padding: 100, duration: 0});
-
-	try {
-		document.getElementById('view-inputs').click()
-		await delay(2);
-	} catch (e) {
-		await delay(1);
-	}
-
+function getMapImage(sourceWidth, sourceHeight, destinationWidth, destinationHeight) {
 	let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
-	let ratio = null;
 
-	if (destinationWidth !== null && destinationHeight !== null) {
-		ratio = _calculateRatio(destinationWidth, destinationHeight)
-	}
-
-	let width = sourceWidth || mapCanvas.clientWidth;
-	let height = sourceHeight || mapCanvas.clientHeight;
+	let width = sourceWidth || mapCanvas.width;
+	let height = sourceHeight || mapCanvas.height;
 
 	// Height never changes, so we calculate source size based on height
 	if (ratio) {
@@ -79,7 +53,6 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 	const canvas = document.getElementById('output-clone');
 	const ctx = canvas.getContext("2d");
 
-
 	canvas.width = destinationWidth;
 	canvas.height = destinationHeight;
 	// ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight,
@@ -90,7 +63,92 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 		0,0,
 		destinationWidth, destinationHeight
 	);
-	let mapImage = canvas.toDataURL('image/png', 1.0);
+	return canvas.toDataURL('image/png', 1.0);
+}
+
+export async function downloadReport(sourceWidth = null, sourceHeight = null, destinationWidth = null, destinationHeight = null, addedLayers = null) {
+
+	MAPBOX.dragPan.disable();
+	MAPBOX.scrollZoom.disable();
+
+	let buttonText = document.getElementById('report-btn-text');
+	let button = document.getElementById('summary-button');
+
+	button.disabled = true;
+	buttonText.innerHTML = 'Generating...'
+
+	let url = '/generate-report-pdf/';
+	let fd = new FormData();
+
+	MAPBOX.fitBounds(BBOX, {padding: 100, duration: 0});
+
+	try {
+		document.getElementById('view-inputs').click()
+		await delay(2);
+	} catch (e) {
+		await delay(1);
+	}
+
+	let ratio = null;
+
+	if (destinationWidth !== null && destinationHeight !== null) {
+		ratio = _calculateRatio(destinationWidth, destinationHeight)
+	}
+
+	if (addedLayers) {
+		for (let i = 0; i < addedLayers.length; i++) {
+			DST.get(addedLayers[i]).visibility(false)
+		}
+		let last_active = null;
+		for (let i = 0; i < addedLayers.length; i++) {
+			if (last_active) {
+				last_active.visibility(false);
+			}
+			let layerFile = DST.get(addedLayers[i]).vectors || DST.get(addedLayers[i]).raster;
+			let geonodeLayer = layerFile.geonode_layer;
+			if (!geonodeLayer) continue;
+			DST.get(addedLayers[i]).visibility(true)
+			last_active = DST.get(addedLayers[i]);
+			await delay(0.5)
+
+			let fd = new FormData();
+			fd.append('boundaryUuid', boundary);
+			fd.append('presetId', PRESET_ID);
+			fd.append('geonodeLayer', geonodeLayer);
+			let destinationHeight = 480;
+			let destinationWidth = 900;
+
+			const canvas = document.getElementById('output-clone');
+			const ctx = canvas.getContext("2d");
+			let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+
+			let width = mapCanvas.width;
+			let height = mapCanvas.height;
+
+			if (ratio) {
+				width = height / ratio[1] * ratio[0]
+			}
+
+			canvas.width = destinationWidth;
+			canvas.height = destinationHeight;
+
+			// ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight,
+			// destinationX, destinationY, destinationWidth, destinationHeight);
+			ctx.drawImage(mapCanvas,
+				(mapCanvas.width / 2) - (width / 2), 0,
+				width, height,
+				0, 0,
+				destinationWidth, destinationHeight
+			);
+			let mapImage = canvas.toDataURL('image/png', 1.0);
+			fd.append('image', mapImage);
+			await api_post('/api/map-image-api/', fd);
+		}
+		for (let i = 0; i < addedLayers.length; i++) {
+			DST.get(addedLayers[i]).visibility(true)
+		}
+		await delay(0.5)
+	}
 
 	try {
 		document.getElementById('view-outputs').click()
@@ -163,7 +221,7 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 	fd.append('totalPopulation', totalPopulation | 0)
 	fd.append('geoId', geoId);
 	fd.append('subRegion', subRegion);
-	fd.append('mapImage', mapImage);
+	// fd.append('mapImage', mapImage);
 	fd.append('useCaseId', useCaseId);
 	fd.append('scenarioId', presetId);
 	fd.append('boundary', boundary);
@@ -184,7 +242,18 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 
 		document.body.removeChild(link);
 
-		button.disabled = false;
-		buttonText.innerHTML = 'Clean Cooking Access Report'
+	} else {
+		ea_flash.push({
+			type: 'error',
+			timeout: 5000,
+			title: "Download error",
+			message: `Error downloading the report, please try again later.`
+		});
 	}
+
+	button.disabled = false;
+	buttonText.innerHTML = 'Clean Cooking Access Report'
+
+	MAPBOX.dragPan.enable();
+	MAPBOX.scrollZoom.enable();
 }

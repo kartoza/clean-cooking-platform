@@ -6,7 +6,8 @@ from preferences.admin import PreferencesAdmin
 from adminsortable2.admin import SortableAdminMixin
 from geonode.layers.models import Layer
 
-from .models import SummaryReportResult, SummaryReportCategory, SummaryReportDataset
+from .models import SummaryReportResult, SummaryReportCategory, \
+    SummaryReportDataset, MapImage
 from .models.geography import Geography
 from .models.category import Category
 from .models.dataset_file import DatasetFile
@@ -222,6 +223,13 @@ class SummaryReportCategoryAdmin(admin.ModelAdmin):
         return form
 
 
+class MapImageAdmin(admin.ModelAdmin):
+    list_filter = ('preset',)
+    list_display = (
+        'preset', 'image', 'geonode_layer',
+        'created_at')
+
+
 admin.site.register(Geography, GeographyAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CCAPreferences, PreferencesAdmin)
@@ -234,3 +242,4 @@ admin.site.register(ClippedLayer, ClippedLayerAdmin)
 admin.site.register(SummaryReportResult, SummaryReportResultAdmin)
 admin.site.register(SummaryReportCategory, SummaryReportCategoryAdmin)
 admin.site.register(SummaryReportDataset)
+admin.site.register(MapImage, MapImageAdmin)

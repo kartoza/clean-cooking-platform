@@ -22,7 +22,7 @@ async function fetchcheck(endpoint, format) {
 export function fail(msg) {
 	const err = msg || "";
 
-	if (this.id === 'boundaries')
+	if (this && this.id === 'boundaries')
 		ea_super_error("Dataset error", `
 Failed to process dataset '${this.name}'.
 
