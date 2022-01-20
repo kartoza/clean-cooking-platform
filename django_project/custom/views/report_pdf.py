@@ -86,6 +86,7 @@ class ReportPDFView(View):
     total_poverty = 0
     boundary = ''
     categories = []
+    table_supply_demand_y_pos = 0
 
     default_font = 'AktivGroteskCorpMedium'
     default_font_bold = 'AktivGroteskCorpBold'
@@ -195,6 +196,7 @@ class ReportPDFView(View):
         table.setStyle(TableStyle(table_style))
         table.wrapOn(canvas, table_width, table_height)
         table.drawOn(canvas, table_x, table_y)
+        self.table_supply_demand_y_pos = table_y
 
     def _draw_wrapped_line(self, canvas, text, length, x_pos, y_pos, y_offset):
         """
@@ -494,15 +496,16 @@ class ReportPDFView(View):
             ['Households', '{:,}'.format(
                 math.trunc(float(self.total_household)))],
             ['Urban ratio', '{:,.2f}%'.format(urban_ratio)],
-            ['% of population relying on\n\n\npolluting fuels and '
+            ['Population relying on\n\n\npolluting fuels and '
              'technologies',
              '{:,.2f}%'.format(self.total_cooking_percentage)],
             ['Portion under the poverty line',
              '{:,.2f}%'.format(poverty_percentage)]
         ]
 
-        table_y = y_pos - 100
+        self._draw_supply_demand_table(page, y_pos)
 
+        table_y = y_pos - 100
         for table_summary_data in self.table_summary_data:
             table_data.append(table_summary_data)
             table_y -= (50 * table_summary_data[0].count('\n\n\n')) + 50
@@ -512,20 +515,12 @@ class ReportPDFView(View):
         table_height = 1000
 
         table_style = [
-            ('GRID', (0, 0), (-1, -1), 0.25, colors.Color(
-                red=220 / 255, green=220 / 255, blue=220 / 255)),
-            ('INNERGRID', (0, 0), (0, 1), 0.25, colors.Color(
-                0.341, 0.553, 0.267
-            )),
-            ('INNERGRID', (1, 0), (1, 1), 0.25, colors.Color(
-                0.341, 0.553, 0.267
-            )),
+            ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
             ('FONTNAME', (0, 0), (1, 0), self.default_font_bold),
-            ('FONTNAME', (0, 0), (0, -1), self.default_font_bold),
             ('BACKGROUND', (0, 0), (1, -1), colors.white),
             ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
                 red=29 / 255, green=63 / 255, blue=116 / 255)),
-            ('FONTSIZE', (0, 0), (1, -1), 28),
+            ('FONTSIZE', (0, 0), (1, -1), 23),
             ('RIGHTPADDING', (0, 0), (1, -1), 50),
             ('LEFTPADDING', (0, 0), (1, -1), 20),
             ('BOTTOMPADDING', (0, 0), (1, -1), 30),
@@ -534,9 +529,7 @@ class ReportPDFView(View):
         table = Table(table_data, colWidths=[6.4 * inch, 4 * inch])
         table.setStyle(TableStyle(table_style))
         table.wrapOn(page, table_width, table_height)
-        table.drawOn(page, table_x, table_y)
-
-        self._draw_supply_demand_table(page, y_pos)
+        table.drawOn(page, table_x, self.table_supply_demand_y_pos)
 
         self._draw_footer(page, 2)
         page.showPage()
