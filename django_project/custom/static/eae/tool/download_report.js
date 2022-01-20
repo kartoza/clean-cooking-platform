@@ -109,7 +109,7 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 			if (!geonodeLayer) continue;
 			DST.get(addedLayers[i]).visibility(true)
 			last_active = DST.get(addedLayers[i]);
-			await delay(1)
+			await delay(0.5)
 
 			let fd = new FormData();
 			fd.append('boundaryUuid', boundary);
@@ -147,7 +147,7 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 		for (let i = 0; i < addedLayers.length; i++) {
 			DST.get(addedLayers[i]).visibility(true)
 		}
-		await delay(1)
+		await delay(0.5)
 	}
 
 	try {
