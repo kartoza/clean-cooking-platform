@@ -2,6 +2,7 @@ function _request(method, url, data=null) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
         xhr.open(method, url);
+        xhr.setRequestHeader('X-CSRFToken', csrfToken);
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
                 resolve({

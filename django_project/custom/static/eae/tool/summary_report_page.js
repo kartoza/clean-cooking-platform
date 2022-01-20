@@ -1,4 +1,4 @@
-import api_get from "./api.js";
+import api_get, {api_post} from "./api.js";
 import DS from "./ds.js";
 import Overlord from "./overlord.js";
 import run, {
@@ -392,7 +392,7 @@ document.getElementById('summary-button').onclick = async (e) => {
 	USE_CASE_ID = useCaseId;
 	PRESET_NAME = scenarioSelect.options[scenarioSelect.selectedIndex].text;
 
-	await downloadReport(null, null, 750, 400);
+	await downloadReport(null, null, 750, 400, addedLayers);
 }
 
 export function convertBounds(bounds) {

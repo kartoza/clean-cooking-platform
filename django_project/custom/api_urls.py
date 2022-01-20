@@ -13,6 +13,7 @@ from custom.api_views.subregion import (
     ClipLayerByRegion
 )
 from custom.api_views.style import StyleApiView
+from custom.api_views.map_image import MapImageApiView
 
 urlpatterns = [
     url(r'^geography/$',
@@ -33,6 +34,8 @@ urlpatterns = [
         ClipLayerByRegion.as_view()),
     url(r'^style-api/$',
         StyleApiView.as_view()),
+    url(r'^map-image-api/$',
+        MapImageApiView.as_view()),
     url(r'^calculate-report/$',
         CalculateReport.as_view())
 ]

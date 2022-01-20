@@ -11,3 +11,4 @@ from .clipped_layer import *
 from .summary_report_result import *
 from .summary_report_category import *
 from .summary_report_dataset import *
+from .map_image import *

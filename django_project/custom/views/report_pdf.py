@@ -1,10 +1,13 @@
 import io
 import math
+import os.path
 import textwrap
 
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
+import requests
+from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.http import FileResponse
@@ -25,7 +28,7 @@ from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from core.settings.utils import absolute_path
 from custom.models import (
     Geography, UseCase, Preset,
-    SummaryReportCategory, SummaryReportResult, SummaryReportDataset
+    SummaryReportCategory, SummaryReportResult, SummaryReportDataset, MapImage
 )
 from custom.tools.report_calculation import (
     calculate_household, calculate_urban, calculate_cooking_with_traditional,
@@ -82,6 +85,7 @@ class ReportPDFView(View):
     total_cooking_percentage = 0
     total_poverty = 0
     boundary = ''
+    categories = []
 
     default_font = 'AktivGroteskCorpMedium'
     default_font_bold = 'AktivGroteskCorpBold'
@@ -117,13 +121,10 @@ class ReportPDFView(View):
             'other': []
         }
 
-        parsed_url = urlparse(self.preset.permalink)
-        captured_value = parse_qs(parsed_url.query)['inputs'][0]
-        categories = category_from_url(captured_value.split(','))
         population_added = False
         table_y = y_pos - 30
 
-        for category in categories:
+        for category in self.categories:
             if 'population' in category.name_long.lower():
                 population_added = True
             if category.demand_index:
@@ -540,9 +541,11 @@ class ReportPDFView(View):
         self._draw_footer(page, 2)
         page.showPage()
 
-    def draw_page_three(self, page):
+    def draw_map_page(
+            self, page, map_image, title = '', legend_data = None,
+            page_number=3):
         page.drawImage(
-            self.map_image, 75, 30,
+            map_image, 75, 30,
             width=1825,
             height=975,
             preserveAspectRatio=True,
@@ -551,11 +554,57 @@ class ReportPDFView(View):
         page.setFillColorRGB(1, 1, 1)
         page.rect(0, 0, self.page_width, self.navbar_height + 5,
                   stroke=0, fill=1)
-        self._draw_footer(page, 3)
-        self._draw_title(page, '', self.subregion, False)
+        self._draw_footer(page, page_number)
+        self._draw_title(page, '', title, False)
 
+        if legend_data:
+            legend_png_dir = os.path.join(settings.MEDIA_ROOT, 'legend_pngs')
+            not os.path.exists(legend_png_dir) and os.mkdir(legend_png_dir)
+            legend_png = os.path.join(
+                legend_png_dir, f'{legend_data["name"]}.png')
+            if not os.path.exists(legend_png):
+                img_data = requests.get(legend_data['url']).content
+                with open(legend_png, 'wb') as handler:
+                    handler.write(img_data)
+            legend_img = ImageReader(legend_png)
+            page.drawImage(legend_img, 80, 60, mask='auto')
 
         page.showPage()
+
+    def draw_page_three(self, page):
+        self.draw_map_page(page, self.map_image, self.subregion)
+
+    def draw_all_layers(self, page, page_number = 5):
+        map_images = MapImage.objects.filter(
+            preset=self.preset,
+            boundary_uuid=self.boundary
+        )
+        for map_image in map_images:
+            legend = (
+                map_image.geonode_layer.link_set.filter(
+                    name__icontains='legend').first()
+            )
+            legend_data = None
+            if legend:
+                legend_data = {
+                    'name': map_image.geonode_layer.name,
+                    'url': legend.url
+                }
+            title = 'Map Layer'
+            try:
+                title = (
+                    self.categories.filter(
+                        datasetfile__in=
+                        map_image.geonode_layer.datasetfile_set.all()
+                    ).first().name_long
+                )
+            except:  # noqa
+                pass
+            self.draw_map_page(page,
+                               map_image.image.path,
+                               title, legend_data, page_number)
+            page_number += 1
+            PageBreak()
 
     def draw_ccp_page(self, page, page_number = 3):
         if not self.demand_image:
@@ -840,6 +889,10 @@ class ReportPDFView(View):
             except Preset.DoesNotExist:
                 pass
 
+        parsed_url = urlparse(self.preset.permalink)
+        captured_value = parse_qs(parsed_url.query)['inputs'][0]
+        self.categories = category_from_url(captured_value.split(','))
+
         # Create the PDF object, using the buffer as its "file."
         p = canvas.Canvas(buffer)
         p.setPageSize((self.page_width, self.page_height))
@@ -847,8 +900,6 @@ class ReportPDFView(View):
         self.draw_page_one(p)
         PageBreak()
         self.draw_page_two(p)
-        PageBreak()
-        self.draw_page_three(p)
         PageBreak()
 
         current_page_number = 4
@@ -872,7 +923,11 @@ class ReportPDFView(View):
         if self.summary_categories.filter(analysis='supply_demand').exists():
             if self.demand_image and self.supply_image:
                 self.draw_supply_and_demand(p, current_page_number)
+                current_page_number += 1
                 PageBreak()
+
+        self.draw_all_layers(p, current_page_number)
+        PageBreak()
 
         self.draw_page_end(p)
         PageBreak()
