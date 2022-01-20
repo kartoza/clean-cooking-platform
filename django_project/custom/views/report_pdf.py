@@ -705,7 +705,7 @@ class ReportPDFView(View):
             page,
             'This is an aggregated and weighted measure of all selected '
             'datasets under the Demand category. Identifies areas with '
-            'higher energy demand',
+            'higher energy demand.',
             70,
             75, self.page_height - 900, 40)
 
@@ -713,7 +713,7 @@ class ReportPDFView(View):
             page,
             'This index is an aggregated and weighted measure of all '
             'selected datasets under the Supply category. Identifies '
-            'areas with potential for clean cooking energy supply',
+            'areas with potential for clean cooking energy supply.',
             70,
             1100, self.page_height - 900, 40)
 
