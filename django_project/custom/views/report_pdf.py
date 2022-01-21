@@ -650,7 +650,7 @@ class ReportPDFView(View):
 
         self._draw_sidebar(page)
         self._draw_footer(page, page_number)
-        self._draw_title(page, 'Analysis', 'Assistance Needed index')
+        self._draw_title(page, 'Analysis', 'Assistance Needed Index')
         self._draw_map(page, self.ani_image, self.ani_legend_path)
         self._draw_summary(page, self.ani_summary)
 
