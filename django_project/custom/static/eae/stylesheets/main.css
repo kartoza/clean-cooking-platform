@@ -388,7 +388,9 @@ section.hero-large {
 }
 
 section.hero-large.size-large .content {
-    min-height: 365px;
+    min-height: 415px;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 section.hero-large .content {

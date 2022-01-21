@@ -49,58 +49,142 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-4" style="background-color: #0280bf; color: white;  border-bottom-left-radius: 2em; padding: 1.8em 3em">
+                    <div class="col-lg-2 col-sm-1"></div>
+                    <div class="col-lg-4 col-sm-12" style="background-color: #0280bf; color: white;  border-bottom-left-radius: 2em; padding: 1.8em 3em">
                         <h3 style="color: white; font-weight: 600">Clean Cooking Explorer</h3>
                         <p class="content-description" style="line-height: 1.8">
                             The Clean Cooking Explorer utilizes geospatial data in a multi-criteria analysis to identify the state of access to clean cooking.
                             The tool enables users to identify areas with high expansion potential as well as areas where assistance is needed, making it a useful tool for both policy makers and private investors.
                         </p>
                     </div>
-                    <div class="col-4"  style="background-color: #578C43; color: white; border-bottom-right-radius: 2em;  padding: 1.8em 3em">
-                        <h3 style="color: white; font-weight: 600">OnSSTOVE</h3>
+                    <div class="col-lg-4 col-sm-12"  style="background-color: #578C43; color: white; border-bottom-right-radius: 2em;  padding: 1.8em 3em">
+                        <h3 style="color: white; font-weight: 600; margin-bottom: 0">OnSSTOVE</h3>
+                        <div class="badge badge-secondary" style="margin-bottom: 2rem;">Coming Soon</div>
                         <p class="content-description" style="line-height: 1.8">
                             OnSSTOVE is a geospatial modelling tool that uses techno- and socio-economic data in order to estimate the potential of adopting different improved and clean cooking solutions.
                             The tool determines the net-benefits of each cooking solution and presents scenarios with the highest net-benefit option for every settlement.
                         </p>
                     </div>
-                    <div class="col-2"></div>
+                    <div class="col-lg-2 col-sm-1"></div>
                 </div>
                 <div style="height: 20px"></div>
-{#                <div class="methodology-desc-left">#}
-{#                    <p class="content-description" style="line-height: 1.8">#}
-{#                        CCE includes a multi-criteria analysis tool that uses location-specific resource availability and infrastructure data to represent clean cooking energy supply.#}
-{#                        It also incorporates demographic data and data on social and productive uses to visualize demand for clean cooking solutions.#}
-{#                        Together, these supply and demand indicators enable more comprehensive energy planning.#}
-{#                        Spatial analysis tools, including multi-criteria analysis, overlays, filters, and buffer zones, help users identify and prioritize areas to enable the adoption of clean cooking solutions.#}
-{#                    </p>#}
-{#                </div>#}
-{#                <div style="height: 20px;"></div>#}
-{#                <div class="methodology-desc-right">#}
-{#                    <p class="content-description" style="line-height: 1.8">#}
-{#                        The tool incorporates remote sensing data as well as data from global, national, sub-national and census databases that are either publicly available or provided by international partners and local stakeholders.#}
-{#                        It can host data available in various resolutions, scales and formats allowing for better or new datasets to be incorporated once available.#}
-{#                        The selection of data is based on a literature review, international and local stakeholder engagement,#}
-{#                        and surveys conducted on the importance of certain datasets, relevant actors, tools and analyses in geospatial clean cooking planning.#}
-{#                        The list of essential data is reviewed by local stakeholders to ensure the platform is relevant and applicable in the local context.#}
-{#                    </p>#}
-{#                </div>#}
             </div>
         </section>
 
-        <section class="methodology-section" style="background-color: #ebf5fa;">
+        <section class="methodology-section" style="background-color: #ebf5fa; flex-direction: column; padding-top: 0">
+             <div class="section-title">
+                 <div class="content flex-center" style="text-align: center">
+                     <h2 class="h4 blue-text">The Clean Cooking Explorer uses a GIS-based multi-criteria analysis to identify the state of access to clean cooking</h2>
+                 </div>
+             </div>
             <div class="methodology-content">
-                <img src="{% static "img/methodology1.png" %}" width="100%"/>
+                <img src="{% static "img/methodology__1.png" %}" width="100%"/>
             </div>
         </section>
-        <section class="methodology-section">
+        <section class="methodology-section" style="background-color: white; flex-direction: column; padding-top: 0">
+            <div class="section-title">
+                 <div class="content flex-center" style="text-align: center">
+                     <h2 class="h4">Approach followed in the Clean Cooking Explorer Analysis</h2>
+                 </div>
+             </div>
             <div class="methodology-content">
-                <img src="{% static "img/methodology2.png" %}" width="100%"/>
+                <img src="{% static "img/methodology__2.png" %}" width="100%"/>
             </div>
         </section>
-        <section class="methodology-section" style="background-color: rgba(128,173,75,.1); ">
+        <section class="methodology-section" style="background-color: #edf5f9; ">
+            <h3 class="h4"><strong class="blue-text">Supply Index</strong></h3>
             <div class="methodology-content">
-                <img src="{% static "img/methodology3.png" %}" width="100%"/>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <img src="{% static "img/methodology__3.png" %}" width="100%"/>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p>
+                            The <b>Supply Index</b> is the weighted sum of normalized distances to existing infrastructure and areas with high fuel potential (for biogas).
+                            The <b>Supply index</b> varies according to the datasets that the user has selected from the supply side.
+                            Equation 1, shows how the index is calculated where w is a weighing factor for the i-th Normalized Supply Data set (NSD),
+                            referring to the normalized values of data under the supply group.
+                            The final displayed Normalized Su
+                            pply Index (NSI) is computed as described in equation 2.
+                        </p>
+                        <div style="display: flex">
+                            <img style="margin-left: auto; margin-right: auto;" src="{% static "img/methodology__3_1.png" %}" width="60%"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="methodology-section" style="background-color: white;">
+            <h3 class="h4"><strong class="blue-text">Filters</strong></h3>
+            <div class="methodology-content">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <img src="{% static "img/methodology__4.png" %}" width="100%"/>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p>
+                            The explorer enables users to filter out certain results. This gives investors, policy makers,
+                            donors and planners the ability to focus on specific parts of the study area.
+                            <br/>
+                            This is helpful if one wishes to focus on e.g. a specific region of the country or population under the poverty line.
+                            <br/>
+                            Using the filters, the <b>Clean Cooking Index</b> can be used to identify which of the priority areas have more potential depending on the
+                            datasets selected in the <b>Demand</b> and <b>Supply</b> categories.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="methodology-section" style="background-color: #edf5f9; ">
+            <h3 class="h4"><strong class="blue-text">Clean Cooking Potential Index</strong></h3>
+            <div class="methodology-content">
+                <div class="row">
+                     <div class="col-lg-6 col-sm-12">
+                        <img src="{% static "img/methodology__5.png" %}" width="100%"/>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p>
+                            With the filters included the aggregated demand and
+                            supply indices are calculated and combined to form
+                            the <b>Clean Cooking Potential Index</b>.
+                            <br/>
+                            Different weights can be applied to different
+                            datasets. Areas with high demand, close to supply
+                            systems, good fuel availability and high ability to
+                            pay have a positive impact on the <b>Clean Cooking
+                            Potential Index</b>.
+                            <br/>
+                            The user can impact the importance of different
+                            datasets in the index by altering the weight of
+                            each dataset.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="methodology-section" style="background-color: white; ">
+            <h3 class="h4"><strong class="blue-text">Assistance Needed Index</strong></h3>
+            <div class="methodology-content">
+                <div class="row">
+                     <div class="col-lg-6 col-sm-12">
+                        <img src="{% static "img/methodology__6.png" %}" width="100%"/>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p>
+                            The <b>Assistance Needed Index</b> identifies population
+                            and regions that may be in need of financial
+                            assistance for adopting clean cooking solutions.
+                            <br/>
+                            Areas with the potential to develop economic
+                            activity and a significant clean cooking demand,
+                            may require more financial
+                            support. Same also holds true for areas with lower
+                            current economic activity (low wealth and low GDP)
+                            and areas with insufficient supply (far away from
+                            supply technologies).
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
     </section>
