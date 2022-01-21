@@ -87,8 +87,9 @@ body {
   height: calc(100% - 7em);
   padding: 0;
   margin: 0;
-  font-family: 'Aktiv Grotesk Corp', sans-serif;
+  font-family: 'Aktiv Grotesk Corp', sans-serif !important;
   background-color: #f8f8f8;
+  font-size: initial !important;
   color: var(--the-color);
 }
 

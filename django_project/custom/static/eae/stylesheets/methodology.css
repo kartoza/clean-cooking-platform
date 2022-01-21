@@ -20,3 +20,19 @@
     width: unset;
   }
 }
+
+.methodology-section {
+  flex-direction: column;
+}
+
+.methodology-section>.h4 {
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 1em;
+}
+
+.methodology-content>.row p {
+  font-size: 1.2em;
+  padding-left: 1.2em;
+  margin-top: 0;
+}
