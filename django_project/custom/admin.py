@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.postgres import fields
 from django.utils.html import format_html
 from django_json_widget.widgets import JSONEditorWidget
+from django.contrib import messages
 from preferences.admin import PreferencesAdmin
 from adminsortable2.admin import SortableAdminMixin
 from geonode.layers.models import Layer
@@ -196,12 +197,17 @@ class SummaryReportResultAdmin(admin.ModelAdmin):
        'created_at', 'dataset_file'
     )
 
+def test_calculation(modeladmin, request, queryset):
+    # TODO : test analysis calculation here
+    modeladmin.message_user(request, 'Done', messages.SUCCESS)
+
+test_calculation.short_description = 'Test calculation'
 
 class SummaryReportCategoryAdmin(admin.ModelAdmin):
     change_form_template = 'admin/custom/summary_report_category/change_form.html'
     autocomplete_fields = ['vector_layer', ]
     list_display = (
-       'name', 'analysis', 'preset', 'vector_layer', 'supply_layer',
+       'name', 'analysis', 'preset', 'vector_layer', 'supply_layer'
     )
     list_filter = (
         'analysis',
@@ -212,6 +218,7 @@ class SummaryReportCategoryAdmin(admin.ModelAdmin):
         'analysis',
         'preset__name'
     )
+    actions = [test_calculation, ]
 
     class Media:
         js = ('/static/admin/js/summary_report_category.js', )

@@ -34,7 +34,10 @@ def sample_raster_with_vector(summary_report_result: SummaryReportResult):
 
     # Read points from shapefile
     pts = gpd.read_file(vector_file)
-    pts = pts[['fid', 'geometry']]
+    try:
+        pts = pts[['fid', 'geometry']]
+    except KeyError:
+        pts = pts[['geometry']]
     pts.index = range(len(pts))
     coords = [(x, y) for x, y in zip(pts['geometry'].x, pts['geometry'].y)]
 
