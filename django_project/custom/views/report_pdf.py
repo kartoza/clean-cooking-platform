@@ -486,8 +486,8 @@ class ReportPDFView(View):
             35
         )
 
-        urban_ratio = self.total_urban_population / self.total_population * 100
-        poverty_percentage = self.total_poverty / self.total_population * 100
+        urban_ratio = self.total_urban_population / self.total_population * 100 if self.total_urban_population > 0 else 0
+        poverty_percentage = self.total_poverty / self.total_population * 100 if self.total_poverty > 0 else 0
 
         table_data = [
             ['', self.subregion],
