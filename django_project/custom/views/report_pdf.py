@@ -2,6 +2,7 @@ import io
 import math
 import os.path
 import textwrap
+from datetime import datetime
 
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
@@ -224,10 +225,10 @@ class ReportPDFView(View):
                   stroke=0, fill=1)
 
         page.setFillColorRGB(0.459, 0.714, 0.831)
-        page.setFont(self.default_font_light, 25)
+        page.setFont(self.default_font, 25)
         page.drawString(self.page_width - 420,
                         self.navbar_height - 35,
-                        "CLEAN COOKING ALLIANCE  —  {}".format(
+                        "CLEAN COOKING ALLIANCE - {}".format(
                             page_number
                         ))
 
@@ -396,6 +397,8 @@ class ReportPDFView(View):
                 self.subregion,
                 self.geography.name
             ))
+
+        page.drawString(50, 330, str(datetime.now().date()))
         page.showPage()
 
     def draw_page_end(self, page):
@@ -613,8 +616,9 @@ class ReportPDFView(View):
         page.setFont(self.default_font_light, 25)
         self._draw_wrapped_line(
             page,
-            'This index helps us understand where there is high demand in the '
-            'form of population and public needs for clean cooking.',
+            'This is an aggregated and weighted measure of all selected '
+            'datasets under the Demand category. Identifies areas with '
+            'higher energy demand.',
             100,
             100, 125, 40
         )
@@ -635,8 +639,9 @@ class ReportPDFView(View):
         page.setFont(self.default_font_light, 25)
         self._draw_wrapped_line(
             page,
-            'This index helps us understand where there is high '
-            'potential for electric cooking.',
+            'This index is an aggregated and weighted measure of all selected '
+            'datasets under the Supply category. Identifies areas with '
+            'potential for clean cooking energy supply.',
             100,
             75, 125, 40
         )
@@ -895,7 +900,7 @@ class ReportPDFView(View):
         self.draw_page_two(p)
         PageBreak()
 
-        current_page_number = 4
+        current_page_number = 3
 
         if self.demand_summary:
             self.draw_ccp_page(p, current_page_number)
