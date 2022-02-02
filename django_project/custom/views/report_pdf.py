@@ -282,12 +282,12 @@ class ReportPDFView(View):
             mask='auto')
 
         if legend_path:
-            legend_x_pos = (x + img_width + 50) if x else self.sidebar_x - 120
+            legend_x_pos = (x + img_width + 50) if x else self.sidebar_x - 170
             page.drawImage(
                 legend_path,
                 legend_x_pos,
                 100,
-                width=100,
+                width=150,
                 preserveAspectRatio=True,
                 mask='auto')
 
