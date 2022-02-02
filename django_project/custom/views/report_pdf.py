@@ -137,36 +137,30 @@ class ReportPDFView(View):
                 data['other'].append(category.name_long)
 
         if not population_added:
-            data['demand'].append('Population')
+            data['other'].append('Population')
 
         table_data = [
-            ['Supply', 'Demand'],
+            ['Supply', 'Demand', 'Other'],
         ]
 
         for supply in data['supply']:
-            table_data.append([supply, ''])
+            table_data.append([supply, '', ''])
 
         demand_index = 1
         for demand in data['demand']:
             if len(table_data) > demand_index:
                 table_data[demand_index][1] = demand
             else:
-                table_data.append(['', demand])
+                table_data.append(['', demand, ''])
             demand_index += 1
 
-        other_first_index = None
+        other_index = 1
         if 'other' in data:
-            if demand_index-1 > len(data['supply']):
-                table_data[len(data['supply']) + 1][0] = 'Other'
-            else:
-                table_data.append(['Other', ''])
-            other_first_index = len(data['supply']) + 1
-            other_index = other_first_index + 1
             for other in data['other']:
                 if len(table_data) > other_index:
-                    table_data[other_index][0] = other
+                    table_data[other_index][2] = other
                 else:
-                    table_data.append([other, ''])
+                    table_data.append(['', '', other])
                 other_index += 1
 
         table_width = 2000
@@ -175,25 +169,19 @@ class ReportPDFView(View):
 
         table_style = [
             ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
-            ('FONTNAME', (0, 0), (1, 0), self.default_font_bold),
-            ('BACKGROUND', (0, 0), (1, -1), colors.white),
-            ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
+            ('FONTNAME', (0, 0), (2, 0), self.default_font_bold),
+            ('BACKGROUND', (0, 0), (2, -1), colors.white),
+            ('TEXTCOLOR', (0, 0), (2, -1), colors.Color(
                 red=29 / 255, green=63 / 255, blue=116 / 255)),
-            ('FONTSIZE', (0, 0), (1, -1), 23),
-            ('RIGHTPADDING', (0, 0), (1, -1), 50),
-            ('LEFTPADDING', (0, 0), (1, -1), 20),
-            ('BOTTOMPADDING', (0, 0), (1, -1), 30),
+            ('FONTSIZE', (0, 0), (2, -1), 23),
+            ('RIGHTPADDING', (0, 0), (2, -1), 50),
+            ('LEFTPADDING', (0, 0), (2, -1), 20),
+            ('BOTTOMPADDING', (0, 0), (2, -1), 30),
         ]
-
-        if other_first_index:
-            table_style.append(
-                ('FONTNAME', (0, other_first_index), (0, other_first_index),
-                 self.default_font_bold),
-            )
 
         table_y -= len(table_data) * 45
 
-        table = Table(table_data, colWidths=[6.5*inch,6.5*inch])
+        table = Table(table_data, colWidths=[4*inch,4*inch])
         table.setStyle(TableStyle(table_style))
         table.wrapOn(canvas, table_width, table_height)
         table.drawOn(canvas, table_x, table_y)
