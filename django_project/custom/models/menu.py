@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from custom.utils.cache import delete_all_dataset_cache
 
 
 class Menu(models.Model):
@@ -49,3 +53,9 @@ class SubMenu(Menu):
     class Meta:
         verbose_name_plural = 'Sub menu'
         ordering = ['order']
+
+
+@receiver(post_save, sender=MainMenu)
+@receiver(post_save, sender=SubMenu)
+def menu_post_save_handler(sender, **kwargs):
+     delete_all_dataset_cache()

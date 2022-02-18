@@ -59,7 +59,8 @@ class DatasetList(APIView):
                 online=True
             ).exclude(
                 boundary_layer=True,
-            ).distinct()
+            ).order_by('sidebar_sub_menu_obj__main_menu__order',
+                       'sidebar_sub_menu_obj__order').distinct()
 
             cached = set_cache_dataset(dataset_key, DatasetSerializer(
                 datasets, many=True, context={
