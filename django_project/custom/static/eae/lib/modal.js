@@ -21,7 +21,7 @@ padding: 0;
     let m = document.createElement('main');
     m.style = `
 margin: auto;
-width: fit-content;
+margin-bottom: 20px;
 width: -moz-fit-content;
 `;
     d.append(m);
@@ -31,7 +31,7 @@ width: -moz-fit-content;
     m.prepend(h);
 
     let c = document.createElement('content');
-    c.style = `padding: 1em;`;
+    c.style = `padding-right: 2em; padding-left: 2em; padding-bottom: 0.5em;`;
     m.append(c);
 
     let f = document.createElement('footer');

@@ -536,6 +536,47 @@ This is not fatal but the dataset is now disabled.`
 				html => {
 					let parser = new DOMParser();
 					let htmlDoc = parser.parseFromString(html, 'text/html');
+					let dds = htmlDoc.querySelectorAll('dd');
+					const c_dt = document.createElement('dt');
+					c_dt.innerHTML = 'Suggested Citation';
+					const c_dd = document.createElement('dd');
+					c_dd.innerHTML = '"[1] Kenya National Bureau of Statistics (KNBS). <br/> ' +
+						'2019 Kenya Population and Housing Census Volume IV: Distribution of Population <br/> ' +
+						'by Socio-Economic Characteristics. Accessed Through Energy Access Explorer, [date]. <br /> ' +
+						'<a href="www.energyaccessexplorer.org">www.energyaccessexplorer.org</a>."'
+
+					for (let dd of dds) {
+						if (dd.getInnerHTML() === ' -- ' ||
+								dd.getInnerHTML().toLowerCase() === 'none' ||
+								dd.getInnerHTML().toLowerCase() === 'no keywords' ||
+								dd.getInnerHTML().toLowerCase() === 'not filled' ||
+								dd.getInnerHTML().toLowerCase() === 'not specified' ||
+								dd.getInnerHTML().toLowerCase().includes('no information provided') ||
+								dd.previousElementSibling.getInnerHTML().includes('Language') ||
+								dd.previousElementSibling.getInnerHTML().includes('Resource ID') ||
+								dd.previousElementSibling.getInnerHTML().includes('Extent') ||
+								dd.previousElementSibling.getInnerHTML().includes('Spatial Reference System Identifier')
+							) {
+							dd.previousElementSibling.remove();
+							dd.remove();
+						}
+
+					}
+					let dts = htmlDoc.querySelectorAll('dt');
+					for (let dt of dts) {
+						if (dt.getInnerHTML() === 'Temporal Extent' || dt.getInnerHTML() === 'Thumbnail') {
+							dt.remove();
+						}
+
+						if (dt.getInnerHTML() === 'Responsible') {
+							try {
+								htmlDoc.querySelectorAll('dl')[0].insertBefore(c_dt, dt);
+								htmlDoc.querySelectorAll('dl')[0].insertBefore(c_dd, dt);
+							} catch (e) {
+							}
+						}
+					}
+
 					ea_modal.set({
 						header: this.name,
 						content: decodeHtml(htmlDoc.getElementsByClassName('container')[0].innerHTML),

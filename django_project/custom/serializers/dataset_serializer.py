@@ -9,7 +9,7 @@ from rest_framework import serializers
 from slugify import slugify
 from custom.models.category import Category
 from custom.models.geography import Geography
-from custom.models.dataset_file import DatasetFile
+from custom.models.dataset_file import DatasetFile, VECTORS
 from custom.models.clipped_layer import ClippedLayer
 from geonode.base.models import Link
 
@@ -289,7 +289,13 @@ class DatasetSerializer(serializers.ModelSerializer):
             geonode_layer__isnull=False
         )
         if dataset_files.exists():
-            dataset_file = dataset_files[0]
+            dataset_file = None
+            if dataset_files.count() > 1:
+                dataset_file = dataset_files.filter(
+                    func=VECTORS
+                ).first()
+            if not dataset_file:
+                dataset_file = dataset_files.first()
             return '/catalogue/csw_to_extra_format/{}/metadata.html'.format(
                 dataset_file.geonode_layer.uuid
             )
