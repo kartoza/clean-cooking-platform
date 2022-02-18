@@ -15,7 +15,9 @@ from django.http import FileResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from reportlab.lib import colors
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfgen import canvas
+from reportlab.lib.enums import TA_LEFT
 from reportlab.platypus import (
     SimpleDocTemplate, Table, PageBreak, TableStyle, Paragraph
 )
@@ -395,6 +397,21 @@ class ReportPDFView(View):
                     height=self.page_height,
                     preserveAspectRatio=True)
         page.setFillColorRGB(1, 1, 1)
+        style = ParagraphStyle(
+            name=self.default_font,
+            fontName=self.default_font,
+            fontSize=25,
+            textColor=colors.white,
+            alignment=TA_LEFT,
+        )
+        p = Paragraph(
+            "The Clean Cooking Explorer adheres to the data quality standards <br/><br/><br/>"
+            "set in place by WRI's Energy Access Explorer (EAE). <br/><br/><br/>"
+            "To view more information about data quality standards, view the <a href='https://files.wri.org/d8/s3fs-public/energy-access-explorer-data-and-methods.pdf'><u>technical note</u>.</a>",
+            style=style)
+        p.wrap(2000, 2000)
+        p.drawOn(page, 1030, 750)
+
         page.setFont(self.default_font_bold, 100)
         page.drawString(1030, 570, "Supported by")
 
