@@ -63,7 +63,9 @@ dialog .close {
 }
 
 dialog content {
-  padding: 1.7em !important;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  padding-bottom: 1.5em;
 }
 
 dialog pre {
@@ -940,4 +942,32 @@ table.summary .index-name {
   cursor: pointer;
   float: right;
   filter: invert(100%)
+}
+
+#ea-modal main {
+  min-width: 80vh;
+}
+
+#ea-modal dt {
+  color: #042549;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+#ea-modal dl dd {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: 0px;
+}
+
+#ea-modal dd .fa {
+  padding-right: 5px;
+}
+
+#ea-modal table {
+  max-width: 90% !important;
+}
+
+#ea-modal .page-header {
+  display: none;
 }
