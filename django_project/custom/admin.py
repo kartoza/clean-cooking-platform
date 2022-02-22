@@ -205,7 +205,6 @@ test_calculation.short_description = 'Test calculation'
 
 class SummaryReportCategoryAdmin(admin.ModelAdmin):
     change_form_template = 'admin/custom/summary_report_category/change_form.html'
-    autocomplete_fields = ['vector_layer', ]
     list_display = (
        'name', 'analysis', 'preset', 'vector_layer', 'supply_layer'
     )
@@ -219,14 +218,29 @@ class SummaryReportCategoryAdmin(admin.ModelAdmin):
         'preset__name'
     )
     actions = [test_calculation, ]
+    exclude = (
+        'category',
+    )
 
     class Media:
         js = ('/static/admin/js/summary_report_category.js', )
+        css = {
+            'all': ('/static/admin/css/category.css', )
+        }
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(SummaryReportCategoryAdmin, self).get_form(request, obj, **kwargs)
+        form = super(SummaryReportCategoryAdmin, self).get_form(
+            request, obj, **kwargs)
         form.base_fields['supply_layer'].queryset = Layer.objects.filter(
             storeType__contains='coverageStore')
+        form.base_fields['supply_layer'].label_from_instance = (
+            lambda obj: obj.title
+        )
+        form.base_fields['vector_layer'].queryset = Layer.objects.filter(
+            storeType__contains='dataStore')
+        form.base_fields['vector_layer'].label_from_instance = (
+            lambda obj: obj.title
+        )
         return form
 
 
