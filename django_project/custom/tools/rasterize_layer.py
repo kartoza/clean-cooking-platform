@@ -1,7 +1,9 @@
 import os.path
+import json
 import random
 from osgeo import gdal
 from osgeo import ogr
+from shapely.geometry import shape, JOIN_STYLE, mapping
 
 from custom.tools.clip_layer import clip_vector_layer, clip_raster_layer
 
@@ -72,6 +74,13 @@ def rasterize_layer(
     geojson_destination = destination_path.replace('.tif', '.json')
     if os.path.exists(geojson_destination):
         os.remove(geojson_destination)
+
+    poly = shape(json.loads(geojson))
+    fx = poly.buffer(
+        0.001, 1, join_style=JOIN_STYLE.mitre).buffer(
+        -0.001, 1, join_style=JOIN_STYLE.mitre)
+    geojson = json.dumps(mapping(fx))
+
     with open(geojson_destination, 'w') as json_file:
         json_file.write(geojson)
 
@@ -81,31 +90,5 @@ def rasterize_layer(
         boundary_layer_file=json_file.name,
         output_path=destination_path)
 
-    # Create the destination data source
-    # x_res = int((x_max - x_min) * 10)
-    # y_res = int((y_max - y_min) * 10)
-    # target_ds = gdal.GetDriverByName('GTiff').Create(
-    #     destination_path, x_res,
-    #     y_res, 3, gdal.GDT_Float32)
-    # target_ds.SetGeoTransform((
-    #     x_min, pixel_size, 0,
-    #     y_max, 0, -pixel_size,
-    # ))
-    # if source_srs:
-    #     # Make the target raster have the same projection as the source
-    #     target_ds.SetProjection(source_srs.ExportToWkt())
-    # else:
-    #     # Source has no projection (needs GDAL >= 1.7.0 to work)
-    #     target_ds.SetProjection('LOCAL_CS["arbitrary"]')
-    #
-    # nodata_value = -999999
-    # band = target_ds.GetRasterBand(1)
-    # band.SetNoDataValue(nodata_value)
-    # band.FlushCache()
-    #
-    # # Rasterize
-    # err = gdal.RasterizeLayer(target_ds, (3, 2, 1), source_layer,
-    #                           burn_values=(0, 0, 0),
-    #                           options=["ATTRIBUTE=%s" % RASTERIZE_COLOR_FIELD])
     if err != 0:
         raise Exception("error rasterizing layer: %s" % err)

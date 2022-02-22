@@ -50,7 +50,7 @@ class SubregionListAPI(APIView):
             subregion_list = json.load(subregion_list_file)
             subregion_list_file.close()
 
-        if not cache_exist:
+        if not cache_exist or not subregion_list:
             r = requests.get(url=url, params=params)
             if r.status_code == 200:
                 root = ET.fromstring(r.content)
@@ -58,7 +58,8 @@ class SubregionListAPI(APIView):
                 for child in root:
                     value = child[0].text
                     if value not in subregion_list:
-                        subregion_list.append(value)
+                        if isinstance(value, str):
+                            subregion_list.append(value)
                 subregion_list.sort()
             with open(property_list_cached_file, 'w+') as outfile:
                 json.dump(subregion_list, outfile)

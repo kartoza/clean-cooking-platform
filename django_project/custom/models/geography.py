@@ -1,6 +1,9 @@
 # coding=utf-8
 """Geography model definition.
 """
+import os
+import shutil
+
 import requests
 import re
 from django.contrib.gis.db import models
@@ -189,6 +192,13 @@ class Geography(models.Model):
 def post_save_geography(sender, instance, **kwargs):
     if not instance.raster_mask_layer:
         return
+
+    property_list_cached_dir = os.path.join(
+        settings.MEDIA_ROOT,
+        'property_list'
+    )
+    if os.path.exists(property_list_cached_dir):
+        shutil.rmtree(property_list_cached_dir)
 
     if (
             instance.raster_mask_layer
