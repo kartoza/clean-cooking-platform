@@ -220,7 +220,7 @@ function wrapper() {
 
 const summaryButton = qs('#summary-button');
 if (summaryButton) {
-	if (boundary) {
+	if (boundary && PRESET_ID && USE_CASE_ID) {
 		summaryButton.onclick = async () => {
 			ea_loading(true);
 			await downloadReport(null, null, 750, 400);

@@ -411,7 +411,7 @@ export async function init() {
 
 	ea_loading(false);
 
-	if (boundary) {
+	if (boundary && PRESET_ID && USE_CASE_ID) {
 		qs('.info-container').style.display = 'block';
 		let closeInfoBtn = qs('#close-info-container', this);
 		let showInfoBtn = qs('#showInfoBtn', this);
