@@ -1,3 +1,7 @@
 .hidden-fieldset {
     display: none;
 }
+
+.select2-container {
+  width: 300px !important;
+}

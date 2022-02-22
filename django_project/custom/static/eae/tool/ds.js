@@ -537,13 +537,6 @@ This is not fatal but the dataset is now disabled.`
 					let parser = new DOMParser();
 					let htmlDoc = parser.parseFromString(html, 'text/html');
 					let dds = htmlDoc.querySelectorAll('dd');
-					const c_dt = document.createElement('dt');
-					c_dt.innerHTML = 'Suggested Citation';
-					const c_dd = document.createElement('dd');
-					c_dd.innerHTML = '"[1] Kenya National Bureau of Statistics (KNBS). <br/> ' +
-						'2019 Kenya Population and Housing Census Volume IV: Distribution of Population <br/> ' +
-						'by Socio-Economic Characteristics. Accessed Through Energy Access Explorer, [date]. <br /> ' +
-						'<a href="www.energyaccessexplorer.org">www.energyaccessexplorer.org</a>."'
 
 					for (let dd of dds) {
 						if (dd.getInnerHTML() === ' -- ' ||

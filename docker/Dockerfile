@@ -16,7 +16,7 @@ RUN pip install -r requirements.txt
 
 RUN pip uninstall -y django-geonode-mapstore-client
 
-ADD deployment/docker/REQUIREMENTS.txt /REQUIREMENTS.txt
+ADD docker/REQUIREMENTS.txt /REQUIREMENTS.txt
 RUN pip uninstall -y celery && pip install -r /REQUIREMENTS.txt
 #
 #USER www-data
@@ -32,8 +32,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_17.x | bash - && \
 # Open port 8080 as we will be running our uwsgi socket on that
 #EXPOSE 8080
 
-ADD deployment/docker/entrypoint.sh /entrypoint.sh
-ADD deployment/docker/initialize.py /initialize.py
-ADD deployment/docker/uwsgi.conf /uwsgi.conf
+ADD docker/entrypoint.sh /entrypoint.sh
+ADD docker/initialize.py /initialize.py
+ADD docker/uwsgi.conf /uwsgi.conf
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["uwsgi", "--ini", "/uwsgi.conf"]

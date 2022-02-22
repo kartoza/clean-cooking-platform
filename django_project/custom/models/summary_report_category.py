@@ -40,6 +40,7 @@ class SummaryReportCategory(models.Model):
 
     vector_layer = models.ForeignKey(
         Layer,
+        related_name='vector_layer',
         null=True,
         blank=True,
         on_delete=models.CASCADE,
