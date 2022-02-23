@@ -15,6 +15,7 @@ from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 from geonode.layers.models import Layer, Style
 
+from custom.utils.cache import delete_vector_point_cache
 
 CSV = 'csv'
 VECTORS = 'vectors'
@@ -130,6 +131,8 @@ def remove_dataset_cache(dataset: DatasetFile, layer: Layer):
 def layer_post_save(sender, instance, created, **kwargs):
     if created:
         return
+    if isinstance(instance, Layer):
+        delete_vector_point_cache(instance.id)
     if isinstance(instance, Style):
         instance = instance.layer_default_style.first()
     dataset = None
