@@ -1,30 +1,56 @@
 import time
 import os
-
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.detail import DetailView
 
 from custom.models import SummaryReportResult, SummaryReportCategory, SummaryReportDataset
+from custom.utils.cache import set_cache_vector_points, get_cache_vector_points
 
 
 def sample_raster_with_vector(summary_report_result: SummaryReportResult):
 
     import rasterio
     import geopandas as gpd
+    import pandas as pd
 
     start_time = time.time()
     summary_report = summary_report_result.summary_report_category
 
-    try:
-        base_file = summary_report.vector_layer.get_base_file()[0].file
-    except:  # noqa
-        base_file = (
-            summary_report.vector_layer.upload_session.layerfile_set.all(
-            ).filter(
-                file__icontains='shp'
-            ).first().file
-        )
-    vector_file = base_file.path
+    coords = get_cache_vector_points(summary_report.vector_layer.id)
+
+    if not coords:
+        try:
+            base_file = summary_report.vector_layer.get_base_file()[0].file
+        except:  # noqa
+            base_file = (
+                summary_report.vector_layer.upload_session.layerfile_set.all(
+                ).filter(
+                    file__icontains='shp'
+                ).first().file
+            )
+
+        vector_file = base_file.path
+        # Read points from shapefile
+        pts = gpd.read_file(vector_file)
+
+        if 'epsg:4326' not in str(pts.crs):
+            pts = pts.to_crs({'init': 'epsg:4326'})
+
+        try:
+            pts = pts[['fid', 'geometry']]
+        except KeyError:
+            pts = pts[['geometry']]
+        pts.index = range(len(pts))
+        try:
+            coords = [(x, y) for x, y in
+                      zip(pts['geometry'].x, pts['geometry'].y)]
+        except ValueError:
+            pts = pts.explode(index_parts=True)
+            coords = [(x, y) for x, y in
+                      zip(pts['geometry'].x, pts['geometry'].y)]
+
+        set_cache_vector_points(summary_report.vector_layer.id, coords)
+
     raster_file = summary_report_result.dataset_file.dataset_file.path
     raster_file_size = os.stat(raster_file).st_size
 
@@ -32,25 +58,17 @@ def sample_raster_with_vector(summary_report_result: SummaryReportResult):
         if summary_report_result.result['raster_file_size'] == raster_file_size:
             return summary_report_result.result
 
-    # Read points from shapefile
-    pts = gpd.read_file(vector_file)
-    try:
-        pts = pts[['fid', 'geometry']]
-    except KeyError:
-        pts = pts[['geometry']]
-    pts.index = range(len(pts))
-    coords = [(x, y) for x, y in zip(pts['geometry'].x, pts['geometry'].y)]
-
     # Open the raster and store metadata
     src = rasterio.open(raster_file)
 
-    pts['Raster Value'] = [x for x in src.sample(coords)]
+    df = pd.DataFrame(columns=['Raster Value'])
+    df['Raster Value'] = [x for x in src.sample(coords)]
 
-    sampling_data = pts[pts['Raster Value'].lt(255)]
+    sampling_data = df[df['Raster Value'].lt(255)]
     high_data = sampling_data[sampling_data['Raster Value'].gt(190.0)]
 
     result_data = {
-        'total_features': len(pts.index),
+        'total_features': len(coords),
         'total_in_raster': len(sampling_data.index),
         'total_high': len(high_data.index),
         'execution_time': time.time() - start_time,
