@@ -73,9 +73,9 @@ def resize_raster_layer(
         output])
 
 
-def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path, raster_boundary_file = None):
-    # Taken and slightly modified from https://gis.stackexchange.com/a/200753
-    # Get coords for bounding box
+def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path,
+                      raster_boundary_file = None):
+    logger.info('Clipping raster with gdalwarp...')
     try:
         subprocess.run([
             'gdalwarp',
@@ -84,6 +84,8 @@ def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path, raste
             '-cutline',
             boundary_layer_file,
             '-crop_to_cutline',
+            '-dstnodata',
+            '-99999.0',
             layer_raster_file,
             output_path])
     except:  # noqa
@@ -100,6 +102,7 @@ def clip_raster_layer(layer_raster_file, boundary_layer_file, output_path, raste
     srs.ImportFromWkt(projection)
 
     if not os.path.exists(output_path):
+        # Taken and slightly modified from https://gis.stackexchange.com/a/200753
         boundary_source = ogr.Open(boundary_layer_file)
         boundary_layer = boundary_source.GetLayer(0)
         extent = boundary_layer.GetExtent()
