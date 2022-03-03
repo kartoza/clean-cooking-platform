@@ -160,7 +160,11 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 	let presetId = PRESET_ID;
 	let useCaseId = USE_CASE_ID;
 
-	if (analysisType.includes('ccp') || analysisType.includes('supply_demand')) {
+	if(analysisType.includes('ccp')) {
+		window.eaiData = await run_analysis("eai", presetId)
+	}
+
+	if ( analysisType.includes('supply_demand')) {
 		window.demandData = await run_analysis("demand", presetId);
 	}
 	if (analysisType.includes('ani')) {
@@ -170,6 +174,19 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 		window.supplyData = await run_analysis("supply", presetId);
 	}
 
+	if (window.eaiData && !isCanvasBlank(document.getElementById('eai-output'))) {
+		let eaiImage = document.getElementById('eai-output').toDataURL('image/png', 1.0);
+		let eaiRaster = await raster_to_tiff('eai', raster_data['demand' + presetId]);
+		fd.append('ccpImage', eaiImage);
+		fd.append('ccpTiff', new Blob([eaiRaster], {
+			type: 'application/octet-stream;charset=utf-8' }),
+			`ccp_${boundary}_${geoId}_${subRegion}.tiff`);
+		try {
+			fd.append('ccpDataHighPercentage', (window.eaiData['population-density']['distribution'][4] * 100).toFixed(2))
+			totalPopulation = Math.round(window.eaiData['population-density']['total']);
+		} catch (e) {}
+	}
+
 	if (window.demandData && !isCanvasBlank(document.getElementById('demand-output'))) {
 		let demandImage = document.getElementById('demand-output').toDataURL('image/png', 1.0);
 		let demandRaster = await raster_to_tiff('demand', raster_data['demand' + presetId]);
@@ -177,10 +194,10 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 		fd.append('demandTiff', new Blob([demandRaster], {
 			type: 'application/octet-stream;charset=utf-8' }),
 			`demand_${boundary}_${geoId}_${subRegion}.tiff`);
-		try {
-			fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
-			totalPopulation = Math.round(window.demandData['population-density']['total']);
-		} catch (e) {}
+		// try {
+		// 	fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
+		// 	totalPopulation = Math.round(window.demandData['population-density']['total']);
+		// } catch (e) {}
 	}
 
 	if (window.supplyData && !isCanvasBlank(document.getElementById('supply-output'))) {
