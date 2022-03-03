@@ -31,6 +31,29 @@ class Preset(models.Model):
         null=False
     )
 
+    population_ccp_text = models.CharField(
+        blank=False,
+        max_length=255,
+        help_text='Description text in the report',
+        default='Population within areas of high clean cooking '
+                'potential index',
+    )
+
+    population_supply_text = models.CharField(
+        blank=False,
+        max_length=255,
+        help_text='Description text in the report',
+        default='Population within areas of high supply index'
+    )
+
+    population_ani_text = models.CharField(
+        blank=False,
+        max_length=255,
+        help_text='Description text in the report',
+        default='Population with medium to high '
+                'Assistance Needed Index'
+    )
+
     class Meta:
         verbose_name_plural = 'Presets'
         ordering = ['order']
