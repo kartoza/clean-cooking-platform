@@ -767,7 +767,7 @@ class ReportPDFView(View):
         if self.summary_categories.filter(analysis='ccp').exists():
             self.demand_summary = [
                 {
-                    'desc': 'Population within areas of high demand index',
+                    'desc': self.preset.population_ccp_text,
                     'value': f'{self.demand_high_percentage}%'
                 }
             ]
@@ -785,7 +785,7 @@ class ReportPDFView(View):
         if self.summary_categories.filter(analysis='supply').exists():
             self.supply_summary = [
                 {
-                    'desc': 'Population within areas of high supply index',
+                    'desc': self.preset.population_supply_text,
                     'value': f'{self.supply_high_percentage}%'
                 }
             ]
@@ -808,8 +808,7 @@ class ReportPDFView(View):
         if self.summary_categories.filter(analysis='ani').exists():
             self.ani_summary = [
                 {
-                    'desc': 'Population with medium to high '
-                            'Assistance Needed Index',
+                    'desc': self.preset.population_ani_text,
                     'value':  '{:,.0f}'.format(self.ani_med_high_total)
                 }
             ]
@@ -884,12 +883,6 @@ class ReportPDFView(View):
             try:
                 self.use_case = UseCase.objects.get(id=use_case_id)
             except UseCase.DoesNotExist:
-                pass
-
-        if preset_id:
-            try:
-                self.preset = Preset.objects.get(id=preset_id)
-            except Preset.DoesNotExist:
                 pass
 
         parsed_url = urlparse(self.preset.permalink)
