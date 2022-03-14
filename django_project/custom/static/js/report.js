@@ -178,6 +178,7 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         window.demandData = null;
         window.supplyData = null;
         window.aniData = null;
+        window.eaiData = null;
 
         ccaToolBtn.disabled = true;
         ccaReportBtn.disabled = true;

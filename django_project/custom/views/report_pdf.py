@@ -54,6 +54,9 @@ class ReportPDFView(View):
     demand_legend_path = absolute_path(
         'custom', 'static', 'img', 'demand_legend.png'
     )
+    ccp_legend_path = absolute_path(
+        'custom', 'static', 'img', 'ccp_legend.png'
+    )
     supply_legend_path = absolute_path(
         'custom', 'static', 'img', 'supply_legend.png'
     )
@@ -71,9 +74,11 @@ class ReportPDFView(View):
     demand_tiff_file = None
     supply_tiff_file = None
     ani_tiff_file = None
+    ccp_tiff_file = None
     subregion = ''
     map_image = ''
     demand_image = None
+    ccp_image = None
     supply_image = None
     ani_image = None
     use_case = None
@@ -613,17 +618,18 @@ class ReportPDFView(View):
 
         self._draw_sidebar(page, (0.459, 0.714, 0.831))
         self._draw_footer(page, page_number)
-        self._draw_title(page, 'Analysis', 'Demand index')
-        self._draw_map(page, self.demand_image, self.demand_legend_path)
+        self._draw_title(page, 'Analysis', 'Clean Cooking Potential')
+        self._draw_map(page, self.ccp_image, self.ccp_legend_path)
         self._draw_summary(page, self.demand_summary)
 
         page.setFillColorRGB(0, 0, 0)
         page.setFont(self.default_font_light, 25)
         self._draw_wrapped_line(
             page,
-            'This is an aggregated and weighted measure of all selected '
-            'datasets under the Demand category. Identifies areas with '
-            'higher energy demand.',
+            'This index is an aggregated measure of all selected datasets '
+            'under both the Demand and Supply categories. '
+            'Identifies areas with higher energy demand and potential of '
+            'supply which are characterized with higher index values.',
             100,
             100, 125, 40
         )
@@ -735,6 +741,8 @@ class ReportPDFView(View):
 
         self.map_image = request.POST.get('mapImage', '')
         self.demand_image = request.POST.get('demandImage', None)
+        self.ccp_image = request.POST.get('ccpImage', None)
+        self.ccp_tiff_file = request.POST.get('ccpTiff', None)
         self.demand_tiff_file = request.FILES.get('demandTiff', None)
         self.supply_tiff_file = request.FILES.get('supplyTiff', None)
         self.ani_tiff_file = request.FILES.get('aniTiff', None)
