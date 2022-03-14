@@ -397,6 +397,8 @@ document.getElementById('summary-button').onclick = async (e) => {
 
 export function convertBounds(bounds) {
 
+	if (!bounds) return [];
+
 	const l = bounds[0];
 	const r = bounds[2];
 	const d = bounds[1];

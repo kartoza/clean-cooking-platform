@@ -854,10 +854,6 @@ class ReportPDFView(View):
                     self.total_urban_population = (
                         urban_result['total_urban_population']
                     )
-                    self.total_population = (
-                        int(urban_result['total_population'])
-                    )
-
 
         if self.geography.cooking_percentage_layer:
             try:
