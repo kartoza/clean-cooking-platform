@@ -194,10 +194,10 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 		fd.append('demandTiff', new Blob([demandRaster], {
 			type: 'application/octet-stream;charset=utf-8' }),
 			`demand_${boundary}_${geoId}_${subRegion}.tiff`);
-		// try {
-		// 	fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
-		// 	totalPopulation = Math.round(window.demandData['population-density']['total']);
-		// } catch (e) {}
+		try {
+			fd.append('demandDataHighPercentage', (window.demandData['population-density']['distribution'][4] * 100).toFixed(2))
+			totalPopulation = Math.round(window.demandData['population-density']['total']);
+		} catch (e) {}
 	}
 
 	if (window.supplyData && !isCanvasBlank(document.getElementById('supply-output'))) {
