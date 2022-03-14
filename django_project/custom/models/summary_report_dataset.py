@@ -16,7 +16,7 @@ class SummaryReportDataset(models.Model):
         created = False
         file_name = f'{boundary}/{os.path.basename(dataset_file.name)}'
         dataset = SummaryReportDataset.objects.filter(
-            dataset_file__icontains=file_name
+            dataset_file__icontains=os.path.basename(file_name).split('.')[0]
         ).first()
         if not dataset:
             dataset = SummaryReportDataset.objects.create()
@@ -28,5 +28,5 @@ class SummaryReportDataset(models.Model):
         return dataset, created
 
     def __str__(self):
-        return self.dataset_file.name if self.dataset_file else self.pk
+        return self.dataset_file.name if self.dataset_file else str(self.pk)
 

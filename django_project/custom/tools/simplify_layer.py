@@ -4,7 +4,7 @@ import subprocess
 from django.conf import settings
 
 
-def simplify_layer(geonode_layer, output, tolerance=0.01):
+def simplify_layer(geonode_layer, output, tolerance=0.05):
 
     try:
         base_file = geonode_layer.layer.get_base_file()[0].file
@@ -46,8 +46,6 @@ def simplify_layer(geonode_layer, output, tolerance=0.01):
         layer_vector_file,
         '-dialect',
         'sqlite',
-        '-sql',
-        'SELECT ST_Union(geometry) AS geometry FROM {}'.format(layer_name),
         '-simplify',
         str(tolerance)])
 
