@@ -364,7 +364,16 @@ export async function getDatasets(inputs, scenarioId, analysisType = []) {
 	for (let i = 0; i < inputList.length; i++) {
 		try {
 			if (typeof MAPBOX.getSource(inputList[i]) === 'undefined') {
-				await DST.get(inputList[i]).active(true, true);
+				let ds = DST.get(inputList[i]);
+				await ds.active(true, true);
+				let domain_data = DOMAIN_DATA.find(o => o.name === ds.id);
+				if (domain_data) {
+					ds._domain = domain_data.domain;
+				}
+				let weight_data = WEIGHT_DATA.find(o => o.name === ds.id);
+				if (weight_data && weight_data.weight) {
+					ds.weight = parseInt(weight_data.weight);
+				}
 				addedLayers.push(inputList[i]);
 			}
 		} catch (e) {

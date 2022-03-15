@@ -49,7 +49,13 @@ class DatasetList(APIView):
 
         if cached is None or not isinstance(cached, list):
             if inputs:
-                datasets = category_from_url(inputs)
+                datasets_from_inputs = category_from_url(inputs)
+                dataset_id = []
+                for dataset in datasets_from_inputs:
+                    dataset_id.append(dataset['category'].id)
+                datasets = Category.objects.filter(
+                    id__in=dataset_id
+                )
             else:
                 datasets = Category.objects.all()
             datasets = datasets.filter(

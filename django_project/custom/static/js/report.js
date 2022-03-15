@@ -191,8 +191,54 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
         selectedLayers = JSON.parse(selectedScenario.dataset.layers);
         let datasetUrl = selectedScenario.dataset.url;
         presetDesc.innerHTML = selectedScenario.dataset.desc;
-        let inputString = new URL(datasetUrl).searchParams.get('inputs').replace(/ *\([^)]*\) */g, "");
-        let inputs = inputString.split(',')
+        let o = new URL(datasetUrl);
+        let inputString = o.searchParams.get('inputs');
+        let v = inputString.split(',');
+        if (v.length > 0) {
+            for (let j = 0; j < v.length; j++) {
+                if (v[j].includes('(') || v[j].includes('[')) {
+                    let value = v[j].replace(/ *\([^)]*\) */g, "");
+                    value = value.replace(/ *\[[^)]*] */g, "");
+
+                    let domainMatches = v[j].match(/ *\([^)]*\) */g);
+                    let weightMatches = v[j].match(/ *\[[^)]*] */g);
+
+                    if (DOMAIN_DATA.length === 0 || DOMAIN_DATA.find(o => o.name !== value)) {
+                        let domain = '';
+                        if (domainMatches) {
+                            domain = domainMatches[0].replace('(', '').replace(')', '').split(':');
+                            domain = {
+                                'min': domain[0],
+                                'max': domain[1]
+                            }
+                        }
+                        if (domain) {
+                            DOMAIN_DATA.push({
+                                'name': value,
+                                'domain': domain
+                            })
+                        }
+                    }
+
+                    if (WEIGHT_DATA.length === 0 || WEIGHT_DATA.find(o => o.name !== value)) {
+                        let weight = '';
+                        if (weightMatches) {
+                            weight = weightMatches[0].replace('[', '').replace(']', '');
+                        }
+                        if (weight) {
+                            WEIGHT_DATA.push({
+                                'name': value,
+                                'weight': weight
+                            })
+                        }
+                    }
+
+                    v[j] = value;
+                }
+            }
+        }
+
+        inputString = v.join(',');
 
         if (selectedLayers.length > 0) {
             selectedLayers.reverse();

@@ -101,6 +101,7 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 		}
 		let last_active = null;
 		for (let i = 0; i < addedLayers.length; i++) {
+			continue;
 			if (last_active) {
 				last_active.visibility(false);
 			}

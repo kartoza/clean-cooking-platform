@@ -133,15 +133,25 @@ class ReportPDFView(View):
         population_added = False
         table_y = y_pos - 30
 
-        for category in self.categories:
-            if 'population' in category.name_long.lower():
+        for category_data in self.categories:
+            category = category_data['category']
+            category_name = category.name_long
+            if category_data['weight']:
+                category_name += '\n\nImportance: {}'.format(
+                    category_data['weight']
+                )
+            if category_data['domain']:
+                category_name += '\n\nDomain: {}'.format(
+                    category_data['domain']
+                )
+            if 'population' in category_name.lower():
                 population_added = True
             if category.demand_index:
-                data['demand'].append(category.name_long)
+                data['demand'].append(category_name)
             if category.supply_index:
-                data['supply'].append(category.name_long)
+                data['supply'].append(category_name)
             if not category.demand_index and not category.supply_index:
-                data['other'].append(category.name_long)
+                data['other'].append(category_name)
 
         if not population_added:
             data['other'].append('Population')
@@ -181,6 +191,7 @@ class ReportPDFView(View):
             ('TEXTCOLOR', (0, 0), (2, -1), colors.Color(
                 red=29 / 255, green=63 / 255, blue=116 / 255)),
             ('FONTSIZE', (0, 0), (2, -1), 23),
+            ('VALIGN', (0, 0), (2, -1), 'MIDDLE'),
             ('RIGHTPADDING', (0, 0), (2, -1), 50),
             ('LEFTPADDING', (0, 0), (2, -1), 20),
             ('BOTTOMPADDING', (0, 0), (2, -1), 30),
@@ -534,6 +545,7 @@ class ReportPDFView(View):
             ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
                 red=29 / 255, green=63 / 255, blue=116 / 255)),
             ('FONTSIZE', (0, 0), (1, -1), 23),
+            ('VALIGN', (0, 0), (1, -1), 'MIDDLE'),
             ('RIGHTPADDING', (0, 0), (1, -1), 50),
             ('LEFTPADDING', (0, 0), (1, -1), 20),
             ('BOTTOMPADDING', (0, 0), (1, -1), 30),
@@ -926,8 +938,8 @@ class ReportPDFView(View):
                 current_page_number += 1
                 PageBreak()
 
-        self.draw_all_layers(p, current_page_number)
-        PageBreak()
+        # self.draw_all_layers(p, current_page_number)
+        # PageBreak()
 
         self.draw_page_end(p)
         PageBreak()
