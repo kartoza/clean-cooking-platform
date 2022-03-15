@@ -545,6 +545,7 @@ class ReportPDFView(View):
             ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
                 red=29 / 255, green=63 / 255, blue=116 / 255)),
             ('FONTSIZE', (0, 0), (1, -1), 23),
+            ('VALIGN', (0, 0), (1, -1), 'MIDDLE'),
             ('RIGHTPADDING', (0, 0), (1, -1), 50),
             ('LEFTPADDING', (0, 0), (1, -1), 20),
             ('BOTTOMPADDING', (0, 0), (1, -1), 30),
