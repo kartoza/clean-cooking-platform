@@ -36,3 +36,29 @@
   padding-left: 1.2em;
   margin-top: 0;
 }
+
+.mc-title {
+  color: white;
+  font-size: 25px;
+  font-weight: bolder;
+  background-color: #253e70;
+  padding: 25px;
+  border-radius: 10px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+}
+
+.col-mc {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mc-text {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #f5f9fc;
+  padding: 20px;
+  height: 40vh;
+  font-size: 18px;
+}
