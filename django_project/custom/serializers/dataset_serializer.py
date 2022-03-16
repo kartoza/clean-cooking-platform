@@ -296,8 +296,8 @@ class DatasetSerializer(serializers.ModelSerializer):
                 ).first()
             if not dataset_file:
                 dataset_file = dataset_files.first()
-            return '/catalogue/csw_to_extra_format/{}/metadata.html'.format(
-                dataset_file.geonode_layer.uuid
+            return '/api/v2/layers/{}/'.format(
+                dataset_file.geonode_layer.id
             )
         return '-'
 

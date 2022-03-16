@@ -950,7 +950,7 @@ table.summary .index-name {
 
 #ea-modal dt {
   color: #042549;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -961,7 +961,6 @@ table.summary .index-name {
 }
 
 #ea-modal dd .fa {
-  padding-right: 5px;
 }
 
 #ea-modal table {
@@ -970,4 +969,20 @@ table.summary .index-name {
 
 #ea-modal .page-header {
   display: none;
+}
+
+#ea-modal .metadata {
+  padding-top: 1.5em;
+  padding-bottom: 1em;
+}
+
+#ea-modal .metadata p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#ea-modal .metadata dd {
+  padding-top: 15px;
+  padding-bottom: 20px;
+  margin-inline-start: 0;
 }
