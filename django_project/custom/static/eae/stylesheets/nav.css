@@ -97,6 +97,18 @@ nav #navigation-links a {
   max-width: 10em;
 }
 
+.login-link {
+  background-color: #578c43;
+  line-height: 1em;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.login-link-container {
+  padding-bottom: 15px;
+  padding-top: 15px;
+}
+
 /* mobile specifics */
 @media (max-width: 1080px) {
   nav:not(.filter)  {
@@ -177,6 +189,11 @@ nav #navigation-links a {
     display: none;
     clear: both;
   }
+
+  .login-link {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 /* desktop specifics */
@@ -219,6 +236,11 @@ nav #navigation-links a {
     border-radius: 12px;
     background: rgba(0,0,0,0.3);
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  }
+
+  .login-link {
+    padding-left: 40px;
+    padding-right: 40px;
   }
 }
 
