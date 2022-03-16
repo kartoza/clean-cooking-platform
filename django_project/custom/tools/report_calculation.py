@@ -298,7 +298,8 @@ def calculate_poverty(geography: Geography, boundary_id: str):
 def calculate_poverty_supply_layer_distance(
         geography: Geography,
         boundary_id: str,
-        supply_layer: Layer):
+        supply_layer: Layer,
+        percentage: bool = False):
     """Calculate total population under poverty line close to supply layer"""
 
     start_time = time.time()
@@ -345,6 +346,19 @@ def calculate_poverty_supply_layer_distance(
         geography.wealth_index_layer
     )
 
+    value = '{:,.0f}'.format(total)
+
+    if percentage:
+        total_all, _, _ = _calculate_weight_average(
+            boundary_id,
+            supply_layer,
+            f'B*logical_and(A>{stats[0]},A<={highest})',
+            False,
+            geography.wealth_index_layer
+        )
+        percentage_value = total / total_all * 100
+        value =  '{:,.2f}%'.format(percentage_value)
+
     return {
         'result': "[ STATS ] =  Minimum=%.3f, "
                    "Maximum=%.3f, Mean=%.3f, StdDev=%.3f" % (
@@ -352,6 +366,7 @@ def calculate_poverty_supply_layer_distance(
         'execution_time': time.time() - start_time,
         'highest_min_range': min_range,
         'total': total,
+        'value': value,
         'output': command_output,
         'success': b'Error!' not in command_output
     }

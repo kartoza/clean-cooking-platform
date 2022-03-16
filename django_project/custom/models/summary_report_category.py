@@ -28,7 +28,14 @@ class SummaryReportCategory(models.Model):
     category = models.CharField(
         max_length=255,
         default='',
-        blank=True
+        blank=True,
+        help_text='To be displayed in the table for the total value e.g. '
+                  'Total Number of health facilities.'
+    )
+
+    show_percentage = models.BooleanField(
+        default=False,
+        help_text='Show percentage value rather than absolute value.'
     )
 
     analysis = models.CharField(

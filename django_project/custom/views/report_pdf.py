@@ -372,6 +372,9 @@ class ReportPDFView(View):
                 )
                 summary_result_data['label'] = summary_category.name
                 summary_result_data['category'] = summary_category.category
+                summary_result_data['percentage'] = (
+                    summary_category.show_percentage
+                )
                 result.append(summary_result_data)
         return result
 
@@ -380,7 +383,8 @@ class ReportPDFView(View):
         boundary = self.boundary
         for ani_category in ani_categories:
             summary_result_data = calculate_poverty_supply_layer_distance(
-                self.geography, boundary, ani_category.supply_layer)
+                self.geography, boundary, ani_category.supply_layer,
+                ani_category.show_percentage)
             summary_result_data['label'] = ani_category.name
             summary_result_data['category'] = ani_category.category
             result.append(summary_result_data)
@@ -765,7 +769,7 @@ class ReportPDFView(View):
         self.table_summary_data = []
 
         self.demand_high_percentage = (
-            request.POST.get('demandDataHighPercentage', '')
+            request.POST.get('ccpDataHighPercentage', '')
         )
         self.supply_high_percentage = (
             request.POST.get('supplyDataHighPercentage', '')
@@ -797,9 +801,16 @@ class ReportPDFView(View):
                     'ccp'
                 )
                 for demand in demand_data:
+                    demand_value = demand['total_high']
+                    if demand['percentage']:
+                        demand_value = '{:,.2f}%'.format(
+                            demand_value / demand['total_in_raster'] * 100
+                        )
+                    else:
+                        demand_value = '{}'.format(demand_value)
                     self.demand_summary.append({
                         'desc': demand['label'],
-                        'value': '{}'.format(demand['total_high'])
+                        'value': demand_value
                     })
 
         if self.summary_categories.filter(analysis='supply').exists():
@@ -816,14 +827,23 @@ class ReportPDFView(View):
                     'supply'
                 )
                 for supply in supply_data:
+                    supply_value = supply['total_high']
+                    if supply['percentage']:
+                        supply_value = '{:,.2f}%'.format(
+                            supply_value / supply['total_in_raster'] * 100
+                        )
+                    else:
+                        supply_value = '{}'.format(supply_value)
+
                     self.supply_summary.append({
                         'desc': supply['label'],
-                        'value': '{}'.format(supply['total_high'])
+                        'value': supply_value
                     })
-                    self.table_summary_data.append([
-                        f'Number of\n\n\n{supply["category"]}',
-                        supply['total_in_raster']
-                    ])
+                    if supply['category']:
+                        self.table_summary_data.append([
+                            f'Number of\n\n\n{supply["category"]}',
+                            supply['total_in_raster']
+                        ])
 
         if self.summary_categories.filter(analysis='ani').exists():
             self.ani_summary = [
@@ -838,7 +858,7 @@ class ReportPDFView(View):
             for ani in ani_summary_data:
                 self.ani_summary.append({
                     'desc': ani['label'],
-                    'value': '{:,.0f}'.format(ani['total'])
+                    'value': ani['value']
                 })
 
         self.total_population = int(
