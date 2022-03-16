@@ -532,49 +532,74 @@ This is not fatal but the dataset is now disabled.`
 				footer: null
 			}).show();
 
-			fetch(this.geonode_metadata).then(response => response.text()).then(
-				html => {
-					let parser = new DOMParser();
-					let htmlDoc = parser.parseFromString(html, 'text/html');
-					let dds = htmlDoc.querySelectorAll('dd');
+			function createRowData(col, title = '', dtText = '') {
+				const _dt = document.createElement('dt');
+				_dt.innerHTML = title;
+				col.appendChild(_dt);
 
-					for (let dd of dds) {
-						if (dd.getInnerHTML() === ' -- ' ||
-								dd.getInnerHTML().toLowerCase() === 'none' ||
-								dd.getInnerHTML().toLowerCase() === 'no keywords' ||
-								dd.getInnerHTML().toLowerCase() === 'not filled' ||
-								dd.getInnerHTML().toLowerCase() === 'not specified' ||
-								dd.getInnerHTML().toLowerCase().includes('no information provided') ||
-								dd.previousElementSibling.getInnerHTML().includes('Language') ||
-								dd.previousElementSibling.getInnerHTML().includes('Resource ID') ||
-								dd.previousElementSibling.getInnerHTML().includes('Extent') ||
-								dd.previousElementSibling.getInnerHTML().includes('Spatial Reference System Identifier')
-							) {
-							dd.previousElementSibling.remove();
-							dd.remove();
+				const _dd = document.createElement('dd');
+				_dd.innerHTML = decodeHtml(dtText);
+				col.appendChild(_dd)
+			}
+
+			fetch(this.geonode_metadata).then(response => response.json()).then(
+				data => {
+					if (data['layer']) {
+
+						let layerData = data['layer'];
+
+						const row = document.createElement('div');
+						row.classList.add('metadata');
+						row.classList.add('row');
+
+						const col = document.createElement('div');
+						col.classList.add('col-12');
+
+						row.appendChild(col);
+
+						if (layerData['abstract']) {
+							createRowData(col, 'Description', layerData['abstract'])
 						}
 
-					}
-					let dts = htmlDoc.querySelectorAll('dt');
-					for (let dt of dts) {
-						if (dt.getInnerHTML() === 'Temporal Extent' || dt.getInnerHTML() === 'Thumbnail') {
-							dt.remove();
+						if (layerData['supplemental_information']) {
+							createRowData(col, 'Suggested Citation', layerData['supplemental_information'])
 						}
 
-						if (dt.getInnerHTML() === 'Responsible') {
+						if (layerData['data_quality_statement']) {
+							createRowData(col, 'Cautions', layerData['data_quality_statement'])
+						}
+
+						if (layerData['attribution']) {
+							createRowData(col, 'Sources', layerData['attribution'])
+						}
+
+						if (layerData['regions']) {
+							let regionText = '-';
 							try {
-								htmlDoc.querySelectorAll('dl')[0].insertBefore(c_dt, dt);
-								htmlDoc.querySelectorAll('dl')[0].insertBefore(c_dd, dt);
+								regionText = layerData['regions'][0]['name'];
 							} catch (e) {
 							}
+							createRowData(col, 'Spatial Resolution', regionText);
 						}
-					}
 
-					ea_modal.set({
-						header: this.name,
-						content: decodeHtml(htmlDoc.getElementsByClassName('container')[0].innerHTML),
-						footer: null
-					}).show();
+						if (layerData['date']) {
+							let date = new Date(layerData['date']);
+							date = date.toLocaleDateString();
+							createRowData(col, 'Date of content', date)
+						}
+
+						if (layerData['doi']) {
+							let link = 'http://dx.doi.org/' + layerData['doi'];
+							let doiData = `<a href="${link}">${layerData['doi']}</a>`;
+							createRowData(col, 'Links', doiData);
+						}
+
+						ea_modal.set({
+							header: this.name,
+							content: row,
+							footer: null
+						}).show();
+					}
 				}
 			)
 		}

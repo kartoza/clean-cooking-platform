@@ -5,7 +5,7 @@ x-common-django:
   &default-common-django
   build:
     context: ../
-    dockerfile: deployment/docker/Dockerfile
+    dockerfile: docker/Dockerfile
   image: kartoza/cca_django:latest
   environment:
     # editable in .env
