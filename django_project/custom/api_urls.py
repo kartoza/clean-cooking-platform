@@ -26,7 +26,12 @@ urlpatterns = [
         DatasetList.as_view()),
     url(r'^boundaries-dataset/$',
         BoundariesDataset.as_view()),
-    url(r'^subregion-list/(?P<geo_id>\d+)/(?P<subregion_selector>.*)/$',
+    url(r'^subregion-list/(?P<geo_id>\d+)/'
+        r'(?P<subregion_selector>[a-zA-Z0-9 ]*)/$',
+        SubregionListAPI.as_view()),
+    url(r'^subregion-list/(?P<geo_id>\d+)/'
+        r'(?P<subregion_selector>[a-zA-Z0-9_ ]*)/'
+        r'(?P<subregion_value>[a-zA-Z0-9_ ]*)/$',
         SubregionListAPI.as_view()),
     url(r'^geography-raster-mask/$',
         GeographyRasterMask.as_view()),

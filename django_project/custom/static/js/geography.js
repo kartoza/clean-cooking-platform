@@ -3,11 +3,19 @@ let boundaryUUID = '';
 let allLayerIds = null;
 let rasterGenerated = false;
 const countrySelect = document.getElementById('countrySelect');
+const provinceSelect = document.getElementById('provinceSelect');
+const districtSelect = document.getElementById('districtSelect');
+const municipalSelect = document.getElementById('municipalSelect');
 const subregionSelect = document.getElementById('subregionSelect');
 const discoverBtn = document.getElementById('btn-discover');
 const subregionPropertySelect = document.getElementById('subregionPropertySelect');
 const exploreBtn = document.getElementById('btn-explorer');
 const loadingSpinner1 = document.getElementById('loading-spinner-1');
+let provinceLayer = '';
+let districtLayer = '';
+let municipalLayer = '';
+let currentSubregionValue = '';
+let currentSubregionSelector = '';
 
 const selectCountry = (countryData) => {
   discoverBtn.disabled = false;
@@ -64,28 +72,29 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
 
 (function () {
 
-  const getSubregionPropertyList = (geoId, selector) => {
-    let url = `/api/subregion-list/${geoId}/${selector}/`;
-    return new Promise((resolve, reject) => fetch(url).then(response => response.json()).then(
-        data => resolve(data)
-    ).catch((error) => reject(error)))
+  const clearAndDisableSelect = (element) => {
+    element.innerHTML = '';
+    let opt = document.createElement('option');
+    opt.value = 'All';
+    opt.innerHTML = 'All';
+    element.appendChild(opt);
+    element.disabled = true;
   }
 
-  setTimeout(() => {
-    if (countrySelect) {
-      countrySelect.selectedIndex = 0;
-    }
-    subregionSelect.selectedIndex = 0;
-    if (subregionPropertySelect) {
-      subregionPropertySelect.selectedIndex = 0;
-    }
-  }, 100)
-
-  const generateRasterMask = () => {
+  const generateRasterMask = (subRegionSelector = '', subRegionValue = '') => {
     let url = '/api/geography-raster-mask/';
     const geoId = selectedGeo.value;
-    const subRegionSelector = selectedGeo.dataset[subregionSelect.value];
-    const subRegionValue = subregionPropertySelect.value;
+    if (!subRegionSelector) {
+      subRegionSelector = selectedGeo.dataset[subregionSelect.value];
+    }
+    if (!subRegionValue) {
+      subRegionValue = subregionPropertySelect.value;
+    }
+
+    currentSubregionValue = subRegionValue;
+    currentSubregionSelector = subRegionSelector;
+
+    loadingSpinner1.style.display = "block";
     return new Promise( (resolve, reject) => fetch(url, {
         method: 'POST',
         credentials: "same-origin",
@@ -100,9 +109,110 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
           subregion_value: subRegionValue
         })
       }).then((response) => response.json()).then(data => {
+        allLayerIds = data.AllLayerIds;
+        boundaryUUID = data.File.replace('.tif', '');
+        href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
+        showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'), true, 'subregion');
+        rasterGenerated = true;
+        loadingSpinner1.style.display = "none";
         resolve(data)
-      }).catch((error) => reject(error)));
+      }).catch((error) => {
+        alert("Unable to generate raster, please choose other subregion...")
+        console.error(error)
+        //statusBtn.disabled = false;
+        rasterGenerated = false;
+        loadingSpinner1.style.display = "none";
+        reject(error)
+    }));
   }
+
+  const getSubregionPropertyList = (geoId, selector, selectorValue = '') => {
+    let url = `/api/subregion-list/${geoId}/${selector}/`;
+    if (selectorValue) {
+      url += `${selectorValue}/`;
+    }
+    return new Promise((resolve, reject) => fetch(url).then(response => response.json()).then(
+        data => resolve(data)
+    ).catch((error) => reject(error)))
+  }
+
+  const fetchSubregionData = (selectorType, selectorElement, selectorValue = '') => {
+    getSubregionPropertyList(selectedGeo.value, selectorType, selectorValue).then(
+        data => {
+          loadingSpinner1.style.display = "none";
+          const subregionListData = data.subregion_list;
+          if (subregionListData) {
+            clearAndDisableSelect(selectorElement);
+            selectorElement.disabled = false;
+            for (let i = 0; i < subregionListData.length; i++) {
+              let opt = document.createElement('option');
+              opt.value = subregionListData[i];
+              opt.innerHTML = subregionListData[i];
+              selectorElement.appendChild(opt);
+            }
+          }
+        }
+    ).catch(
+        error => {
+          loadingSpinner1.style.display = "none";
+          console.error(error)
+        }
+    )
+  }
+
+  const getAllProvinces = () => {
+    fetchSubregionData(selectedGeo.dataset.province, provinceSelect);
+  }
+
+  provinceSelect.onchange = (e) => {
+    let provinceValue = e.target.value;
+    clearAndDisableSelect(municipalSelect);
+    if (provinceValue === 'All') {
+      clearAndDisableSelect(districtSelect)
+    } else {
+      generateRasterMask(selectedGeo.dataset.province, provinceValue).then(data => {
+        provinceLayer = data.RasterPath.replace('.tif', '.json');
+        fetchSubregionData(selectedGeo.dataset.province, districtSelect, provinceValue);
+      })
+    }
+  }
+
+  districtSelect.onchange = (e) => {
+    let districtValue = e.target.value;
+    if (districtValue === 'All') {
+      clearAndDisableSelect(municipalSelect);
+      currentSubregionSelector = selectedGeo.dataset.province;
+      currentSubregionValue = provinceSelect.value;
+      showGeoJSONLayer(provinceLayer, true, 'subregion');
+    } else {
+      generateRasterMask(selectedGeo.dataset.district, districtValue).then(data => {
+        districtLayer = data.RasterPath.replace('.tif', '.json');
+        fetchSubregionData(selectedGeo.dataset.district, municipalSelect, districtValue);
+      })
+    }
+  }
+
+  municipalSelect.onchange = (e) => {
+    let municipalValue = e.target.value;
+    if (municipalValue === 'All') {
+      currentSubregionSelector = selectedGeo.dataset.district;
+      currentSubregionValue = districtSelect.value;
+      showGeoJSONLayer(districtLayer, true, 'subregion');
+    } else {
+      generateRasterMask(selectedGeo.dataset.municipal, municipalValue);
+    }
+  }
+
+  setTimeout(() => {
+    if (countrySelect) {
+      countrySelect.selectedIndex = 0;
+    }
+    if (provinceSelect) {
+      provinceSelect.selectedIndex = 0;
+    }
+    // Get all provinces
+    getAllProvinces();
+  }, 100)
 
   if (countrySelect) {
     countrySelect.onchange = (e) => {
@@ -134,110 +244,26 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
     }
   }
 
-  subregionSelect.onchange = (e) => {
-    const selectedSubRegion = e.target.options[e.target.selectedIndex];
-    if (!selectedGeo) return false;
-
-    const subRegionSelector = selectedGeo.dataset[selectedSubRegion.value];
-
-    if (selectedSubRegion.value === '-') {
-      let x = document.querySelectorAll(".subregion-elm");
-      let i;
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-      }
-      return
-    } else {
-      loadingSpinner1.style.display = "block";
-    }
-
-    //statusBtn.querySelector('.text').innerHTML = 'Generate Sub Region Boundary';
-    //statusBtn.disabled = false;
-
-    let loadingOption = document.createElement('option');
-    subregionPropertySelect.innerHTML = '';
-    loadingOption.innerHTML = 'loading...';
-    subregionPropertySelect.appendChild(loadingOption);
-    subregionPropertySelect.disabled = true;
-
-    getSubregionPropertyList(selectedGeo.value, subRegionSelector).then(
-        data => {
-          let x = document.querySelectorAll(".subregion-elm");
-          let i;
-          for (i = 0; i < x.length; i++) {
-            x[i].style.display = "flex";
-          }
-          loadingSpinner1.style.display = "none";
-          const subregionListData = data.subregion_list;
-          document.getElementById('subregionPropertyLabel').innerHTML = selectedSubRegion.innerHTML;
-          subregionPropertySelect.innerHTML = '';
-          subregionPropertySelect.disabled = false;
-          if (subregionListData) {
-            let opt = document.createElement('option');
-            opt.value = '-';
-            opt.innerHTML = 'All';
-            subregionPropertySelect.appendChild(opt);
-
-            for (let i = 0; i < subregionListData.length; i++) {
-              let opt = document.createElement('option');
-              opt.value = subregionListData[i];
-              opt.innerHTML = subregionListData[i];
-              subregionPropertySelect.appendChild(opt);
-            }
-          }
-        }
-    ).catch(
-        error => {
-          console.error(error)
-          loadingSpinner1.style.display = "none";
-          subregionPropertySelect.innerHTML = "";
-          subregionPropertySelect.disabled = false;
-        }
-    )
-  }
-
-  subregionPropertySelect.onchange = (e) => {
-    const selectedData = e.target.options[e.target.selectedIndex];
-    const geoId = selectedGeo.value;
-    const subRegionSelector = selectedGeo.dataset[subregionSelect.value];
-    const subRegionValue = subregionPropertySelect.value;
-    if (selectedData.value === '-') {
-      return false
-    }
-    loadingSpinner1.style.display = "block";
-    generateRasterMask().then(data => {
-      allLayerIds = data.AllLayerIds;
-      boundaryUUID = data.File.replace('.tif', '');
-      href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
-      showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'), true, 'subregion');
-      rasterGenerated = true;
-      loadingSpinner1.style.display = "none";
-    }).catch(error => {
-      alert("Unable to generate raster, please choose other subregion...")
-      //statusBtn.disabled = false;
-      rasterGenerated = false;
-      loadingSpinner1.style.display = "none";
-    })
-  }
-
   discoverBtn.onclick = (e) => {
     e.preventDefault();
     const geoId = selectedGeo.value;
-    const subRegionSelector = selectedGeo.dataset[subregionSelect.value];
-    const subRegionValue = subregionPropertySelect.value;
-    if (subRegionSelector && subRegionValue !== '-') {
+    if (!rasterGenerated) {
       discoverBtn.querySelector('.text').innerHTML = 'Generating raster';
       discoverBtn.disabled = true;
     } else {
       rasterGenerated = true;
     }
-    if (!rasterGenerated && subRegionValue) {
+    if (!href) {
       generateRasterMask().then(data => {
          boundaryUUID = data.File.replace('.tif', '');
-         window.location.href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
+         window.location.href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${currentSubregionSelector}:${currentSubregionValue}`;
       })
     } else {
-      window.location.href = href;
+      if (currentSubregionSelector &&  currentSubregionValue) {
+        window.location.href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${currentSubregionSelector}:${currentSubregionValue}`;
+      } else {
+        window.location.href = href;
+      }
     }
   }
 
