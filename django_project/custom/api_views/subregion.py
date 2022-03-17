@@ -17,9 +17,13 @@ from geonode.layers.models import Layer
 
 class SubregionListAPI(APIView):
 
-    def get_property_list_from_geoserver(self, layer_name, property_name):
+    def get_property_list_from_geoserver(self,
+                                         geography,
+                                         property_name,
+                                         property_value = None):
         cache_exist = False
         subregion_list = None
+        layer_name = str(geography.vector_boundary_layer)
 
         url = f'{settings.GEOSERVER_PUBLIC_LOCATION}/wfs'
         params = {
@@ -29,6 +33,16 @@ class SubregionListAPI(APIView):
             'typeNames': layer_name,
             'valueReference': property_name
         }
+
+        if property_value:
+            params['cql_filter'] = f"{property_name}='{property_value}'"
+
+            # Change the valueReference to the child of the selector, to get
+            # all descendant values
+            if property_name == geography.province_selector:
+                params['valueReference'] = geography.district_selector
+            elif property_name == geography.district_selector:
+                params['valueReference'] = geography.municipal_selector
 
         file_name = str(uuid.uuid3(
             uuid.NAMESPACE_DNS,
@@ -66,7 +80,7 @@ class SubregionListAPI(APIView):
 
         return subregion_list
 
-    def get(self, request, geo_id, subregion_selector):
+    def get(self, request, geo_id, subregion_selector, subregion_value = None):
         try:
             geography = Geography.objects.get(
                 id=geo_id
@@ -75,13 +89,15 @@ class SubregionListAPI(APIView):
             raise Http404
 
         subregion_list = self.get_property_list_from_geoserver(
-            layer_name=str(geography.vector_boundary_layer),
-            property_name=subregion_selector
+            geography=geography,
+            property_name=subregion_selector,
+            property_value=subregion_value
         )
 
         return Response({
             'geography': geography.name,
             'subregion_selector': subregion_selector,
+            'subregion_value': subregion_value,
             'subregion_list': subregion_list
         })
 
