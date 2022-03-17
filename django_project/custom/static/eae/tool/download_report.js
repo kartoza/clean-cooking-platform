@@ -96,57 +96,59 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 	}
 
 	if (addedLayers) {
-		for (let i = 0; i < addedLayers.length; i++) {
-			DST.get(addedLayers[i]).visibility(false)
-		}
-		let last_active = null;
-		for (let i = 0; i < addedLayers.length; i++) {
-			continue;
-			if (last_active) {
-				last_active.visibility(false);
+		if (document.querySelector('#showMapLayers') && document.querySelector('#showMapLayers').checked) {
+			for (let i = 0; i < addedLayers.length; i++) {
+				DST.get(addedLayers[i]).visibility(false)
 			}
-			let layerFile = DST.get(addedLayers[i]).vectors || DST.get(addedLayers[i]).raster;
-			let geonodeLayer = layerFile.geonode_layer;
-			if (!geonodeLayer) continue;
-			DST.get(addedLayers[i]).visibility(true)
-			last_active = DST.get(addedLayers[i]);
-			await delay(0.5)
+			let last_active = null;
+			fd.append('showMapLayers', 'True');
+			for (let i = 0; i < addedLayers.length; i++) {
+				if (last_active) {
+					last_active.visibility(false);
+				}
+				let layerFile = DST.get(addedLayers[i]).vectors || DST.get(addedLayers[i]).raster;
+				let geonodeLayer = layerFile.geonode_layer;
+				if (!geonodeLayer) continue;
+				DST.get(addedLayers[i]).visibility(true)
+				last_active = DST.get(addedLayers[i]);
+				await delay(0.5)
 
-			let fd = new FormData();
-			fd.append('boundaryUuid', boundary);
-			fd.append('presetId', PRESET_ID);
-			fd.append('geonodeLayer', geonodeLayer);
-			let destinationHeight = 480;
-			let destinationWidth = 900;
+				let fd = new FormData();
+				fd.append('boundaryUuid', boundary);
+				fd.append('presetId', PRESET_ID);
+				fd.append('geonodeLayer', geonodeLayer);
+				let destinationHeight = 480;
+				let destinationWidth = 900;
 
-			const canvas = document.getElementById('output-clone');
-			const ctx = canvas.getContext("2d");
-			let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
+				const canvas = document.getElementById('output-clone');
+				const ctx = canvas.getContext("2d");
+				let mapCanvas = document.getElementsByClassName('mapboxgl-canvas')[0];
 
-			let width = mapCanvas.width;
-			let height = mapCanvas.height;
+				let width = mapCanvas.width;
+				let height = mapCanvas.height;
 
-			if (ratio) {
-				width = height / ratio[1] * ratio[0]
+				if (ratio) {
+					width = height / ratio[1] * ratio[0]
+				}
+
+				canvas.width = destinationWidth;
+				canvas.height = destinationHeight;
+
+				// ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight,
+				// destinationX, destinationY, destinationWidth, destinationHeight);
+				ctx.drawImage(mapCanvas,
+					(mapCanvas.width / 2) - (width / 2), 0,
+					width, height,
+					0, 0,
+					destinationWidth, destinationHeight
+				);
+				let mapImage = canvas.toDataURL('image/png', 1.0);
+				fd.append('image', mapImage);
+				await api_post('/api/map-image-api/', fd);
 			}
-
-			canvas.width = destinationWidth;
-			canvas.height = destinationHeight;
-
-			// ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight,
-			// destinationX, destinationY, destinationWidth, destinationHeight);
-			ctx.drawImage(mapCanvas,
-				(mapCanvas.width / 2) - (width / 2), 0,
-				width, height,
-				0, 0,
-				destinationWidth, destinationHeight
-			);
-			let mapImage = canvas.toDataURL('image/png', 1.0);
-			fd.append('image', mapImage);
-			await api_post('/api/map-image-api/', fd);
-		}
-		for (let i = 0; i < addedLayers.length; i++) {
-			DST.get(addedLayers[i]).visibility(true)
+			for (let i = 0; i < addedLayers.length; i++) {
+				DST.get(addedLayers[i]).visibility(true)
+			}
 		}
 		await delay(0.5)
 	}
