@@ -1,3 +1,4 @@
+import ast
 import io
 import math
 import os.path
@@ -95,6 +96,7 @@ class ReportPDFView(View):
     boundary = ''
     categories = []
     table_supply_demand_y_pos = 0
+    show_map_layers = False
 
     default_font = 'AktivGroteskCorpMedium'
     default_font_bold = 'AktivGroteskCorpBold'
@@ -766,6 +768,10 @@ class ReportPDFView(View):
         self.ani_image = request.POST.get('aniImage', None)
         self.subregion = request.POST.get('subRegion', '')
         self.geography = Geography.objects.get(id=geo_id)
+        self.show_map_layers = ast.literal_eval(
+            request.POST.get('showMapLayers', 'False')
+        )
+
         self.table_summary_data = []
 
         self.demand_high_percentage = (
@@ -958,8 +964,9 @@ class ReportPDFView(View):
                 current_page_number += 1
                 PageBreak()
 
-        # self.draw_all_layers(p, current_page_number)
-        # PageBreak()
+        if self.show_map_layers:
+            self.draw_all_layers(p, current_page_number)
+            PageBreak()
 
         self.draw_page_end(p)
         PageBreak()

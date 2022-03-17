@@ -3,6 +3,7 @@ const loadingSpinner1 = document.getElementById('loading-spinner-1');
 const loadingSpinner0 = document.getElementById('loading-spinner-0');
 const progressBar = document.getElementById('progress-bar');
 const presetDesc = document.getElementById('preset-desc');
+const showMapLayers = document.querySelector('#showMapLayers');
 let clippingProgress = 0;
 let doneLayer = 0;
 
