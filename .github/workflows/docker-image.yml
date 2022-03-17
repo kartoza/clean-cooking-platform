@@ -36,7 +36,7 @@ jobs:
           context: .
           file: deployment/docker/Dockerfile
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags }}
+          tags: ${{ secrets.DOCKERHUB_REPO }}/cca_django:${{ github.event.inputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           cache-from: |
             type=gha,scope=test
