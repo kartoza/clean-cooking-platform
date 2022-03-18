@@ -22,6 +22,7 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.platypus import (
     SimpleDocTemplate, Table, PageBreak, TableStyle, Paragraph
 )
+from reportlab.platypus.flowables import TopPadder
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.units import inch
 
@@ -134,6 +135,12 @@ class ReportPDFView(View):
 
         population_added = False
         table_y = y_pos - 30
+        table_row_count = 1
+        table_row = {
+            'demand': 0,
+            'supply': 0,
+            'other': 0
+        }
 
         for category_data in self.categories:
             category = category_data['category']
@@ -157,6 +164,19 @@ class ReportPDFView(View):
 
         if not population_added:
             data['other'].append('Population')
+
+        for table_key in data:
+            for table_data in data[table_key]:
+                count = 1
+                if 'Importance' in table_data:
+                    count += 1
+                if 'Domain' in table_data:
+                    count += 1
+                table_row[table_key] += count
+
+        table_row_count += (
+            max(table_row['demand'], table_row['supply'], table_row['other'])
+        )
 
         table_data = [
             ['Supply', 'Demand', 'Other'],
@@ -192,16 +212,19 @@ class ReportPDFView(View):
             ('BACKGROUND', (0, 0), (2, -1), colors.white),
             ('TEXTCOLOR', (0, 0), (2, -1), colors.Color(
                 red=29 / 255, green=63 / 255, blue=116 / 255)),
-            ('FONTSIZE', (0, 0), (2, -1), 23),
+            ('FONTSIZE', (0, 0), (2, -1), 20),
             ('VALIGN', (0, 0), (2, -1), 'MIDDLE'),
             ('RIGHTPADDING', (0, 0), (2, -1), 50),
             ('LEFTPADDING', (0, 0), (2, -1), 20),
-            ('BOTTOMPADDING', (0, 0), (2, -1), 30),
+            ('BOTTOMPADDING', (0, 0), (2, -1), 20),
         ]
 
-        table_y -= len(table_data) * 45
+        table_y -= table_row_count * 30
 
         table = Table(table_data, colWidths=[4*inch,4*inch])
+        table.Align = 'BOTTOM'
+        table.vAlign = 'BOTTOM'
+
         table.setStyle(TableStyle(table_style))
         table.wrapOn(canvas, table_width, table_height)
         table.drawOn(canvas, table_x, table_y)
@@ -516,8 +539,11 @@ class ReportPDFView(View):
             35
         )
 
-        urban_ratio = self.total_urban_population / self.total_population * 100 if self.total_urban_population > 0 else 0
-        poverty_percentage = self.total_poverty / self.total_population * 100 if self.total_poverty > 0 else 0
+        urban_ratio = 0
+        poverty_percentage = 0
+        if self.total_population > 0:
+            urban_ratio = self.total_urban_population / self.total_population * 100 if self.total_urban_population > 0 else 0
+            poverty_percentage = self.total_poverty / self.total_population * 100 if self.total_poverty > 0 else 0
 
         table_data = [
             ['', self.subregion],
@@ -550,11 +576,11 @@ class ReportPDFView(View):
             ('BACKGROUND', (0, 0), (1, -1), colors.white),
             ('TEXTCOLOR', (0, 0), (1, -1), colors.Color(
                 red=29 / 255, green=63 / 255, blue=116 / 255)),
-            ('FONTSIZE', (0, 0), (1, -1), 23),
+            ('FONTSIZE', (0, 0), (1, -1), 20),
             ('VALIGN', (0, 0), (1, -1), 'MIDDLE'),
             ('RIGHTPADDING', (0, 0), (1, -1), 50),
             ('LEFTPADDING', (0, 0), (1, -1), 20),
-            ('BOTTOMPADDING', (0, 0), (1, -1), 30),
+            ('BOTTOMPADDING', (0, 0), (1, -1), 20),
         ]
 
         table = Table(table_data, colWidths=[6.4 * inch, 4 * inch])
