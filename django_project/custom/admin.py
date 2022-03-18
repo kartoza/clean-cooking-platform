@@ -218,9 +218,6 @@ class SummaryReportCategoryAdmin(admin.ModelAdmin):
         'preset__name'
     )
     actions = [test_calculation, ]
-    exclude = (
-        'category',
-    )
 
     class Media:
         js = ('/static/admin/js/summary_report_category.js', )

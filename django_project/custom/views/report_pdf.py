@@ -91,9 +91,11 @@ class ReportPDFView(View):
     table_summary_data = []
     total_population = 0
     total_urban_population = 0
+    total_urban_percentage = 0
     total_household = 0
     total_cooking_percentage = 0
     total_poverty = 0
+    total_poverty_percentage = 0
     boundary = ''
     categories = []
     table_supply_demand_y_pos = 0
@@ -235,7 +237,7 @@ class ReportPDFView(View):
             ('BOTTOMPADDING', (0, 0), (2, -1), 20),
         ]
 
-        table_y -= table_row_count * 30
+        table_y -= (table_row_count * 30) + 50
 
         col_width = 4 if other_data else 6
         table = Table(table_data, colWidths=[
@@ -557,24 +559,20 @@ class ReportPDFView(View):
             35
         )
 
-        urban_ratio = 0
-        poverty_percentage = 0
-        if self.total_population > 0:
-            urban_ratio = self.total_urban_population / self.total_population * 100 if self.total_urban_population > 0 else 0
-            poverty_percentage = self.total_poverty / self.total_population * 100 if self.total_poverty > 0 else 0
-
         table_data = [
             ['', self.subregion],
             ['Population', '{:,}'.format(
                 math.trunc(float(self.total_population)))],
             ['Households', '{:,}'.format(
                 math.trunc(float(self.total_household)))],
-            ['Urban ratio', '{:,.2f}%'.format(urban_ratio)],
+            ['Urban ratio', '{:,.2f}%'.format(
+                self.total_urban_percentage
+            )],
             ['Population relying on\n\n\npolluting fuels and '
              'technologies',
              '{:,.2f}%'.format(self.total_cooking_percentage)],
-            ['Portion under the poverty line',
-             '{:,.2f}%'.format(poverty_percentage)]
+            ['Portion under the poverty line 2', '{:,.2f}%'.format(
+                self.total_poverty_percentage)]
         ]
 
         self._draw_supply_demand_table(page, y_pos)
@@ -838,7 +836,7 @@ class ReportPDFView(View):
             preset=self.preset
         )
 
-        if self.summary_categories.filter(analysis='ccp').exists():
+        if self.demand_high_percentage:
             self.demand_summary = [
                 {
                     'desc': self.preset.population_ccp_text,
@@ -863,7 +861,7 @@ class ReportPDFView(View):
                         'value': demand_value
                     })
 
-        if self.summary_categories.filter(analysis='supply').exists():
+        if self.supply_high_percentage:
             self.supply_summary = [
                 {
                     'desc': self.preset.population_supply_text,
@@ -891,7 +889,7 @@ class ReportPDFView(View):
                     })
                     if supply['category']:
                         self.table_summary_data.append([
-                            f'Number of\n\n\n{supply["category"]}',
+                            f'Number of\n\n{supply["category"]}',
                             supply['total_in_raster']
                         ])
 
@@ -933,8 +931,8 @@ class ReportPDFView(View):
                 urban_result = None
             if urban_result:
                 if urban_result['success']:
-                    self.total_urban_population = (
-                        urban_result['total_urban_population']
+                    self.total_urban_percentage = (
+                        urban_result['total_urban_percentage']
                     )
 
         if self.geography.cooking_percentage_layer:
@@ -963,6 +961,9 @@ class ReportPDFView(View):
                 if poverty_result['success']:
                     self.total_poverty = (
                         poverty_result['total_poverty_population']
+                    )
+                    self.total_poverty_percentage = (
+                        poverty_result['total_poverty_percentage']
                     )
 
         if use_case_id:

@@ -256,6 +256,7 @@ def _calculate_weight_average(
             src = rasterio.open(population_raster_file)
             arr = src.read()
             arr[np.isinf(arr)] = 0
+            arr[np.isin(arr, [-99999])] = 0
             total_population = np.nansum(arr)
 
     return total, total_population, command_output
@@ -274,6 +275,7 @@ def calculate_urban(geography: Geography, boundary_id: str):
         'execution_time': time.time() - start_time,
         'total_population': total_population,
         'total_urban_population': total,
+        'total_urban_percentage': total / total_population * 100,
         'output': command_output,
         'success': b'Error!' not in command_output
     }
@@ -285,11 +287,13 @@ def calculate_poverty(geography: Geography, boundary_id: str):
         boundary_id,
         geography.wealth_index_layer,
         'B*logical_and(A>0,A<50)',
+        True
     )
     return {
         'calculation': 'Total Population in Poverty Area',
         'execution_time': time.time() - start_time,
         'total_poverty_population': total,
+        'total_poverty_percentage': total / total_population * 100,
         'output': command_output,
         'success': b'Error!' not in command_output
     }
