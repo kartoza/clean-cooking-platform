@@ -134,6 +134,7 @@ class ReportPDFView(View):
         }
 
         population_added = False
+        other_data = False
         table_y = y_pos - 30
         table_row_count = 1
         table_row = {
@@ -161,9 +162,16 @@ class ReportPDFView(View):
                 data['supply'].append(category_name)
             if not category.demand_index and not category.supply_index:
                 data['other'].append(category_name)
+                other_data = True
 
         if not population_added:
             data['other'].append('Population')
+            other_data = True
+
+        if len(data['supply']) == 0:
+            data['supply'].append('No supply facilities found')
+        if len(data['demand']) == 0:
+            data['demand'].append('No demand facilities found')
 
         for table_key in data:
             for table_data in data[table_key]:
@@ -178,19 +186,27 @@ class ReportPDFView(View):
             max(table_row['demand'], table_row['supply'], table_row['other'])
         )
 
-        table_data = [
-            ['Supply', 'Demand', 'Other'],
-        ]
+        if not other_data:
+            table_data = [
+                ['Supply', 'Demand'],
+            ]
+            del data['other']
+        else:
+            table_data = [
+                ['Supply', 'Demand', 'Other'],
+            ]
 
         for supply in data['supply']:
-            table_data.append([supply, '', ''])
+            table_data.append([supply, '', ''] if other_data else [supply, ''])
 
         demand_index = 1
         for demand in data['demand']:
             if len(table_data) > demand_index:
                 table_data[demand_index][1] = demand
             else:
-                table_data.append(['', demand, ''])
+                table_data.append(
+                    ['', demand, ''] if other_data else ['', demand]
+                )
             demand_index += 1
 
         other_index = 1
@@ -221,7 +237,9 @@ class ReportPDFView(View):
 
         table_y -= table_row_count * 30
 
-        table = Table(table_data, colWidths=[4*inch,4*inch])
+        col_width = 4 if other_data else 6
+        table = Table(table_data, colWidths=[
+            col_width*inch,col_width*inch])
         table.Align = 'BOTTOM'
         table.vAlign = 'BOTTOM'
 
