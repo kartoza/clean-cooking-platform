@@ -836,7 +836,7 @@ class ReportPDFView(View):
             preset=self.preset
         )
 
-        if self.summary_categories.filter(analysis='ccp').exists():
+        if self.demand_high_percentage:
             self.demand_summary = [
                 {
                     'desc': self.preset.population_ccp_text,
@@ -861,7 +861,7 @@ class ReportPDFView(View):
                         'value': demand_value
                     })
 
-        if self.summary_categories.filter(analysis='supply').exists():
+        if self.supply_high_percentage:
             self.supply_summary = [
                 {
                     'desc': self.preset.population_supply_text,
