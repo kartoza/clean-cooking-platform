@@ -235,7 +235,7 @@ class ReportPDFView(View):
             ('BOTTOMPADDING', (0, 0), (2, -1), 20),
         ]
 
-        table_y -= table_row_count * 30
+        table_y -= (table_row_count * 30) + 50
 
         col_width = 4 if other_data else 6
         table = Table(table_data, colWidths=[
@@ -574,7 +574,8 @@ class ReportPDFView(View):
              'technologies',
              '{:,.2f}%'.format(self.total_cooking_percentage)],
             ['Portion under the poverty line',
-             '{:,.2f}%'.format(poverty_percentage)]
+             '{:,.2f}%'.format(poverty_percentage)],
+            ['Portion under the poverty line 2', '{:,.2f}%'.format(self.total_poverty_percentage)]
         ]
 
         self._draw_supply_demand_table(page, y_pos)
@@ -891,7 +892,7 @@ class ReportPDFView(View):
                     })
                     if supply['category']:
                         self.table_summary_data.append([
-                            f'Number of\n\n\n{supply["category"]}',
+                            f'Number of\n\n{supply["category"]}',
                             supply['total_in_raster']
                         ])
 
@@ -963,6 +964,9 @@ class ReportPDFView(View):
                 if poverty_result['success']:
                     self.total_poverty = (
                         poverty_result['total_poverty_population']
+                    )
+                    self.total_poverty_percentage = (
+                        poverty_result['total_poverty_percentage']
                     )
 
         if use_case_id:
