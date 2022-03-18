@@ -275,6 +275,7 @@ def calculate_urban(geography: Geography, boundary_id: str):
         'execution_time': time.time() - start_time,
         'total_population': total_population,
         'total_urban_population': total,
+        'total_urban_percentage': total / total_population * 100,
         'output': command_output,
         'success': b'Error!' not in command_output
     }
