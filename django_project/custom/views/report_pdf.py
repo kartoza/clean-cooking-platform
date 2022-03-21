@@ -801,7 +801,7 @@ class ReportPDFView(View):
         self.map_image = request.POST.get('mapImage', '')
         self.demand_image = request.POST.get('demandImage', None)
         self.ccp_image = request.POST.get('ccpImage', None)
-        self.ccp_tiff_file = request.POST.get('ccpTiff', None)
+        self.ccp_tiff_file = request.FILES.get('ccpTiff', None)
         self.demand_tiff_file = request.FILES.get('demandTiff', None)
         self.supply_tiff_file = request.FILES.get('supplyTiff', None)
         self.ani_tiff_file = request.FILES.get('aniTiff', None)
