@@ -76,7 +76,7 @@ section.banner:before {
 
 section.hero-medium {
     position: relative;
-    min-height: 450px;
+    min-height: 600px;
     background-size: cover;
     background-position: right top;
 }
@@ -108,13 +108,13 @@ section.hero-medium .content {
     position: relative;
 }
 section.hero-medium svg.bg-flair-1 {
-    top: -185px;
+    top: -250px;
     left: -700px;
 }
 
 section.hero-medium .text-content h1 {
     color: #FFFFFF;
-    margin-bottom: 50px;
+    margin-bottom: 200px;
 }
 
 @media screen and (min-width: 768px) {
@@ -134,7 +134,7 @@ section.hero-medium .bg-image {
 
 section.hero-medium {
     z-index: 1;
-    min-height: 450px;
+    min-height: 600px;
     background-size: cover;
     background-position: right top;
     padding-top: 0;
@@ -169,7 +169,7 @@ section.hero-medium .h2 {
 
 @media screen and (max-width: 768px) {
     section.hero-medium {
-        padding-bottom: 200px;
+        padding-bottom: 0;
     }
     section.hero-medium svg.flair-right {
         top: 80%;
@@ -184,14 +184,14 @@ section.hero-medium .h2 {
         height: 700px;
     }
     section.hero-medium .text-content {
-        margin-top: 50px;
+        margin-top: -200px;
     }
     section.hero-medium .text-content h1 {
         font-size: 40px;
         line-height: 48px;
     }
     section.hero-medium svg.bg-flair-1 {
-        top: -120px;
+        top: -450px;
         left: -840px;
     }
 }
