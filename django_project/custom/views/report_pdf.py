@@ -22,7 +22,6 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.platypus import (
     SimpleDocTemplate, Table, PageBreak, TableStyle, Paragraph
 )
-from reportlab.platypus.flowables import TopPadder
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.units import inch
 
@@ -673,7 +672,7 @@ class ReportPDFView(View):
             PageBreak()
 
     def draw_ccp_page(self, page, page_number = 3):
-        if not self.demand_image:
+        if not self.ccp_image:
             return
 
         self._draw_sidebar(page, (0.459, 0.714, 0.831))
