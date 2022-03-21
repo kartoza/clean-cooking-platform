@@ -815,7 +815,7 @@ class ReportPDFView(View):
 
         self.table_summary_data = []
 
-        self.demand_high_percentage = (
+        self.ccp_high_percentage = (
             request.POST.get('ccpDataHighPercentage', '')
         )
         self.supply_high_percentage = (
@@ -835,29 +835,29 @@ class ReportPDFView(View):
             preset=self.preset
         )
 
-        if self.demand_high_percentage:
+        if self.ccp_high_percentage:
             self.demand_summary = [
                 {
                     'desc': self.preset.population_ccp_text,
-                    'value': f'{self.demand_high_percentage}%'
+                    'value': f'{self.ccp_high_percentage}%'
                 }
             ]
-            if self.demand_tiff_file:
-                demand_data = self._calculate_demand_supply(
-                    self.demand_tiff_file,
+            if self.ccp_tiff_file:
+                ccp_data = self._calculate_demand_supply(
+                    self.ccp_tiff_file,
                     'ccp'
                 )
-                for demand in demand_data:
-                    demand_value = demand['total_high']
-                    if demand['percentage']:
-                        demand_value = '{:,.2f}%'.format(
-                            demand_value / demand['total_in_raster'] * 100
+                for ccp in ccp_data:
+                    ccp_value = ccp['total_high']
+                    if ccp['percentage']:
+                        ccp_value = '{:,.2f}%'.format(
+                            ccp_value / ccp['total_in_raster'] * 100
                         )
                     else:
-                        demand_value = '{}'.format(demand_value)
+                        ccp_value = '{}'.format(ccp_value)
                     self.demand_summary.append({
-                        'desc': demand['label'],
-                        'value': demand_value
+                        'desc': ccp['label'],
+                        'value': ccp_value
                     })
 
         if self.supply_high_percentage:
