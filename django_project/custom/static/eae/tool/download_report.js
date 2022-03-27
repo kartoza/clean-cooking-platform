@@ -163,18 +163,21 @@ export async function downloadReport(sourceWidth = null, sourceHeight = null, de
 	let presetId = PRESET_ID;
 	let useCaseId = USE_CASE_ID;
 
-	if(analysisType.includes('ccp')) {
-		window.eaiData = await run_analysis("eai", presetId)
-	}
-
-	if ( analysisType.includes('supply_demand')) {
-		window.demandData = await run_analysis("demand", presetId);
-	}
-	if (analysisType.includes('ani')) {
-		window.aniData = await run_analysis("ani", presetId);
-	}
-	if (analysisType.includes('supply') || analysisType.includes('supply_demand')) {
-		window.supplyData = await run_analysis("supply", presetId);
+	try {
+		if(analysisType.includes('ccp')) {
+			window.eaiData = await run_analysis("eai", presetId)
+		}
+		if ( analysisType.includes('supply_demand')) {
+			window.demandData = await run_analysis("demand", presetId);
+		}
+		if (analysisType.includes('ani')) {
+			window.aniData = await run_analysis("ani", presetId);
+		}
+		if (analysisType.includes('supply') || analysisType.includes('supply_demand')) {
+			window.supplyData = await run_analysis("supply", presetId);
+		}
+	} catch (e) {
+		console.error(e);
 	}
 
 	if (window.eaiData && !isCanvasBlank(document.getElementById('eai-output'))) {
