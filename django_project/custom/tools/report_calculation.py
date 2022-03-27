@@ -360,7 +360,10 @@ def calculate_poverty_supply_layer_distance(
             False,
             geography.wealth_index_layer
         )
-        percentage_value = total / total_all * 100
+        try:
+            percentage_value = total / total_all * 100
+        except ZeroDivisionError:
+            percentage_value = 0
         value =  '{:,.2f}%'.format(percentage_value)
 
     return {
