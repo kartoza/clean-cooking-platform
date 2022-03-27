@@ -570,7 +570,7 @@ class ReportPDFView(View):
             ['Population relying on\n\n\npolluting fuels and '
              'technologies',
              '{:,.2f}%'.format(self.total_cooking_percentage)],
-            ['Portion under the poverty line 2', '{:,.2f}%'.format(
+            ['Portion under the poverty line', '{:,.2f}%'.format(
                 self.total_poverty_percentage)]
         ]
 
@@ -690,7 +690,7 @@ class ReportPDFView(View):
             'Identifies areas with higher energy demand and potential of '
             'supply which are characterized with higher index values.',
             100,
-            100, 125, 40
+            100, 150, 40
         )
 
         page.showPage()
