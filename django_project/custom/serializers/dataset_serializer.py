@@ -35,11 +35,14 @@ def geonode_layer_links(geonode_layer, geography):
         url = url.replace('EPSG:3857', 'EPSG:4326')
         x = geography.boundary_dimension_x
         y = geography.boundary_dimension_y
-        layer_url = '/proxy_cca/{url}&SCALESIZE=i({x}),j({y})'.format(
+        current_site = Site.objects.get_current()
+        layer_url = '{url}&SCALESIZE=i({x}),j({y})'.format(
             url=url,
             x=x,
             y=y
         )
+        if current_site.domain not in layer_url:
+            layer_url = '/proxy_cca/' + layer_url
 
     try:
         style_url = geonode_layer.default_style.sld_url
