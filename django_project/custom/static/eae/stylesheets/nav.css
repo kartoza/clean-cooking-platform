@@ -300,3 +300,11 @@ nav #navigation-links a {
 .dropdown-menu-cca {
   cursor: pointer;
 }
+
+nav.filter a {
+  color: #042549;
+}
+
+nav.filter .nav a:not(.active):hover {
+  color: #042549;
+}
