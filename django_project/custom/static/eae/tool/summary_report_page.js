@@ -382,12 +382,6 @@ export async function getDatasets(inputs, scenarioId, analysisType = []) {
 		}
 	}
 
-	// Wait for seconds
-	setTimeout(() => {
-		document.getElementById('loading-spinner-0').style.display = 'none';
-		document.getElementById('summary-button').disabled = false;
-		progressBar.style.width = '100%';
-	}, 500)
 }
 
 window.getDatasets = getDatasets;

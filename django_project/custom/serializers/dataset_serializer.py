@@ -15,14 +15,40 @@ from geonode.base.models import Link
 
 from custom.tools.simplify_layer import simplify_layer
 
+CACHED_TIFF_LAYERS_PATH = os.path.join(
+    settings.MEDIA_ROOT, 'cached_tiff_layers')
+
+def cached_raster_layer(layer_url, layer_name):
+    """
+    Download raster layer, so we don't need to request to geoserver everytime
+    """
+    if not os.path.exists(CACHED_TIFF_LAYERS_PATH):
+        os.mkdir(CACHED_TIFF_LAYERS_PATH)
+
+    layer_path = os.path.join(
+        CACHED_TIFF_LAYERS_PATH,
+        layer_name
+    )
+    r = requests.get(url=layer_url, stream=True)
+    chunk_size = 2000
+    with open(layer_path, 'wb') as fd:
+        for chunk in r.iter_content(chunk_size):
+            fd.write(chunk)
+    return settings.MEDIA_URL + os.path.join(
+        'cached_tiff_layers',
+        layer_name
+    )
+
 
 def geonode_layer_links(geonode_layer, geography):
     """
     Return links for layer and the style
     """
+    raster_layer = False
     if geonode_layer.is_vector():
         file_type = 'geojson'
     else:
+        raster_layer = True
         file_type = 'geotiff'
     links = Link.objects.filter(
         resource=geonode_layer,
@@ -41,8 +67,22 @@ def geonode_layer_links(geonode_layer, geography):
             x=x,
             y=y
         )
-        if current_site.domain not in layer_url:
-            layer_url = '/proxy_cca/' + layer_url
+        if raster_layer:
+            layer_tiff_name = geonode_layer.name + '.tiff'
+            layer_path = os.path.join(
+                CACHED_TIFF_LAYERS_PATH,
+                layer_tiff_name
+            )
+            if not os.path.exists(layer_path):
+                layer_url = cached_raster_layer(layer_url, layer_tiff_name)
+            else:
+                layer_url = settings.MEDIA_URL + os.path.join(
+                    'cached_tiff_layers',
+                    layer_tiff_name
+                )
+        else:
+            if current_site.domain not in layer_url:
+                layer_url = '/proxy_cca/' + layer_url
 
     try:
         style_url = geonode_layer.default_style.sld_url
