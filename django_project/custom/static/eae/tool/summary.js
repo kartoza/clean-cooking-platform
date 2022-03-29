@@ -22,8 +22,8 @@ async function summary() {
 
 	const content = ce('div');
 
-	let graphs;
-	const graphs_tab = ce('div', graphs = ce('div', null, { id: "summary-graphs" }), { class: 'tab' });
+	const graphs = ce('div', null, { id: "summary-graphs" });
+	const graphs_tab = ce('div', graphs, { class: 'tab' });
 
 	const summary = {};
 
@@ -38,8 +38,7 @@ async function summary() {
 	scale.append(ea_analysis_colorscale.svg.cloneNode(true), ramp);
 
 	async function get_summaries(idxn) {
-		let raster = ea_analysis(idxn);
-
+		let raster = await ea_analysis(idxn);
 		summary[idxn] = await analyse(raster);
 
 		let ppie = ea_svg_pie(summary[idxn]['population-density']['distribution'].map(x => [x]), 75, 0, ea_analysis_colorscale.stops, null);
@@ -129,7 +128,7 @@ async function summary() {
 	const footer = ce('div', [switcher, pdf, csv], { style: "text-align: center;" });
 
 	ea_modal.set({
-		header: "Snapshot",
+		header: "Summary",
 		content: content,
 		footer: footer
 	}).show();
@@ -145,7 +144,9 @@ export default async function analyse(raster) {
 		ds = DST.get('boundaries');
 	}
 
-	await ds.load('raster');
+	if (!ds.raster || !ds.raster.data) {
+		await ds.load('raster');
+	}
 	const p = ds.raster.data;
 	const nodata = ds.raster.nodata;
 
@@ -228,5 +229,6 @@ if (summaryButton) {
 		}
 	} else {
 		summaryButton.onclick = wrapper;
+		summaryButton.innerHTML = 'Clean Cooking Access Summary';
 	}
 }
