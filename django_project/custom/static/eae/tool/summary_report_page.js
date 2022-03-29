@@ -365,7 +365,8 @@ export async function getDatasets(inputs, scenarioId, analysisType = []) {
 		try {
 			if (typeof MAPBOX.getSource(inputList[i]) === 'undefined') {
 				let ds = DST.get(inputList[i]);
-				await ds.active(true, true);
+				await ds.load('raster')
+				ds.active(true, true);
 				let domain_data = DOMAIN_DATA.find(o => o.name === ds.id);
 				if (domain_data) {
 					ds._domain = domain_data.domain;
@@ -377,11 +378,9 @@ export async function getDatasets(inputs, scenarioId, analysisType = []) {
 				addedLayers.push(inputList[i]);
 			}
 		} catch (e) {
-			debugger;
 			console.log(e);
 		}
 	}
-
 }
 
 window.getDatasets = getDatasets;
