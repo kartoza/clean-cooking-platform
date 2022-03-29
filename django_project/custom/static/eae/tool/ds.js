@@ -642,21 +642,25 @@ This is not fatal but the dataset is now disabled.`
 	async load(arg) {
 		this.loading = true;
 
-		if (this.items) {
-			// Collections will (as of now) always share rasters.
-			if (this.raster) this.raster.parse();
-			await Promise.all(this.items.map(d => d.load(arg)));
-		}
+		try {
+			if (this.items) {
+				// Collections will (as of now) always share rasters.
+				if (this.raster) this.raster.parse();
+				await Promise.all(this.items.map(d => d.load(arg)));
+			}
 
-		if (this.mutant) {
-			await until(_ => maybe(this.hosts, 'length') === this.config.mutant_targets.length);
-			return Promise.all(this.hosts.map(d => d.load(arg)));
-		}
+			if (this.mutant) {
+				await until(_ => maybe(this.hosts, 'length') === this.config.mutant_targets.length);
+				return Promise.all(this.hosts.map(d => d.load(arg)));
+			}
 
-		if (!arg)
-			await Promise.all(['vectors', 'csv', 'raster'].map(i => this[i] ? this.load(i) : null));
-		else {
-			if (this[arg]) await this[arg].parse();
+			if (!arg)
+				await Promise.all(['vectors', 'csv', 'raster'].map(i => this[i] ? this.load(i) : null));
+			else {
+				if (this[arg]) await this[arg].parse();
+			}
+		} catch (e) {
+			console.log(e)
 		}
 
 		this.loading = false;

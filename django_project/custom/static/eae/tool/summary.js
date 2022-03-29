@@ -228,7 +228,9 @@ if (summaryButton) {
 			ea_loading(false);
 		}
 	} else {
-		summaryButton.onclick = wrapper;
-		summaryButton.innerHTML = 'Clean Cooking Access Summary';
+		if (!summaryButton.classList.contains('summary-button-download')) {
+			summaryButton.onclick = wrapper;
+			summaryButton.innerHTML = 'Clean Cooking Access Summary';
+		}
 	}
 }

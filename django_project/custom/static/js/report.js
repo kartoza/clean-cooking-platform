@@ -263,16 +263,16 @@ const clipSelectedLayer = async (boundary, layerId, drawToMap = true) => {
                 document.getElementById('loading-spinner-0').style.display = 'none';
                 document.getElementById('summary-button').disabled = false;
                 progressBar.style.width = '100%';
-            }, 1000)
+            }, 500)
         }
 
         Promise.allSettled(tasks).
-            then(function (results) {
+            then(async function (results) {
                 results.forEach((result) => console.log(result))
                 loadingSpinner1.style.display = "none";
                 ccaToolBtn.disabled = false;
-                window.getDatasets(inputString, scenarioSelect.value, analysisType);
-                MAPBOX.on('idle', updateSummaryButton);
+                await window.getDatasets(inputString, scenarioSelect.value, analysisType);
+                updateSummaryButton();
             });
     }
 
