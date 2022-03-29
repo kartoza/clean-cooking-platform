@@ -593,11 +593,11 @@ higher index values. It is an aggregated and weighted measure of all selected da
 under Resource Availability and Infrastructure.`
 	},
 	"ani": {
-		"name": "Assistance Need Index",
+		"name": "Finance Need Index",
 		"compound": null,
 		"description": "Areas where financial assistance is needed",
 		"info": `
-The Assistance Need Index identifies areas where market assistance is needed the most
+The Finance Need Index identifies areas where market assistance is needed the most
 which are characterized with higher index values. It is an aggregated and weighted
 measure of selected data sets under both Demand and Supply categories indicating high
 energy demand, low economic activity, and low access to infrastructure and resources.`
