@@ -250,9 +250,9 @@ class Category(models.Model):
 
     ani_index = models.BooleanField(
         default=False,
-        verbose_name='Use Assistance Need Index',
+        verbose_name='Use Finance Need Index',
         help_text=(
-            'The Assistance Need Index identifies areas where market '
+            'The Finance Need Index identifies areas where market '
             'assistance is needed the most which are characterized '
             'with higher index values. It is an aggregated and weighted '
             'measure of selected data sets under both Demand and Supply '

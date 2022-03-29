@@ -51,7 +51,7 @@ class Preset(models.Model):
         max_length=255,
         help_text='Description text in the report',
         default='Population with medium to high '
-                'Assistance Needed Index'
+                'Finance Needed Index'
     )
 
     class Meta:
