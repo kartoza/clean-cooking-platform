@@ -16,8 +16,6 @@
        href="/">
         <span class="notranslate">Clean Cooking Explorer</span>
     </a>
-    {% if user.is_authenticated %}
-
     <div id="navigation-links">
         <a href="/"
            class="toggleable">
@@ -60,18 +58,6 @@
         </a>
         -->
     </div>
-    {% else %}
-
-        <div id="navigation-links" class="login-menu-link">
-            <a></a><a></a>
-            <div class="login-link-container">
-                <a href="/account/login" class="toggleable login-link">
-                    Login
-                </a>
-            </div>
-
-        </div>
-    {% endif %}
 </nav>
 
 <script>
