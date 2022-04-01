@@ -26,12 +26,15 @@ const zoomToBoundingBox = (bboxString = '80.0584517,26.3479682,88.2015273,30.473
 let width, height, extent;
 
 const addedLayer = {};
-const showGeoJSONLayer = (url, checkLayerLoaded = true, layerId = 'boundary') => {
-  fetch(url).then(response => response.json()).then(
+const showGeoJSONLayer = async (url, checkLayerLoaded = true, layerId = 'boundary') => {
+  await fetch(url).then(response => response.json()).then(
       async data => {
         if (subregion_source) {
+          try {
             MAPBOX.removeLayer('subregion-layer');
             MAPBOX.removeSource('subregion-source');
+          } catch (e) {
+          }
         }
         subregion_source = MAPBOX.addSource('subregion-source', {
           type: 'geojson',

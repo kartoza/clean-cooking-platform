@@ -6,6 +6,8 @@ import zipfile
 import requests
 from django.conf import settings
 from django.http.response import Http404
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 

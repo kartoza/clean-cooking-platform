@@ -71,14 +71,6 @@ nav a#energy-access-link {
   margin-left: 4em;
 }
 
-nav a#energy-access-link:after {
-  content: 'BETA';
-  font-size: 0.5em;
-  position: relative;
-  top: -1.8em;
-  left: -3em;
-}
-
 nav a#submit-a-story {
   border: solid 1px var(--the-yellow);
   text-transform: unset;
