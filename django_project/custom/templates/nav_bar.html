@@ -45,10 +45,15 @@
             </div>
         </div>
 
+
         {% if user.is_superuser %}
             <a href="/admin"
                class="toggleable">
               Admin
+            </a>
+        {% else %}
+            <a href="/account/login">
+                Login
             </a>
         {% endif %}
         <!--

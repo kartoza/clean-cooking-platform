@@ -95,6 +95,9 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
     currentSubregionSelector = subRegionSelector;
 
     loadingSpinner1.style.display = "block";
+    discoverBtn.disabled = true;
+    exploreBtn.disabled = true;
+
     return new Promise( (resolve, reject) => fetch(url, {
         method: 'POST',
         credentials: "same-origin",
@@ -108,12 +111,14 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
           subregion_selector: subRegionSelector,
           subregion_value: subRegionValue
         })
-      }).then((response) => response.json()).then(data => {
+      }).then((response) => response.json()).then(async data => {
         allLayerIds = data.AllLayerIds;
         boundaryUUID = data.File.replace('.tif', '');
         href = `/use-case/?boundary=${boundaryUUID}&geoId=${geoId}&subRegion=${subRegionSelector}:${subRegionValue}`;
-        showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'), true, 'subregion');
+        await showGeoJSONLayer(data.RasterPath.replace('.tif', '.json'), true, 'subregion');
         rasterGenerated = true;
+        discoverBtn.disabled = false;
+        exploreBtn.disabled = false;
         loadingSpinner1.style.display = "none";
         resolve(data)
       }).catch((error) => {
@@ -139,7 +144,7 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
   const fetchSubregionData = (selectorType, selectorElement, selectorValue = '') => {
     getSubregionPropertyList(selectedGeo.value, selectorType, selectorValue).then(
         data => {
-          loadingSpinner1.style.display = "none";
+          // loadingSpinner1.style.display = "none";
           const subregionListData = data.subregion_list;
           if (subregionListData) {
             clearAndDisableSelect(selectorElement);
@@ -168,7 +173,10 @@ const clipSelectedLayerPromise = (boundary, layerId) => {
     let provinceValue = e.target.value;
     clearAndDisableSelect(municipalSelect);
     if (provinceValue === 'All') {
-      clearAndDisableSelect(districtSelect)
+      clearAndDisableSelect(districtSelect);
+      MAPBOX.removeLayer('subregion-layer');
+      MAPBOX.removeSource('subregion-source');
+      zoomToBoundingBox(selectedGeo.dataset.bbox);
     } else {
       generateRasterMask(selectedGeo.dataset.province, provinceValue).then(data => {
         provinceLayer = data.RasterPath.replace('.tif', '.json');
