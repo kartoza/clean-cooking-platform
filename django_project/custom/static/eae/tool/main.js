@@ -566,13 +566,12 @@ ea_params = {
 
 ea_indexes = {
 	"eai": {
-		"name": "Energy Access Potential",
+		"name": "Clean Cooking Potential Index",
 		"compound": ["demand", "supply"],
 		"description": "Current and/or potential",
 		"info": `
-The Energy Access Potential Index indentifies areas with higher energy demand and supply
-which are characterized with higher index values. It is an aggregated measure of all selected
-data sets under both Demand and Supply categories.`
+Is an aggregated measure of all selected data sets under both Demand and Supply categories.
+It identifies areas with higher energy demand and potential of supply which are characterized with higher index values.`
 	},
 	"demand": {
 		"name": "Demand Index",

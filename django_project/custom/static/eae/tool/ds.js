@@ -548,6 +548,8 @@ This is not fatal but the dataset is now disabled.`
 
 						let layerData = data['layer'];
 
+						console.log(layerData);
+
 						const row = document.createElement('div');
 						row.classList.add('metadata');
 						row.classList.add('row');
@@ -573,13 +575,14 @@ This is not fatal but the dataset is now disabled.`
 							createRowData(col, 'Sources', layerData['attribution'])
 						}
 
-						if (layerData['regions']) {
-							let regionText = '-';
-							try {
-								regionText = layerData['regions'][0]['name'];
-							} catch (e) {
+						if (layerData['keywords']) {
+							let spatialResolution = '-';
+							for (let keyword of layerData['keywords']) {
+								if (keyword['name'].includes('spatial_resolution:')) {
+									spatialResolution = keyword['name'].split(':')[1];
+								}
 							}
-							createRowData(col, 'Spatial Resolution', regionText);
+							createRowData(col, 'Spatial Resolution', spatialResolution);
 						}
 
 						if (layerData['date']) {
