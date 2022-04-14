@@ -131,8 +131,33 @@ def remove_dataset_cache(dataset: DatasetFile, layer: Layer):
 def layer_post_save(sender, instance, created, **kwargs):
     if created:
         return
+    import urllib.parse
+    from custom.serializers.dataset_serializer import cached_raster_layer
+    from custom.models import Geography
     if isinstance(instance, Layer):
         delete_vector_point_cache(instance.id)
+
+    layer_name = instance.name
+    tif_file = instance.link_set.filter(extension__icontains='tif').first()
+    if tif_file:
+        layer_name += '.' + tif_file.extension
+        url = tif_file.url
+        geography = Geography.objects.first()
+        url = urllib.parse.unquote(url)
+        url = url.replace('EPSG:3857', 'EPSG:4326')
+        x = geography.boundary_dimension_x
+        y = geography.boundary_dimension_y
+        layer_url = '{url}&SCALESIZE=i({x}),j({y})'.format(
+            url=url,
+            x=x,
+            y=y
+        )
+        layer_url = (
+            re.sub('.*geoserver/', settings.GEOSERVER_PUBLIC_LOCATION,
+                   layer_url, 1)
+        )
+        cached_raster_layer(layer_url, layer_name)
+
     if isinstance(instance, Style):
         instance = instance.layer_default_style.first()
     dataset = None

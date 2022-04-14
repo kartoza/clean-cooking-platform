@@ -304,7 +304,7 @@ function loadGeonodeLayer() {
 	this.add_source({
 		'type': 'raster',
 		'tiles': [
-			`/proxy_cca/${geoserverUrl}/wms?bbox={bbox-epsg-3857}&` +
+			`${geoserverUrl}/wms?bbox={bbox-epsg-3857}&` +
 			`format=image/png&TILED=true&service=WMS&version=1.1.1&` +
 			`request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&LAYERS=${layerName}`,
 		],
@@ -316,7 +316,7 @@ function loadGeonodeLayer() {
 		'paint': {}
 	});
 
-	let legendUrl = `/proxy_cca/${geoserverUrl}/ows?service=WMS&` +
+	let legendUrl = `${geoserverUrl}/ows?service=WMS&` +
 		`request=GetLegendGraphic&format=image/png&WIDTH=30&HEIGHT=20&` +
 		`transparent=true&LAYER=${layerName}&legend_options=fontAntiAliasing:true;fontSize:12;forceLabels:on`;
 	this.card.image_legends(legendUrl);

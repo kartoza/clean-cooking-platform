@@ -1,4 +1,8 @@
 import os
+import re
+import shutil
+import subprocess
+import time
 import urllib.parse
 
 import requests
@@ -29,11 +33,50 @@ def cached_raster_layer(layer_url, layer_name):
         CACHED_TIFF_LAYERS_PATH,
         layer_name
     )
+    if os.path.exists(layer_path):
+        os.remove(layer_path)
     r = requests.get(url=layer_url, stream=True)
     chunk_size = 2000
-    with open(layer_path, 'wb') as fd:
+
+    extension = 'tif'
+    if 'geotiff' in layer_path:
+        extension = 'geotiff'
+
+    layer_original_path = layer_path.replace(f'.{extension}',
+                                             f'_original.{extension}')
+
+    with open(layer_original_path, 'wb') as fd:
         for chunk in r.iter_content(chunk_size):
             fd.write(chunk)
+
+    try:
+        start_time = time.time()
+        command = [
+            "gdal_translate",
+            layer_original_path, layer_path,
+            "-co", "COMPRESS=DEFLATE",
+            "-co", "PREDICTOR=2",
+            "-co", "ZLEVEL=9"
+        ]
+        subprocess.check_output(command)
+        print('Finished in {}'.format(time.time() - start_time))
+    except Exception as e:  # noqa
+        if os.path.exists(layer_path):
+            os.remove(layer_path)
+        command = [
+            "gdal_translate",
+            layer_original_path, layer_path,
+            "-co", "COMPRESS=DEFLATE",
+            "-co", "PREDICTOR=1",
+            "-co", "ZLEVEL=9"
+        ]
+        subprocess.check_output(command)
+
+    if os.path.exists(layer_path):
+        os.remove(layer_original_path)
+    else:
+        shutil.move(layer_original_path, layer_path)
+
     return settings.MEDIA_URL + os.path.join(
         'cached_tiff_layers',
         layer_name
@@ -56,7 +99,8 @@ def geonode_layer_links(geonode_layer, geography):
     )
     layer_url = None
     if links.exists():
-        url = links[0].url
+        link = links.first()
+        url = link.url
         url = urllib.parse.unquote(url)
         url = url.replace('EPSG:3857', 'EPSG:4326')
         x = geography.boundary_dimension_x
@@ -68,12 +112,16 @@ def geonode_layer_links(geonode_layer, geography):
             y=y
         )
         if raster_layer:
-            layer_tiff_name = geonode_layer.name + '.tiff'
+            layer_tiff_name = geonode_layer.name + '.' + link.extension
             layer_path = os.path.join(
                 CACHED_TIFF_LAYERS_PATH,
                 layer_tiff_name
             )
             if not os.path.exists(layer_path):
+                layer_url = (
+                    re.sub('.*geoserver/', settings.GEOSERVER_PUBLIC_LOCATION,
+                           layer_url, 1)
+                )
                 layer_url = cached_raster_layer(layer_url, layer_tiff_name)
             else:
                 layer_url = settings.MEDIA_URL + os.path.join(
