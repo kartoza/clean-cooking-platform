@@ -49,6 +49,7 @@ def cached_raster_layer(layer_url, layer_name):
         for chunk in r.iter_content(chunk_size):
             fd.write(chunk)
 
+    compressed = False
     try:
         start_time = time.time()
         command = [
@@ -60,17 +61,24 @@ def cached_raster_layer(layer_url, layer_name):
         ]
         subprocess.check_output(command)
         print('Finished in {}'.format(time.time() - start_time))
+        compressed = True
     except Exception as e:  # noqa
         if os.path.exists(layer_path):
             os.remove(layer_path)
-        command = [
-            "gdal_translate",
-            layer_original_path, layer_path,
-            "-co", "COMPRESS=DEFLATE",
-            "-co", "PREDICTOR=1",
-            "-co", "ZLEVEL=9"
-        ]
-        subprocess.check_output(command)
+
+    if not compressed:
+        try:
+            command = [
+                "gdal_translate",
+                layer_original_path, layer_path,
+                "-co", "COMPRESS=DEFLATE",
+                "-co", "PREDICTOR=1",
+                "-co", "ZLEVEL=9"
+            ]
+            subprocess.check_output(command)
+        except Exception as e:  # noqa
+            if os.path.exists(layer_path):
+                os.remove(layer_path)
 
     if os.path.exists(layer_path):
         os.remove(layer_original_path)
